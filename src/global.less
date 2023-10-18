@@ -3,7 +3,7 @@
 }
 
 body {
-    font-family: "Inconsolata", monospace;
+    font-family: "等线", monospace;
     font-feature-settings: "liga" 0;
     line-height: 1.6;
     background-color: #f8f9f9;
@@ -12,12 +12,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: red;
+    background-color: @themeColor;
 }
 
 ::-webkit-scrollbar {
     width: 5px;
     background-color: unset;
+    position: absolute;
+    right: 0;
 }
 
 h1, h2 {
@@ -37,7 +39,7 @@ a {
 }
 
 a:hover, a:active, a:focus {
-    color: #9f8f68;
+    color: @themeColor;
 }
 
 figure {
@@ -50,37 +52,13 @@ ul {
     list-style-type: none;
 }
 
-::-moz-selection {
-    color: #fff;
-    background-color: #9f8f68;
-    text-shadow: none;
-}
-
 ::selection {
     color: #fff;
-    background-color: #9f8f68;
+    background-color: @themeColor;
     text-shadow: none;
-}
-
-.interactive {
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-}
-
-.fadeInAnimation {
-    will-change: opacity;
-    animation: fade-in 1s both;
 }
 
 .placeholder {
     flex: 1;
 }
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}

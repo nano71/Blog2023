@@ -1,0 +1,43 @@
+.categories {
+
+    .card {
+        padding: 4vw 8vw;
+        transition: background-color 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            background-color: @hoverColor;
+
+            .title {
+                box-shadow: inset 175px 0 0 0 @themeColor;
+                color: #fff;
+            }
+        }
+
+        .descript {
+            white-space: pre-wrap;
+        }
+
+        .title {
+            transition: all 0.4s ease-in-out;
+
+        }
+
+        .info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .label {
+                font-size: 14px;
+            }
+
+            .count {
+                font-family: "Space Mono", monospace;
+                color: @themeColor;
+                font-size: 18px;
+            }
+        }
+
+    }
+}

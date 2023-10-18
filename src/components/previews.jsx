@@ -14,7 +14,7 @@ function Previews({imageUrls}) {
     function Images() {
         const images = []
         imageUrls.forEach((imageUrl, index) => {
-            images.push(<img className={(currentIndex === index && imageUrl) ? "preview active" : "preview"} src={imageUrl} key={index} alt=""/>)
+            images.push(<img className={currentIndex === index ? "preview active" : "preview"} src={imageUrl} key={index} alt=""/>)
         });
         return images
     }

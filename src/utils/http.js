@@ -10,7 +10,7 @@ axios.defaults.baseURL = "http://localhost:8080/api";
  */
 export async function getRecentArticles() {
     const response = await axios.post("/getArticleList", {
-        "limit": 6,
+        "limit": 8,
         "page": 0
     })
     return response.data.data.list

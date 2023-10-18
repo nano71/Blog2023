@@ -8,7 +8,7 @@ export default defineConfig({
         preprocessorOptions: {
             less: {
                 charset: false,
-                additionalData: '@import "/src/global.less";',
+                additionalData: '@import "/src/reference.less";',
             },
         },
     },

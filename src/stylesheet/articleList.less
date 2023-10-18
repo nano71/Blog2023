@@ -1,14 +1,14 @@
 .articleList#articleList {
     .article {
-        padding: 64px 128px;
+        padding: 4vw 8vw;
         transition: background-color 0.2s ease-in-out;
         cursor: pointer;
 
         &:hover {
-            background-color: #f5f3ef;
+            background-color: @hoverColor;
 
             .more {
-                box-shadow: inset 175px 0 0 0 #9f8f68;
+                box-shadow: inset 175px 0 0 0 @themeColor;
                 color: #fff;
             }
         }
@@ -19,8 +19,10 @@
         }
 
         .title {
-            color: #9f8f68;
-            margin-bottom: 0.5em;
+            color: @themeColor;
+            font-weight: bolder;
+            font-family: "Inconsolata", "等线", monospace;
+            margin-bottom: 8px;
         }
 
         .text {
@@ -34,11 +36,12 @@
 
         .more {
             display: inline-block;
-            padding: 0.5em;
+            padding: 8px;
             font-family: "Space Mono", monospace;
-            color: #9f8f68;
-            border: 3px solid #9f8f68;
+            color: @themeColor;
+            border: 3px solid @themeColor;
             transition: all 0.4s ease-in-out;
+            &:extend(.interactive);
         }
     }
 }
