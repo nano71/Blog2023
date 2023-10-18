@@ -50,7 +50,7 @@ const Footer = () => {
 const TabBar = () => {
     const {active, setActive} = useContext(TabContext);
 
-    const tabItems = ["Recent", "Category", "Search", "All", "About"];
+    const tabItems = ["Recent", "Category", "Search", "About"];
     return (
         <div className="tabBar">
             {tabItems.map((item, i) => (
