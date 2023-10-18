@@ -1,0 +1,44 @@
+.articleList#articleList {
+    .article {
+        padding: 64px 128px;
+        transition: background-color 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f5f3ef;
+
+            .more {
+                box-shadow: inset 175px 0 0 0 #9f8f68;
+                color: #fff;
+            }
+        }
+
+        .date {
+            font-family: "Space Mono", monospace;
+            color: #0a0a0a;
+        }
+
+        .title {
+            color: #9f8f68;
+            margin-bottom: 0.5em;
+        }
+
+        .text {
+            color: #0a0a0a;
+            overflow: hidden; /* 超出部分隐藏 */
+            text-overflow: ellipsis; /* 超出部分用省略号表示 */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 限制文本的行数 */
+            -webkit-box-orient: vertical;
+        }
+
+        .more {
+            display: inline-block;
+            padding: 0.5em;
+            font-family: "Space Mono", monospace;
+            color: #9f8f68;
+            border: 3px solid #9f8f68;
+            transition: all 0.4s ease-in-out;
+        }
+    }
+}

@@ -1,0 +1,86 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inconsolata", monospace;
+    font-feature-settings: "liga" 0;
+    line-height: 1.6;
+    background-color: #f8f9f9;
+    padding: 0;
+    margin: 0;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: red;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: unset;
+}
+
+h1, h2 {
+    margin: 0;
+    font-family: "Space Mono", monospace;
+}
+
+
+p {
+    margin: 0 0 12px;
+}
+
+a {
+    color: #0a0a0a;
+    text-decoration: none;
+    transition: color 0.4s ease-in-out;
+}
+
+a:hover, a:active, a:focus {
+    color: #9f8f68;
+}
+
+figure {
+    margin: 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+::-moz-selection {
+    color: #fff;
+    background-color: #9f8f68;
+    text-shadow: none;
+}
+
+::selection {
+    color: #fff;
+    background-color: #9f8f68;
+    text-shadow: none;
+}
+
+.interactive {
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.fadeInAnimation {
+    will-change: opacity;
+    animation: fade-in 1s both;
+}
+
+.placeholder {
+    flex: 1;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,66 @@
+.content#content {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .tabBar {
+        height: 60px;
+        align-items: center;
+        display: flex;
+        justify-content: space-evenly;
+        font-family: "Space Mono", monospace;
+        flex: 0 0 60px;
+        &:extend(.interactive);
+
+        .tabItem {
+            cursor: pointer;
+            position: relative;
+            color: #0a0a0a;
+            border-bottom: 3px solid transparent;
+
+            &.active {
+                border-color: #9f8f68;
+            }
+
+            &:not(.active) {
+
+                &:hover:after {
+                    width: 100%;
+                }
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 0;
+                    border-bottom: 3px solid #9f8f68;
+                    transition: width 0.4s ease-in-out;
+                }
+            }
+        }
+
+    }
+
+    .tab {
+        display: none;
+        flex: 1;
+
+        &.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            &:extend(.fadeInAnimation);
+        }
+
+
+
+        .footer {
+            padding: 32px;
+            align-items: center;
+            display: flex;
+            gap: 16px;
+        }
+    }
+}

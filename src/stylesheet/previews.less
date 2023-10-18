@@ -1,0 +1,53 @@
+.previews#previews {
+    width: 45%;
+    height: 100%;
+    background-color: #0a0a0a;
+    position: fixed;
+    left: 0;
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(10, 10, 10, 0.2);
+        transition: background-color 0.4s ease-in-out;
+    }
+
+    img.preview {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+
+        &.active {
+            display: block;
+            &:extend(.fadeInAnimation);
+        }
+
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        color: #fff;
+
+        span {
+            font-family: "Inconsolata", monospace;
+            &:extend(.interactive);
+        }
+    }
+}
+
+
