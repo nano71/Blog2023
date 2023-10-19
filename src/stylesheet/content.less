@@ -1,16 +1,21 @@
 .content#content {
     width: 55%;
-    height: 100%;
     display: flex;
+    min-height: 100vh;
     flex-direction: column;
+    @media (max-width: 450px) {
+        width: 100%;
+    }
 
     .tabBar {
-        height: 60px;
+        padding: 0 4vw;
+        height: 80px;
         align-items: center;
         display: flex;
-        justify-content: space-evenly;
+        //justify-content: s;
+        gap: 32px;
         font-family: "Space Mono", monospace;
-        flex: 0 0 60px;
+        flex: 0 0 80px;
         &:extend(.interactive);
 
         .tabItem {
@@ -55,12 +60,14 @@
         }
 
 
-
         .footer {
-            padding: 32px;
+            padding: 0 4vw;
+            height: 80px;
             align-items: center;
             display: flex;
             gap: 16px;
+            font-size: 24px;
+
         }
     }
 }

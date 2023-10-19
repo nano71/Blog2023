@@ -9,6 +9,10 @@ body {
     background-color: #f8f9f9;
     padding: 0;
     margin: 0;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 ::-webkit-scrollbar-thumb {
@@ -35,6 +39,7 @@ p {
 a {
     color: #0a0a0a;
     text-decoration: none;
+    cursor: pointer;
     transition: color 0.4s ease-in-out;
 }
 
