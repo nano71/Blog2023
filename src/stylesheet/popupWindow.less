@@ -7,6 +7,7 @@
     height: 100vh;
     left: 0;
     top: 0;
+    z-index: 1742;
 
     .mask {
         position: absolute;
@@ -57,14 +58,15 @@
     }
 
     .container {
+        display: flex;
+        flex-direction: column;
         position: absolute;
         width: 70%;
-        height: 90%;
+        height: 95%;
         background-color: #fff;
         overflow: auto;
         animation: show .4s both;
-        padding: 15px;
-        max-width: 575px;
+        max-width: 700px;
 
         &.hide {
             animation: hide .4s both;
@@ -72,8 +74,13 @@
 
         .top {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
+            padding: 15px;
+
+            .subtitle {
+                &:extend(.hybridFontB);
+            }
 
             .close {
                 display: flex;

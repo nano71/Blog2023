@@ -1,7 +1,7 @@
 import ArticleList from "./articleList.jsx";
 import {Outlet} from "react-router-dom";
-import {Footer} from "./footer.jsx";
-import Loading from "./loading.jsx";
+import {Footer} from "/src/components/content/footer.jsx";
+import Loading from "/src/components/content/loading.jsx";
 import {useContext} from "react";
 import {RecentArticlesContext} from "../../pages/index.jsx";
 

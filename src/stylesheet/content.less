@@ -12,40 +12,31 @@
         height: 80px;
         align-items: center;
         display: flex;
-        //justify-content: s;
         gap: 32px;
-        font-family: "Space Mono", monospace;
         flex: 0 0 80px;
-        &:extend(.interactive);
+        &:extend(.interactive,.enFontB);
 
         .tabItem {
             cursor: pointer;
             position: relative;
             color: #0a0a0a;
-            border-bottom: 3px solid transparent;
 
-            &.active {
-                border-color: @themeColor;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 0;
+                border-bottom: 3px solid @themeColor;
+                //border-bottom: 3px solid transparent;
+                transition: width 0.4s ease-in-out;
             }
 
-            &:not(.active) {
+            &.active:after, &:hover:after {
+                width: 100%;
 
-                &:hover:after {
-                    width: 100%;
-                }
-
-                &:after {
-                    content: "";
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    width: 0;
-                    border-bottom: 3px solid @themeColor;
-                    transition: width 0.4s ease-in-out;
-                }
             }
         }
-
     }
 
     .tab {

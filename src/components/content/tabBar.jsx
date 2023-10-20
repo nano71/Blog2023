@@ -1,9 +1,11 @@
 import {useContext, useEffect} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {TabContext} from "./content.jsx";
+import Search from "./searchBox.jsx";
 
 const TabBar = () => {
     const {active, setActive} = useContext(TabContext);
+    const navigate = useNavigate()
     const location = useLocation()
     const routeLinks = ["article"]
     const tabItems = ["Recent", "Category", "Search", "About"];
@@ -17,18 +19,24 @@ const TabBar = () => {
             }
         }
     }, [])
+
+    function switchTabItem(i, item) {
+        setActive(i)
+        navigate("/" + (routeLinks[i] || item.toLowerCase()))
+    }
+
     return (
         <div className="tabBar">
             {tabItems.map((item, i) => (
-                <Link to={"/" + (routeLinks[i] || item.toLowerCase())} key={i}>
-                    <div
-                        className={active === i ? "tabItem active" : "tabItem"}
-                        onClick={() => setActive(i)}
-                    >
-                        {item}
-                    </div>
-                </Link>
+                <div
+                    key={i}
+                    className={active === i ? "tabItem active" : "tabItem"}
+                    onClick={() => switchTabItem(i, item)}
+                >
+                    {item}
+                </div>
             ))}
+            <Search/>
         </div>
     );
 };

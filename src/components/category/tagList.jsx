@@ -1,7 +1,4 @@
 import "/src/stylesheet/tagList.less"
-import {useContext} from "react";
-import {TagListContext} from "/src/pages/index.jsx";
-
 function TagList({tagList}) {
     return (
         <div className="tagList">

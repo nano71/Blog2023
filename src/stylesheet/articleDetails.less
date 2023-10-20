@@ -1,9 +1,35 @@
 .articleDetails {
-    .title {
-        font-family: "等线", serif;
+    overflow: auto;
+    flex: 1;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    strong {
+        font-size: 18px;
     }
 
-    img.image {
+    &.scrollbar {
+        padding: 0 10px 0 15px;
+
+    }
+
+    .title {
+        &:extend(.cnFont);
+    }
+
+    .infoBar {
+        display: flex;
+        gap: 10px;
+
+        .label {
+            font-weight: bolder;
+        }
+    }
+
+    img {
         width: 100%;
         aspect-ratio: 1.6;
         object-fit: cover;
@@ -15,5 +41,9 @@
 
     .content {
         white-space: break-spaces;
+    }
+
+    &::-webkit-scrollbar {
+
     }
 }

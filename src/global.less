@@ -3,7 +3,7 @@
 }
 
 body {
-    font-family: "等线", monospace;
+    &:extend(.cnFont);
     font-feature-settings: "liga" 0;
     line-height: 1.6;
     background-color: #f8f9f9;
@@ -28,9 +28,8 @@ body {
 
 h1, h2 {
     margin: 0;
-    font-family: "Space Mono", monospace;
+    &:extend(.enFontB);
 }
-
 
 p {
     margin: 0 0 12px;
@@ -41,20 +40,15 @@ a {
     text-decoration: none;
     cursor: pointer;
     transition: color 0.4s ease-in-out;
+
+    &:hover, &:active, &:focus {
+        color: @themeColor;
+    }
 }
 
-a:hover, a:active, a:focus {
-    color: @themeColor;
-}
-
-figure {
-    margin: 0;
-}
-
-ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
+input {
+    color: #0a0a0a;
+    letter-spacing: 0.8px;
 }
 
 ::selection {

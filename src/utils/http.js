@@ -11,14 +11,21 @@ async function r(url, data) {
 
 /**
  *
- * @returns {Promise<Awaited<string[]>>}
+ * @returns {Promise<Awaited<Article[]>>}
  */
 export async function getRecentArticles() {
     const response = await r("/getArticleList", {
         "limit": 8,
         "page": 0
     })
-    return response.data.list
+    /**
+     * @type {Article[]}
+     */
+    const list = response.data.list
+    for (let object of list) {
+        sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
+    }
+    return list
 }
 
 /**
