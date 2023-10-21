@@ -32,7 +32,9 @@ function ArticleDetails() {
         if (location.pathname === "/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
-            setArticle(await getArticleContent(parseInt(params.articleId)))
+            const article = await getArticleContent(parseInt(params.articleId))
+            if (article)
+                return setArticle(article)
         }
     }
 

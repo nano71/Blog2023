@@ -1,12 +1,11 @@
-import {createHashRouter} from "react-router-dom";
+import {createHashRouter, json} from "react-router-dom";
 import Index from "/src/pages/index.jsx";
-import Error from "/src/pages/error.jsx";
+import ErrorPage from "/src/pages/error.jsx";
 import React from "react";
 import Recent from "/src/components/recent/recent.jsx";
 import PopupWindow from "/src/components/content/popupWindow.jsx";
 import ArticleDetails from "/src/components/recent/articleDetails.jsx";
 import Category from "/src/components/category/category.jsx";
-import {getArticleContent} from "../utils/http.js";
 import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 
@@ -14,7 +13,18 @@ export default createHashRouter([
     {
         path: "/write",
         element: <Write/>,
-        errorElement: <Error/>,
+        errorElement: <ErrorPage/>,
+        loader() {
+            let key = prompt("请输入密钥")
+            if (key === "1742") {
+                return null
+            }
+            const errorMessage = "You don't have permission to perform actions on this page"
+            const permissionError = new Error(errorMessage)
+            permissionError.stack = undefined
+            permissionError.cause = undefined
+            throw permissionError
+        },
         children: [
             {
                 path: "",
@@ -29,7 +39,7 @@ export default createHashRouter([
     {
         path: "/",
         element: <Index/>,
-        errorElement: <Error/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "article",

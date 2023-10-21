@@ -16,7 +16,7 @@ function ArticleList() {
             <div key={index} className="article" onClick={() => navigate("/article/" + value.id)} onMouseEnter={() => value.coverImage && setCurrentIndex(index)}>
                 <span className="date">{new Date(value.createTime).toLocaleString()}</span>
                 <h2 className="title" itemProp="name">{value.title}</h2>
-                <p className="text" itemProp="description">{value.description}</p>
+                <p className="text" itemProp="description">{value.description.replace(/<[^>]*>/g, '')}</p>
                 <span className="more">-view-</span>
             </div>
         )}

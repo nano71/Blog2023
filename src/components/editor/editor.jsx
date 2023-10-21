@@ -6,6 +6,7 @@ import MarkdownIt from "markdown-it";
 import {Icon} from "@iconify/react";
 import {Link, useNavigate} from "react-router-dom";
 import hljs from 'highlight.js';
+import * as http from "../../utils/http.js";
 
 export default function Editor() {
     const [content, setContent] = useState("");
@@ -21,8 +22,12 @@ export default function Editor() {
         setTime(new Date().toLocaleString())
     }, []);
 
-    function preview() {
-        let draft = {
+    /**
+     *
+     * @returns {{createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
+     */
+    function preprocessedData() {
+        return {
             title,
             content: HTML,
             description: HTML.match(/<p>(.*?)<\/p>/g)[0] || "",
@@ -30,14 +35,16 @@ export default function Editor() {
             coverImage,
             tags
         }
-        localStorage.setItem("draft", JSON.stringify(draft))
+    }
+
+    function preview() {
+        localStorage.setItem("draft", JSON.stringify(preprocessedData()))
         console.log(localStorage.getItem("draft"));
         navigate("/write/preview")
     }
 
-    function uploadImage(file) {
-        const url = URL.createObjectURL(file)
-        console.log(url);
+    async function uploadImage(file) {
+        const url = await http.uploadImage(file)
         setCoverImage(url)
     }
 
@@ -53,6 +60,14 @@ export default function Editor() {
             setTimeout(() => {
                 event.target.value = ""
             }, 0)
+        }
+    }
+
+    async function submit() {
+        if (await http.publishArticle(preprocessedData())) {
+            console.log(1);
+        } else {
+            console.log(2);
         }
     }
 
@@ -128,7 +143,7 @@ export default function Editor() {
 
             </div>
             <div className="buttons">
-                <a className="button">-Submit-</a>
+                <a className="button" onClick={submit}>-Submit-</a>
             </div>
         </div>
 
@@ -136,7 +151,7 @@ export default function Editor() {
 }
 
 function MarkdownEditor({value, setValue, setOut}) {
-    const mdParser = MarkdownIt({
+    const mdParser = new MarkdownIt({
         html: true,
         linkify: true,
         highlight(str, lang) {
@@ -161,12 +176,10 @@ function MarkdownEditor({value, setValue, setOut}) {
         localStorage.setItem("markdownOutHistory", html)
     }
 
-    function onImageUpload(file) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve("https://images.pexels.com/photos/4554150/pexels-photo-4554150.jpeg?auto=compress&cs=tinysrgb&w=1200")
-            }, 2000)
-        });
+    async function onImageUpload(file) {
+        const url = await http.uploadImage(file)
+        console.log(url);
+        return Promise.resolve(url)
     }
 
     return <MdEditor
