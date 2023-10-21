@@ -9,7 +9,7 @@ const PopupWindow = ({children}) => {
     const [isHide, setHide] = useState(false)
     const titles = {
         "article": "Article details",
-        "write": "Write article",
+        "write": "Preview article",
         "manage": "Article management"
     }
 

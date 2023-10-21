@@ -7,6 +7,7 @@
     flex-direction: column;
     gap: 15px;
 
+
     strong {
         font-size: 18px;
     }
@@ -29,18 +30,99 @@
         }
     }
 
-    img {
+    > img {
         width: 100%;
         aspect-ratio: 1.6;
         object-fit: cover;
     }
 
     .description {
-        white-space: pre-wrap;
+        * {
+            margin: 0;
+        }
     }
 
     .content {
-        white-space: break-spaces;
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            margin: 0 0 15px;
+
+            * {
+                margin: 0;
+            }
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        blockquote {
+            padding: 8px 15px;
+            border-left: 3px solid @themeColor;
+            background-color: #f9fcfa;
+            color: #666666;
+        }
+
+        pre {
+            code {
+                &:extend(.enFontS);
+                padding: 15px;
+                background-color: #f9fcfa;
+                display: block;
+            }
+        }
+
+        p {
+            > code {
+                color: #333;
+                background-color: #f8f8f8;
+                padding: 4px 6px;
+                margin: 0 2px;
+                &:extend(.enFontS);
+            }
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            display: block;
+            width: 100%;
+            overflow: auto;
+            word-break: keep-all;
+            text-align: left;
+            font-size: 14px;
+
+
+            //tr {
+            //    background-color: #f1f1f1;
+            //}
+
+
+            thead {
+                background-color: #f8f8f8;
+            }
+
+            tbody {
+                tr:nth-child(even) {
+                    background-color: #f8f8f8;
+                }
+
+                tr:nth-child(odd) {
+                    background-color: #fefefe;
+                }
+            }
+
+
+            th, td {
+                padding: 8px 16px;
+            }
+        }
+
+        a {
+            color: @themeColor;
+        }
     }
 
     &::-webkit-scrollbar {

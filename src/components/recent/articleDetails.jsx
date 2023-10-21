@@ -3,6 +3,7 @@ import "/src/stylesheet/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
 import {getArticleContent} from "../../utils/http.js";
 import Loading from "../content/loading.jsx";
+import 'highlight.js/styles/atom-one-light.css';
 
 function ArticleDetails() {
     /**
@@ -39,8 +40,8 @@ function ArticleDetails() {
         return scrollHeight > window.innerHeight * 0.95 - 62
     }
 
-    const articleDetails = <div className={"articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
-        <h1 className="title">{article.title}</h1>
+    const articleDetails = <div className={"markdown-body articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
+        <h1 className="title">{article.title || "无标题"}</h1>
         <div className="infoBar">
             <div className="label">Date:</div>
             <div className="date">{new Date(article.createTime).toLocaleString()}</div>
@@ -50,7 +51,7 @@ function ArticleDetails() {
         <div className="content" dangerouslySetInnerHTML={{__html: article.content}}></div>
         <h2>Comments</h2>
     </div>
-    return (article.title ? articleDetails : <Loading/>);
+    return (Object.keys(article).length ? articleDetails : <Loading/>);
 }
 
 export default ArticleDetails
