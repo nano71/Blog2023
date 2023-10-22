@@ -10,7 +10,7 @@ import {CurrentIndexContext} from "../../pages/index.jsx";
  */
 function Cover({imageUrls}) {
     const {currentIndex} = useContext(CurrentIndexContext)
-
+    // todo 封面去除鼠标选中样式
     return (
         <div className="cover" id="cover">
             {imageUrls.map((value, index) => <img className={currentIndex === index ? "preview active" : "preview"} src={value} key={index} alt=""/>)}

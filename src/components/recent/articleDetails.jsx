@@ -26,6 +26,10 @@ function ArticleDetails() {
         }
     }, [article]);
 
+    /**
+     * 加载器
+     * @returns {void}
+     */
     async function loader() {
         if (location.pathname === "/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))

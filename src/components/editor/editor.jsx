@@ -24,7 +24,6 @@ export default function Editor() {
     const popup = useContext(PopupContext)
     useEffect(() => {
         setTime(new Date().toLocaleString())
-        console.log(1);
     }, []);
 
     /**
@@ -76,6 +75,7 @@ export default function Editor() {
                 .show({showMask: false, lockScroll: false, autoClose: true})
             return
         }
+        // todo 更多的表单验证
         if (await http.publishArticle(processedData)) {
             console.log(1);
         } else {

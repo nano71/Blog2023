@@ -8,6 +8,7 @@ import Window from "../popup/window.jsx";
 import Message from "../popup/message.jsx";
 
 function ArticleList() {
+    // todo 文章列表需要加载更多功能
     /**
      * @type {Article[]}
      */
