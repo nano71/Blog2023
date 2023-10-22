@@ -21,7 +21,7 @@ function ArticleList() {
         popup.loadComponent(<Window><ArticleDetails/></Window>)
         popup.loadTemporaryComponent(<Message/>)
             .title("缺少标题")
-            .show(false, false, true)
+            .show({showMask: false, lockScroll: false, autoClose: true})
 
         if (location.pathname.includes("/article/")) {
             popup.show()

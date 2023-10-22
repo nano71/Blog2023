@@ -73,7 +73,7 @@ export default function Editor() {
         if (!processedData.title) {
             popup.loadTemporaryComponent(<Message/>)
                 .title("缺少标题")
-                .show(false, false, true)
+                .show({showMask: false, lockScroll: false, autoClose: true})
             return
         }
         if (await http.publishArticle(processedData)) {
