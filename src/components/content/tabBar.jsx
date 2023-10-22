@@ -6,7 +6,6 @@ import Search from "./searchBox.jsx";
 const TabBar = () => {
     const {active, setActive} = useContext(TabContext);
     const navigate = useNavigate()
-    const location = useLocation()
     const routeLinks = ["article"]
     const tabItems = ["Recent", "Category", "Search", "About"];
     useEffect(() => {

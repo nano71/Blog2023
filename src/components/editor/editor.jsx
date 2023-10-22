@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import "/src/stylesheet/editor.less";
@@ -7,6 +7,10 @@ import {Icon} from "@iconify/react";
 import {Link, useNavigate} from "react-router-dom";
 import hljs from 'highlight.js';
 import * as http from "../../utils/http.js";
+import Message from "../popup/message.jsx";
+import {PopupContext} from "../popup/popup.jsx";
+import Window from "../popup/window.jsx";
+import ArticleDetails from "../recent/articleDetails.jsx";
 
 export default function Editor() {
     const [content, setContent] = useState("");
@@ -17,9 +21,10 @@ export default function Editor() {
     const [isFormat, setFormatStatus] = useState(false)
     const [tags, setTags] = useState([])
     const navigate = useNavigate()
-
+    const popup = useContext(PopupContext)
     useEffect(() => {
         setTime(new Date().toLocaleString())
+        console.log(1);
     }, []);
 
     /**
@@ -39,8 +44,8 @@ export default function Editor() {
 
     function preview() {
         localStorage.setItem("draft", JSON.stringify(preprocessedData()))
-        console.log(localStorage.getItem("draft"));
         navigate("/write/preview")
+        popup.loadTemporaryComponent(<Window><ArticleDetails/></Window>).show()
     }
 
     async function uploadImage(file) {
@@ -64,7 +69,14 @@ export default function Editor() {
     }
 
     async function submit() {
-        if (await http.publishArticle(preprocessedData())) {
+        const processedData = preprocessedData()
+        if (!processedData.title) {
+            popup.loadTemporaryComponent(<Message/>)
+                .title("缺少标题")
+                .show(false, false, true)
+            return
+        }
+        if (await http.publishArticle(processedData)) {
             console.log(1);
         } else {
             console.log(2);
@@ -143,7 +155,7 @@ export default function Editor() {
 
             </div>
             <div className="buttons">
-                <a className="button" onClick={submit}>-Submit-</a>
+                <div className="button" onClick={submit}>Submit</div>
             </div>
         </div>
 

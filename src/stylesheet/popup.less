@@ -1,0 +1,191 @@
+.popup {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1742;
+
+    &.noMask {
+        top: 100vh;
+    }
+
+    .mask {
+        position: absolute;
+        background-color: #000;
+        opacity: .5;
+        width: 100%;
+        height: 100%;
+        animation: showMask .4s both;
+
+        &.hide {
+            animation: hideMask .4s both;
+        }
+    }
+
+    @keyframes showMask {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: .5;
+        }
+    }
+    @keyframes hideMask {
+        from {
+            opacity: .5;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes show {
+        from {
+            transform: translateY(100vh);
+        }
+        to {
+            transform: translateY(0%);
+        }
+    }
+
+    @keyframes showPrompt {
+        from {
+            transform: translateY(0%);
+        }
+        to {
+            transform: translateY(-100vh);
+        }
+    }
+    @keyframes hidePrompt {
+        from {
+            transform: translateY(-100vh);
+        }
+        to {
+            transform: translateY(0%);
+        }
+    }
+
+    @keyframes hide {
+        from {
+            transform: translateY(0%);
+        }
+        to {
+            transform: translateY(100vh);
+        }
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        background-color: #fff;
+        animation: show .4s both;
+
+        &.hide {
+            animation: hide .4s both;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+
+
+        }
+
+        .subtitle {
+            &:extend(.hybridFontB);
+        }
+
+        .close {
+            display: flex;
+            align-items: center;
+            font-size: 32px;
+        }
+    }
+
+    .windowContainer {
+
+        width: 70%;
+        height: 95%;
+
+        max-width: 700px;
+        overflow: auto;
+
+
+    }
+
+    .validateContainer {
+        width: 50%;
+        max-width: 375px;
+        display: flex;
+
+        .inputArea {
+            padding: 0 15px 15px;
+            display: flex;
+            gap: 15px;
+            flex: 1;
+            flex-direction: column;
+
+            .label {
+                line-height: 40px;
+            }
+
+            input {
+                width: 100%;
+                border: 0;
+                outline: 0;
+                height: 40px;
+                background-color: #f5f5f5;
+                padding: 0 16px;
+                font-size: 14px;
+                letter-spacing: 0.8px;
+            }
+
+            .tip {
+                font-size: 14px;
+                color: #666666;
+                margin-top: 5px;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    .messageContainer {
+        position: absolute;
+        bottom: 30px;
+        min-width: 300px;
+        max-width: calc(100vw - 30px);
+        display: flex;
+        flex-direction: row;
+        padding: 15px;
+        align-items: center;
+        justify-content: space-between;
+        animation: showPrompt .4s both;
+
+        .subtitle {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            line-height: 22px;
+            font-weight: normal;
+
+            svg {
+                font-size: 22px;
+            }
+        }
+
+        &.hide {
+            animation: hidePrompt .4s both;
+        }
+    }
+}

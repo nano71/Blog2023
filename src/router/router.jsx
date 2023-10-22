@@ -1,21 +1,21 @@
-import {createHashRouter, json} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import Index from "/src/pages/index.jsx";
 import ErrorPage from "/src/pages/error.jsx";
 import React from "react";
 import Recent from "/src/components/recent/recent.jsx";
-import PopupWindow from "/src/components/content/popupWindow.jsx";
-import ArticleDetails from "/src/components/recent/articleDetails.jsx";
 import Category from "/src/components/category/category.jsx";
 import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 
-export default createHashRouter([
+export default createBrowserRouter([
     {
         path: "/write",
         element: <Write/>,
         errorElement: <ErrorPage/>,
         loader() {
-            let key = prompt("请输入密钥")
+            console.log("Write loader");
+            const key = sessionStorage.getItem("authenticationCode")
+            sessionStorage.removeItem("authenticationCode")
             if (key === "1742") {
                 return null
             }
@@ -32,7 +32,7 @@ export default createHashRouter([
             },
             {
                 path: "preview",
-                element: <><Editor/><PopupWindow><ArticleDetails/></PopupWindow></>
+                element: <Editor/>
             }
         ]
     },
@@ -40,14 +40,22 @@ export default createHashRouter([
         path: "/",
         element: <Index/>,
         errorElement: <ErrorPage/>,
+        loader() {
+            console.log("Index loader");
+            return null
+        },
         children: [
             {
+                index: true,
+                element: <Recent/>,
+            },
+            {
+
                 path: "article",
                 element: <Recent/>,
                 children: [
                     {
                         path: ":articleId",
-                        element: <PopupWindow><ArticleDetails/></PopupWindow>
                     }
                 ]
             },
