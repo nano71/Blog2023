@@ -1,4 +1,4 @@
-import "/src/stylesheet/search.less"
+import "/src/stylesheets/search/search.less"
 import {useState} from "react";
 
 export default function () {

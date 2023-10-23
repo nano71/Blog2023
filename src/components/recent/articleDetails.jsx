@@ -1,5 +1,5 @@
 import {useLocation, useParams} from "react-router-dom";
-import "/src/stylesheet/articleDetails.less"
+import "/src/stylesheets/article/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
 import {getArticleContent} from "../../utils/http.js";
 import Loading from "../content/loading.jsx";

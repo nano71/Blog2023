@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import "/src/stylesheet/editor.less";
+import "/src/stylesheets/write/editor.less";
 import MarkdownIt from "markdown-it";
 import {Icon} from "@iconify/react";
 import {Link, useNavigate} from "react-router-dom";
@@ -11,18 +11,27 @@ import Message from "../popup/message.jsx";
 import {PopupContext} from "../popup/popup.jsx";
 import Window from "../popup/window.jsx";
 import ArticleDetails from "../recent/articleDetails.jsx";
+import Modal from "../popup/modal.jsx";
+import {useImmer} from "use-immer";
+import Loading from "../content/loading.jsx";
+import {sleep} from "../../utils/tools.js";
+import Feedback from "../content/feedback.jsx";
 
+let realCoverImage = ""
+let coverImageDefaultValue = {url: "", uploadCompleted: false, errorMessage: ""}
 export default function Editor() {
     const [content, setContent] = useState("");
     const [HTML, setHTML] = useState("");
     const [title, setTitle] = useState("")
-    const [coverImage, setCoverImage] = useState("")
+    const [coverImage, setCoverImage] = useImmer(coverImageDefaultValue)
     const [createTime, setTime] = useState("")
     const [isFormat, setFormatStatus] = useState(false)
     const [tags, setTags] = useState([])
     const navigate = useNavigate()
     const popup = useContext(PopupContext)
+
     useEffect(() => {
+        popup.loadComponent(<Window><ArticleDetails/></Window>)
         setTime(new Date().toLocaleString())
     }, []);
 
@@ -31,12 +40,15 @@ export default function Editor() {
      * @returns {{createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
      */
     function preprocessedData() {
+        let matches = HTML.match(/<p>(.*?)<\/p>/g)
+        if (matches)
+            matches = matches[0]
         return {
             title,
             content: HTML,
-            description: HTML.match(/<p>(.*?)<\/p>/g)[0] || "",
+            description: matches || "",
             createTime,
-            coverImage,
+            coverImage: realCoverImage,
             tags
         }
     }
@@ -44,12 +56,23 @@ export default function Editor() {
     function preview() {
         localStorage.setItem("draft", JSON.stringify(preprocessedData()))
         navigate("/write/preview")
-        popup.loadTemporaryComponent(<Window><ArticleDetails/></Window>).show()
+        popup.show()
     }
 
     async function uploadImage(file) {
-        const url = await http.uploadImage(file)
-        setCoverImage(url)
+        setCoverImage(draft => {
+            draft.url = URL.createObjectURL(file)
+            draft.uploadCompleted = false
+            draft.errorMessage = ""
+        })
+        await sleep(2000)
+        realCoverImage = await http.uploadImage(file)
+        setCoverImage(draft => {
+            draft.uploadCompleted = true
+            if (!realCoverImage) {
+                draft.errorMessage = "上传失败,请重试"
+            }
+        })
     }
 
     function addTag(event) {
@@ -69,17 +92,26 @@ export default function Editor() {
 
     async function submit() {
         const processedData = preprocessedData()
-        if (!processedData.title) {
-            popup.loadTemporaryComponent(<Message/>)
-                .title("缺少标题")
-                .show({showMask: false, lockScroll: false, autoClose: true})
-            return
+        const checkMap = {
+            title: "缺少标题",
+            content: "缺少内容",
+            description: "缺少内容",
         }
-        // todo 更多的表单验证
-        if (await http.publishArticle(processedData)) {
-            console.log(1);
+        for (let checkMapKey in checkMap) {
+            if (!processedData[checkMapKey]) {
+                console.log(checkMapKey);
+                popup.loadTemporaryComponent(<Message/>)
+                    .title(checkMap[checkMapKey])
+                    .show({showMask: false, lockScroll: false, autoClose: true})
+                return
+            }
+        }
+        popup.loadTemporaryComponent(<Modal/>).title("请等待...").show()
+        let result = await http.publishArticle(processedData)
+        if (result) {
+            console.log(result);
         } else {
-            console.log(2);
+            console.log(result);
         }
     }
 
@@ -110,12 +142,18 @@ export default function Editor() {
                 <div className="item">
                     <div className="label">文章的封面</div>
                     <div className="inputBox">
-                        {!coverImage ? <div className="previewBox">
+                        {coverImage.url && !coverImage.uploadCompleted &&
+                            <Loading/>
+                        }
+                        {coverImage.url && coverImage.errorMessage &&
+                            <Feedback message={coverImage.errorMessage}/>
+                        }
+                        {!coverImage.url ? <div className="previewBox">
                                 <Icon icon="ri:add-fill"/>
                                 <span>添加文章封面</span>
                             </div> :
-                            <div className="previewImage">
-                                <img src={coverImage} alt=""/>
+                            <div className={"previewImage " + (coverImage.uploadCompleted && !coverImage.errorMessage && "ok")}>
+                                <img src={coverImage.url} alt=""/>
                             </div>
                         }
                         <input type="file" className="imgUpload" alt={""} accept={"image/*"}
@@ -155,7 +193,9 @@ export default function Editor() {
 
             </div>
             <div className="buttons">
-                <div className="button" onClick={submit}>Submit</div>
+                <div className="button preview" onClick={preview}>preview</div>
+
+                <div className="button" onClick={submit}>publish</div>
             </div>
         </div>
 
@@ -190,8 +230,9 @@ function MarkdownEditor({value, setValue, setOut}) {
 
     async function onImageUpload(file) {
         const url = await http.uploadImage(file)
-        console.log(url);
-        return Promise.resolve(url)
+        if (url)
+            return Promise.resolve(url)
+        return Promise.resolve("上传失败")
     }
 
     return <MdEditor

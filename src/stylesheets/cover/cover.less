@@ -23,19 +23,13 @@
     }
 
     img.preview {
-        display: none;
         position: absolute;
         top: 0;
         left: 0;
         height: 100%;
         width: 100%;
         object-fit: cover;
-
-        &.active {
-            display: block;
-            &:extend(.fadeInAnimation2);
-        }
-
+        &:extend(.fadeInAnimation2);
     }
 
     .container {

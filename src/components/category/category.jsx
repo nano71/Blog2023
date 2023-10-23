@@ -12,7 +12,6 @@ export default () => {
         tagList.length ? <div className="tab active">
             <TagList tagList={tagList}/>
             <div className="placeholder"></div>
-            <Footer/>
         </div> : <Loading/>
     )
 

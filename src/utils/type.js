@@ -28,3 +28,16 @@
  * @property {number} readCount - The number of times the article has been read.
  */
 
+/**
+ * @typedef {Object} Tag
+ * @property {string} name
+ * @property {string} content
+ * @property {number} count
+ */
+
+/**
+ * @typedef {Object} responseData
+ * @property {any} data
+ * @property {string} message
+ * @property {number} code
+ */

@@ -1,5 +1,5 @@
 import {Cover4Write} from "../components/cover/cover.jsx";
-import "/src/stylesheet/write.less"
+import "/src/stylesheets/write/write.less"
 import Content from "../components/content/content.jsx";
 import {useEffect} from "react";
 import PopupProvider from "../components/popup/popup.jsx";

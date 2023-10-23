@@ -1,8 +1,9 @@
 // 创建 Context
 import {createContext, useState} from "react";
-import "/src/stylesheet/content.less"
-import {Outlet, useLocation} from "react-router-dom";
+import "/src/stylesheets/content/content.less"
+import {Outlet} from "react-router-dom";
 import TabBar from "./tabBar.jsx";
+import {Footer} from "./footer.jsx";
 
 export const TabContext = createContext(null);
 
@@ -14,6 +15,8 @@ const Content = ({useTabBar = true}) => {
             <TabContext.Provider value={{active, setActive}}>
                 {useTabBar ? <TabBar/> : ""}
                 <Outlet/>
+                <Footer/>
+                
             </TabContext.Provider>
         </div>
     );

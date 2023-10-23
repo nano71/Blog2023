@@ -1,6 +1,6 @@
 import {createBrowserRouter} from "react-router-dom";
 import Index from "/src/pages/index.jsx";
-import ErrorPage from "/src/pages/error.jsx";
+import ErrorView from "/src/pages/errorView.jsx";
 import React from "react";
 import Recent from "/src/components/recent/recent.jsx";
 import Category from "/src/components/category/category.jsx";
@@ -11,7 +11,7 @@ export default createBrowserRouter([
     {
         path: "/write",
         element: <Write/>,
-        errorElement: <ErrorPage/>,
+        errorElement: <ErrorView/>,
         loader() {
             console.log("Write loader");
             const key = sessionStorage.getItem("authenticationCode")
@@ -39,7 +39,7 @@ export default createBrowserRouter([
     {
         path: "/",
         element: <Index/>,
-        errorElement: <ErrorPage/>,
+        errorElement: <ErrorView/>,
         loader() {
             console.log("Index loader");
             return null
@@ -54,6 +54,15 @@ export default createBrowserRouter([
                 path: "article",
                 element: <Recent/>,
                 children: [
+                    {
+                        path: "page",
+                        children: [
+                            {
+                                path: ":pageIndex",
+                                element:<></>
+                            }
+                        ]
+                    },
                     {
                         path: ":articleId",
                     }

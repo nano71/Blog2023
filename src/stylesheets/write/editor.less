@@ -9,6 +9,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        a {
+            display: flex;
+            align-items: center;
+        }
     }
 
     @titleInputHeight: 40px;
@@ -73,11 +78,12 @@
                     line-height: 40px;
                 }
 
-                @imageSize: 200px;
+                @imageSize: 20vw;
 
                 .inputBox {
                     position: relative;
                     flex: 1;
+                    max-width: 400px;
 
                     input {
                         width: 180px;
@@ -119,8 +125,8 @@
                     }
 
                     .previewBox {
+                        width: 100%;
                         aspect-ratio: 1.6;
-                        height: @imageSize;
                         font-size: 14px;
                         display: flex;
                         align-items: center;
@@ -134,14 +140,55 @@
                         top: 0;
                         position: absolute;
                         opacity: 0;
-                        height: @imageSize;
-                        width: calc(@imageSize * 1.6);
+                        width: 100%;
+                        aspect-ratio: 1.6;
+                        //width: calc(@imageSize * 1.6);
+                        z-index: 2;
+                    }
+
+                    .loading {
+                        position: absolute;
+                        width: 100%;
+
+                        aspect-ratio: 1.6;
+                        z-index: 1;
+                        animation: fadeIn .4s !important;
+                    }
+
+                    .feedback {
+                        position: absolute;
+                        width: 100%;
+
+                        aspect-ratio: 1.6;
+                        z-index: 1;
+                        animation: fadeIn .4s !important;
+                        color: white;
+                        text-shadow: 1px 1px 0 black;
                     }
 
                     .previewImage {
+                        &:after {
+                            top: 0;
+                            position: absolute;
+                            content: "";
+                            width: 100%;
+
+                            aspect-ratio: 1.6;
+                            //background-color: rgba(0, 0, 0, 50%);
+                            background-color: rgba(255, 255, 255, 50%);
+                            transition: opacity .4s;
+                            animation: fadeIn .4s;
+                        }
+
+                        &.ok {
+                            &:after {
+                                opacity: 0;
+                            }
+                        }
+
                         img {
                             display: block;
-                            height: @imageSize;
+                            width: 100%;
                             object-fit: cover;
                             aspect-ratio: 1.6;
                         }
@@ -195,5 +242,8 @@
 
         &:extend(.enFontB);
 
+        .preview {
+            display: none;
+        }
     }
 }

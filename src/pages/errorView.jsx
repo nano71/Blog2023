@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom";
-import "/src/stylesheet/error.less"
-export default function Error() {
+import "/src/stylesheets/error.less"
+export default function ErrorView() {
     const error = useRouteError();
     console.error(error);
 

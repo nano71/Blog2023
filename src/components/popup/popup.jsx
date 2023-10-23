@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import React, {createContext, useEffect, useState} from "react";
-import "/src/stylesheet/popup.less"
+import "/src/stylesheets/popup/popup.less"
 
 class PopupContextValue {
     isVisible
@@ -17,6 +17,9 @@ export const PopupContext = createContext(PopupContextValue)
 
 let visibleState = false
 let autoCloseTimer
+let taskParams
+let titleQueue = []
+let temporaryComponentQueue = []
 export default function PopupProvider({children}) {
     const navigate = useNavigate()
     const [isHiding, setHiding] = useState(false)
@@ -37,7 +40,6 @@ export default function PopupProvider({children}) {
         title
     }
     useEffect(() => {
-        console.log(isVisible);
         if (isLockScroll)
             document.body.style.overflow = isVisible ? "hidden" : "unset"
         return () => {
@@ -47,44 +49,47 @@ export default function PopupProvider({children}) {
 
     function title(title) {
         if (title) {
-            setPopipTitle(title)
+            titleQueue.push(title)
             return PopupContextValue
         } else
             return popipTitle
     }
 
     function loadTemporaryComponent(element) {
-        setTemporaryComponent(element)
+        temporaryComponentQueue.push(element)
         return PopupContextValue
     }
 
     function close(message, haveTask) {
         console.log("close", message);
         setHiding(true)
+        clearTimeout(autoCloseTimer)
         setTimeout(() => {
             if (location.pathname.split("/").length > 2 && !haveTask)
                 navigate(location.pathname.replace(/\/[^/]*$/, ""))
             setVisibility(false)
             visibleState = false
-            setTemporaryComponent(null)
             isShowMask || setMaskVisibility(true)
             isLockScroll || setLockScroll(true)
             setPopipTitle("")
-            clearTimeout(autoCloseTimer)
+            setTemporaryComponent(null)
+            haveTask && show(taskParams)
             console.log("closed", isVisible);
-            haveTask && show({task: true})
         }, 400)
     }
 
     function show({showMask = true, lockScroll = true, autoClose = false, task = false} = {}) {
-        if (visibleState)
+        if (visibleState) {
+            taskParams = {showMask, lockScroll, autoClose, task: true}
             return close("task", true)
+        }
         if (task) {
             console.log("show", "task");
         } else {
             console.log("show", "normal");
         }
-
+        setPopipTitle(titleQueue.shift())
+        setTemporaryComponent(temporaryComponentQueue.shift())
         lockScroll || setLockScroll(false)
         showMask || setMaskVisibility(false)
         setHiding(false)

@@ -1,4 +1,4 @@
-import "/src/stylesheet/tagList.less"
+import "/src/stylesheets/tagList.less"
 function TagList({tagList}) {
     return (
         <div className="tagList">

@@ -1,4 +1,4 @@
-import "/src/stylesheet/loading.less"
+import "/src/stylesheets/content/loading.less"
 
 const Loading = () => {
     // todo 加载失败反馈

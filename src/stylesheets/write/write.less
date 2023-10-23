@@ -1,0 +1,39 @@
+.write {
+    display: flex;
+    justify-content: flex-end;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        .content#content, .cover#cover {
+            width: 100%;
+            position: relative;
+
+        }
+    }
+    @media (max-width: 450px) {
+        .editor {
+            > .title a {
+                display: flex;
+                align-items: center;
+            }
+
+            .inputArea {
+                > .previewButton {
+                    display: none;
+                }
+
+                .buttons .preview {
+                    display: block;
+                }
+
+                .options .item {
+                    gap: 15px;
+                }
+
+                .button.button-type-undo, .button.button-type-redo {
+                    display: none;
+                }
+            }
+        }
+    }
+}

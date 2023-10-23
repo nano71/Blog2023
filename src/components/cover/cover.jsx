@@ -1,19 +1,30 @@
-import "/src/stylesheet/cover.less"
-import {useContext} from "react";
-import {CurrentIndexContext} from "../../pages/index.jsx";
+import "/src/stylesheets/cover/cover.less"
+import {useContext, useEffect, useState} from "react";
+import {CoverImageIndexContext} from "../../pages/index.jsx";
+
 
 /**
  *
- * @param {string[]} imageUrls
  * @returns {JSX.Element}
  * @constructor
  */
-function Cover({imageUrls}) {
-    const {currentIndex} = useContext(CurrentIndexContext)
-    // todo 封面去除鼠标选中样式
+function Cover() {
+    const {coverImage} = useContext(CoverImageIndexContext)
+    const [image, setImage] = useState(<></>)
+
+    useEffect(() => {
+        if (coverImage) {
+            setImage(<></>)
+            setTimeout(() => {
+                setImage(<img className="preview" src={coverImage} alt=""/>)
+            }, 0)
+        }
+    }, [coverImage]);
+
+
     return (
         <div className="cover" id="cover">
-            {imageUrls.map((value, index) => <img className={currentIndex === index ? "preview active" : "preview"} src={value} key={index} alt=""/>)}
+            {image}
             <ContainerTemplate subtitle="Welcome to my" title="Blog-site"/>
         </div>)
 }

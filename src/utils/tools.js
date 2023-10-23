@@ -9,3 +9,11 @@ export function scrollToTop(scrollDuration = 200) {
         }
     }, 15);
 }
+
+/**
+ * 延迟执行
+ * @param {number} delay 延迟多少毫秒
+ * @returns {Promise<unknown>}
+ */
+export const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
