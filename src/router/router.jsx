@@ -7,6 +7,27 @@ import Category from "/src/components/category/category.jsx";
 import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 
+let p = _ => location.pathname
+export const routeTools = {
+    root: "/",
+    articles: "/articles",
+    default: "/articles",
+    articleDetails(id) {
+        return this.articles + "/" + id
+    },
+    isDefault() {
+        return p() === this.root || p() === this.default
+    },
+    front() {
+        if (this.isDefault())
+            return this.default
+        return p().match(/\w+/g)[0]
+    },
+    isArticles() {
+        return p().indexOf(this.articles) === 0
+    }
+
+}
 export default createBrowserRouter([
     {
         path: "/write",
@@ -50,19 +71,9 @@ export default createBrowserRouter([
                 element: <Recent/>,
             },
             {
-
-                path: "article",
+                path: "articles",
                 element: <Recent/>,
                 children: [
-                    {
-                        path: "page",
-                        children: [
-                            {
-                                path: ":pageIndex",
-                                element:<></>
-                            }
-                        ]
-                    },
                     {
                         path: ":articleId",
                     }

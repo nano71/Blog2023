@@ -1,18 +1,23 @@
 import "/src/stylesheets/search/search.less"
-import {useState} from "react";
+import {useRef, useState} from "react";
+import {Icon} from "@iconify/react";
+import {useNavigate} from "react-router-dom";
 
 export default function () {
     // todo 文章搜索功能
-    const [input, setInput] = useState("")
+    const input = useRef(null)
+    const navigate = useNavigate()
 
-    function onInput(event) {
-        setInput(event.target.value)
+    function search() {
+        console.log(input.current.value);
+        navigate("/articles/search?page=1&text=" + input.current.value)
     }
 
     return (
         <div className="searchBox">
             <label className={input ? " active" : ""} htmlFor="searchInput">
-                <input id="searchInput" type="text" onInput={onInput}/>
+                <input ref={input} id="searchInput" type="text"/>
+                <a onClick={search}><Icon icon="ri:search-2-line"/></a>
             </label>
         </div>
     )

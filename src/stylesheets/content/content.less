@@ -8,37 +8,7 @@
     }
     &:extend(.fadeInAnimation);
 
-    .tabBar {
-        padding: 0 4vw;
-        height: 80px;
-        align-items: center;
-        display: flex;
-        gap: 32px;
-        flex: 0 0 80px;
-        &:extend(.interactive,.enFontB);
 
-        .tabItem {
-            cursor: pointer;
-            position: relative;
-            color: #0a0a0a;
-
-            &:after {
-                content: "";
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 0;
-                border-bottom: 3px solid @themeColor;
-                //border-bottom: 3px solid transparent;
-                transition: width 0.4s ease-in-out;
-            }
-
-            &.active:after, &:hover:after {
-                width: 100%;
-
-            }
-        }
-    }
 
     .tab {
         display: none;

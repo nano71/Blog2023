@@ -14,11 +14,12 @@ export const Footer = () => {
 
     return (
         <footer className="footer">
-            <a href="https://github.com/nano71" title="GitHub"><Icon icon="ri:github-fill"/></a>
-            <a href="https://codepen.io/Lightning-Development-Team" title="CodePen"><Icon icon="ri:codepen-fill"/></a>
-            <a href="https://nano71.zcool.com.cn" title="ZCool"><Icon icon="ri:zcool-fill"/></a>
-            <a href="mailto://master@nano71.com" title="E-Mail"><Icon icon="ri:at-fill"/></a>
+            <a href="https://github.com/nano71" target="_blank" title="GitHub"><Icon icon="ri:github-fill"/></a>
+            <a href="https://codepen.io/Lightning-Development-Team" target="_blank" title="CodePen"><Icon icon="ri:codepen-fill"/></a>
+            <a href="https://nano71.zcool.com.cn" target="_blank" title="ZCool"><Icon icon="ri:zcool-fill"/></a>
+            <a href="mailto://master@nano71.com" target="_blank" title="E-Mail"><Icon icon="ri:at-fill"/></a>
             <a onClick={goWrite} title="Writing"><Icon icon="ri:pen-nib-fill"/></a>
+            <a href="https://nano71.com/resume" target="_blank" title="Resume"><Icon icon="academicons:cv"/></a>
         </footer>
     )
 }

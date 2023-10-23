@@ -20,6 +20,7 @@ let autoCloseTimer
 let taskParams
 let titleQueue = []
 let temporaryComponentQueue = []
+let pathCache = ""
 export default function PopupProvider({children}) {
     const navigate = useNavigate()
     const [isHiding, setHiding] = useState(false)
@@ -29,6 +30,7 @@ export default function PopupProvider({children}) {
     const [isShowMask, setMaskVisibility] = useState(true)
     const [isLockScroll, setLockScroll] = useState(true)
     const [popipTitle, setPopipTitle] = useState("")
+
     PopupContextValue = {
         isVisible,
         setVisibility,
@@ -66,7 +68,7 @@ export default function PopupProvider({children}) {
         clearTimeout(autoCloseTimer)
         setTimeout(() => {
             if (location.pathname.split("/").length > 2 && !haveTask)
-                navigate(location.pathname.replace(/\/[^/]*$/, ""))
+                navigate(location.pathname.replace(/\/[^/]*$/, "") + pathCache)
             setVisibility(false)
             visibleState = false
             isShowMask || setMaskVisibility(true)
@@ -83,6 +85,7 @@ export default function PopupProvider({children}) {
             taskParams = {showMask, lockScroll, autoClose, task: true}
             return close("task", true)
         }
+        pathCache = location.search
         if (task) {
             console.log("show", "task");
         } else {

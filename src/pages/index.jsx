@@ -4,8 +4,9 @@ import {getRecentArticles, getTagList} from "../utils/http.js";
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {useImmer} from "use-immer";
+import {routeTools} from "../router/router.jsx";
 
 /**
  *
@@ -18,27 +19,29 @@ export const TagListContext = createContext(null)
 
 let fetchingArticles = false
 let fetchingTagList = false
+let currentPage = 1
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
     const [tagList, setTagList] = useState([])
     const [coverImage, setCoverImage] = useState("")
+    let [searchParams, setSearchParams] = useSearchParams();
     const params = useParams()
-
     /**
      * 获取文章列表数据
      * @param {string} message debug消息
      * @returns {void}
      */
     async function getArticleListData(message) {
-        if (fetchingArticles)
+        if (fetchingArticles || currentPage === searchParams.get("page")?.toInt())
             return
+        currentPage = searchParams.get("page")?.toInt() || 1
         fetchingArticles = true
         setArticleListObject(draft => {
             draft.isLoading = true
         })
         console.log("getArticleListData", message);
-        const result = await getRecentArticles(8, parseInt(params.pageIndex || 1))
+        const result = await getRecentArticles(8, currentPage)
         if (result) {
             setArticleListObject(result)
         } else {
@@ -67,7 +70,7 @@ function Index() {
     }, [])
 
     useEffect(() => {
-        if (params.pageIndex && location.pathname.includes("/article/")) {
+        if (searchParams.has("page") && routeTools.isArticles()) {
             getArticleListData("onUpdate")
         }
     }, [params])

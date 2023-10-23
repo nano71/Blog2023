@@ -1,13 +1,16 @@
 import {useContext, useEffect} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {TabContext} from "./content.jsx";
 import Search from "./searchBox.jsx";
+import {routeTools} from "../../router/router.jsx";
+import "/src/stylesheets/content/tabBar.less"
 
 const TabBar = () => {
     const {active, setActive} = useContext(TabContext);
     const navigate = useNavigate()
-    const routeLinks = ["article"]
-    const tabItems = ["Recent", "Category", "Search", "About"];
+    const routeLinks = [routeTools.articles]
+
+    const tabItems = ["Recent", "Category", "Guestbook"];
     useEffect(() => {
         console.log("useEffect");
         for (let i in tabItems) {
