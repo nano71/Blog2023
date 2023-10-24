@@ -17,3 +17,9 @@ export function scrollToTop(scrollDuration = 200) {
  */
 export const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
+String.prototype.toInt = function () {
+    return parseInt(this.replace(/\D+/g, "") || 0)
+}
+
+
+

@@ -36,8 +36,21 @@
  */
 
 /**
- * @typedef {Object} responseData
+ * @typedef {Object} ResponseData
  * @property {any} data
  * @property {string} message
  * @property {number} code
  */
+
+/**
+ * @typedef {Object} ArticlesResponseData
+ * @property {{list:Article[],total:number ,limit:number,page:number}|false} data
+ * @property {string} message
+ * @property {number} code
+ */
+
+/**
+ * @typedef {Object} ArticleListObject
+ * @type {{total: number, limit: number, page: number, list: Article[],isLoading:boolean}|false}
+ */
+

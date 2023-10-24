@@ -11,15 +11,10 @@
 
 
     .tab {
-        display: none;
         flex: 1;
-
-        &.active {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            &:extend(.fadeInAnimation);
-        }
-
-    }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        &:extend(.fadeInAnimation);
+     }
 }

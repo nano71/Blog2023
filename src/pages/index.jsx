@@ -1,47 +1,56 @@
 import "/src/stylesheets/index.less"
 import React, {createContext, useEffect, useState} from "react";
-import {getRecentArticles, getTagList} from "../utils/http.js";
+import {getRecentArticles, getTagList, searchArticles} from "../utils/http.js";
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {routeTools} from "../router/router.jsx";
 
-/**
- *
- * @type {{total: number, limit: number, page: number, list: Article[],isLoading:boolean}}
- */
-let recentArticlesContextValue = {isLoading: false, list: [], total: 0, limit: 0, page: 0}
+
+let recentArticlesContextValue = {isLoading: true, list: [], total: 0, limit: 0, page: 0}
 export const ArticleListObjectContext = createContext(recentArticlesContextValue)
 export const CoverImageIndexContext = createContext(null)
 export const TagListContext = createContext(null)
 
 let fetchingArticles = false
 let fetchingTagList = false
-let currentPage = 1
+let pageIndex = 1
+const resultLimit = 8
+let previousRoutePath = ""
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
     const [tagList, setTagList] = useState([])
     const [coverImage, setCoverImage] = useState("")
-    let [searchParams, setSearchParams] = useSearchParams();
     const params = useParams()
+    const location = useLocation()
+
     /**
      * 获取文章列表数据
      * @param {string} message debug消息
+     * @param {string} query 搜索文本
      * @returns {void}
      */
-    async function getArticleListData(message) {
-        if (fetchingArticles || currentPage === searchParams.get("page")?.toInt())
+    async function getArticleListData({message = "", query = ""} = {}) {
+        if (fetchingArticles)
             return
-        currentPage = searchParams.get("page")?.toInt() || 1
         fetchingArticles = true
         setArticleListObject(draft => {
             draft.isLoading = true
         })
-        console.log("getArticleListData", message);
-        const result = await getRecentArticles(8, currentPage)
+        message && console.log("getArticleListData", message);
+        pageIndex = parseInt(params.pageIndex || 1)
+        /**
+         * @type {ArticleListObject}
+         */
+        let result
+        if (query) {
+            result = await searchArticles(query, resultLimit, pageIndex)
+        } else {
+            result = await getRecentArticles(resultLimit, pageIndex)
+        }
         if (result) {
             setArticleListObject(result)
         } else {
@@ -65,14 +74,22 @@ function Index() {
     }
 
     useEffect(() => {
-        getArticleListData("initial")
+        if (params.query && routeTools.isSearch())
+            getArticleListData({message: "onUpdate", query: params.query})
+        else
+            getArticleListData({message: "initial"})
         getTagListData()
     }, [])
 
     useEffect(() => {
-        if (searchParams.has("page") && routeTools.isArticles()) {
-            getArticleListData("onUpdate")
+        console.log("location.key", location.key);
+        if (routeTools.isSearch(previousRoutePath) || params.pageIndex && routeTools.isArticles() && (pageIndex !== params.pageIndex.toInt())) {
+            getArticleListData({message: "onUpdate recent"})
         }
+        if (params.query && routeTools.isSearch()) {
+            getArticleListData({message: "onUpdate search", query: params.query})
+        }
+        previousRoutePath = location.pathname
     }, [params])
 
 

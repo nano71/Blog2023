@@ -1,29 +1,38 @@
 import {useContext, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {TabContext} from "./content.jsx";
 import Search from "./searchBox.jsx";
 import {routeTools} from "../../router/router.jsx";
 import "/src/stylesheets/content/tabBar.less"
 
 const TabBar = () => {
-    const {active, setActive} = useContext(TabContext);
+    const {active, setTabActive} = useContext(TabContext);
     const navigate = useNavigate()
+    const location = useLocation()
     const routeLinks = [routeTools.articles]
 
     const tabItems = ["Recent", "Category", "Guestbook"];
     useEffect(() => {
-        console.log("useEffect");
+        automaticRouteSelection()
+    }, [])
+
+    function automaticRouteSelection() {
+        console.log("automaticRouteSelection");
+        if (routeTools.isSearch()) {
+            setTabActive(-1)
+            return
+        }
         for (let i in tabItems) {
             let path = (routeLinks[i] || tabItems[i]).toLowerCase()
             if (location.pathname.includes(path)) {
-                setActive(parseInt(i))
+                setTabActive(i.toInt())
                 break
             }
         }
-    }, [])
+    }
 
     function switchTabItem(i, item) {
-        setActive(i)
+        setTabActive(i)
         navigate("/" + (routeLinks[i] || item.toLowerCase()))
     }
 

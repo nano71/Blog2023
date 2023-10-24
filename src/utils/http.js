@@ -9,7 +9,7 @@ const baseStaticResourceURL = "http://localhost:8080"
  *  发起一个post请求
  * @param {string} url 请求地址
  * @param {Object} data 请求体
- * @returns {Promise<responseData>} 响应体包含code,data,message
+ * @returns {Promise<ResponseData>} 响应体包含code,data,message
  */
 async function r(url, data = undefined) {
     return new Promise(resolve => {
@@ -27,12 +27,12 @@ async function r(url, data = undefined) {
  * 获取文章列表
  * @param {number} limit 返回多少项
  * @param {number} page 第几页, 1开始
- * @returns {Promise<{list:Article[],total:number ,limit:number,page:number,isLoading:false}|false>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
 export async function getRecentArticles(limit = 8, page = 1) {
     /**
      *
-     * @type {{data: {list:Article[],total:number ,limit:number,page:number}|false, code: number, message: string}}
+     * @type {{data: ArticlesResponseData, code: number, message: string}}
      */
     const response = await r("/getArticleList", {
         limit,
@@ -112,5 +112,35 @@ export async function publishArticle({title, content, description, createTime, c
     const response = await r("/publishArticle", {
         title, content, description, createTime, coverImage, tags: tags.toString()
     })
+    return response.data
+}
+
+/**
+ * 获取文章列表
+ * @param {string} query
+ * @param {number} limit 返回多少项
+ * @param {number} page 第几页, 1开始
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
+ */
+export async function searchArticles(query, limit, page) {
+    /**
+     *
+     * @type {{data: ArticlesResponseData, code: number, message: string}}
+     */
+    const response = await r("/searchArticles", {
+        query,
+        limit,
+        page: page - 1
+    })
+
+    if (response.data) {
+        for (let object of response.data.list) {
+            sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
+        }
+        response.data.limit = limit
+        response.data.page = page
+        response.data.isLoading = false
+    }
+
     return response.data
 }

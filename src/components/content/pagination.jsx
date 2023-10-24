@@ -1,32 +1,38 @@
 import "/src/stylesheets/content/pagination.less"
 import {Icon} from "@iconify/react";
-import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {routeTools} from "../../router/router.jsx";
 
 export default function Pagination({max}) {
     const navigate = useNavigate()
     const params = useParams()
     const [pageIndex, setPageIndex] = useState(1)
-    let [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-        setPageIndex(searchParams.get("page")?.toInt() || 1)
+        setPageIndex(parseInt(params.pageIndex || 1))
     }, [params]);
 
     function previous() {
         if (pageIndex <= 1)
             return
-        goto(false)
+        let path = "p/" + (pageIndex - 1)
+
+        navigate(pathConcatenation(path))
     }
 
-    function goto(isNext = true) {
-        setSearchParams({page: (pageIndex + (isNext ? 1 : -1)).toString()})
+    function pathConcatenation(path) {
+        if (routeTools.isDefault()) {
+            path = routeTools.front() + "/" + path
+        }
+        return path
     }
 
     function next() {
         if (pageIndex >= max)
             return
-        goto()
+        let path = "p/" + (pageIndex + 1)
+        navigate(pathConcatenation(path))
     }
 
     return <div className="pagination">

@@ -9,14 +9,14 @@ export const TabContext = createContext(null);
 
 // 父组件
 const Content = ({useTabBar = true}) => {
-    const [active, setActive] = useState(0);
+    const [active, setTabActive] = useState(0);
     return (
         <div className="content" id="content">
-            <TabContext.Provider value={{active, setActive}}>
+            <TabContext.Provider value={{active, setTabActive}}>
                 {useTabBar ? <TabBar/> : ""}
                 <Outlet/>
                 <Footer/>
-                
+
             </TabContext.Provider>
         </div>
     );

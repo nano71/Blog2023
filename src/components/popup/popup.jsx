@@ -21,6 +21,8 @@ let taskParams
 let titleQueue = []
 let temporaryComponentQueue = []
 let pathCache = ""
+let callback4Close = () => {
+}
 export default function PopupProvider({children}) {
     const navigate = useNavigate()
     const [isHiding, setHiding] = useState(false)
@@ -67,29 +69,38 @@ export default function PopupProvider({children}) {
         setHiding(true)
         clearTimeout(autoCloseTimer)
         setTimeout(() => {
-            if (location.pathname.split("/").length > 2 && !haveTask)
-                navigate(location.pathname.replace(/\/[^/]*$/, "") + pathCache)
             setVisibility(false)
             visibleState = false
             isShowMask || setMaskVisibility(true)
             isLockScroll || setLockScroll(true)
             setPopipTitle("")
             setTemporaryComponent(null)
-            haveTask && show(taskParams)
+            if (haveTask) {
+                show(taskParams)
+            } else {
+                callback4Close()
+            }
             console.log("closed", isVisible);
         }, 400)
     }
 
-    function show({showMask = true, lockScroll = true, autoClose = false, task = false} = {}) {
+    function show({
+                      showMask = true,
+                      lockScroll = true,
+                      autoClose = false,
+                      task = false,
+                      onClose = () => {
+                      }
+                  } = {}) {
         if (visibleState) {
-            taskParams = {showMask, lockScroll, autoClose, task: true}
+            taskParams = {showMask, lockScroll, autoClose, task: true, onClose}
             return close("task", true)
         }
         pathCache = location.search
         if (task) {
-            console.log("show", "task");
+            console.log("popup.show", "task");
         } else {
-            console.log("show", "normal");
+            console.log("popup.show", "normal");
         }
         setPopipTitle(titleQueue.shift())
         setTemporaryComponent(temporaryComponentQueue.shift())
@@ -98,7 +109,7 @@ export default function PopupProvider({children}) {
         setHiding(false)
         setVisibility(true)
         visibleState = true
-
+        callback4Close = onClose
         if (autoClose) {
             autoCloseTimer && clearTimeout(autoCloseTimer)
             autoCloseTimer = setTimeout(() => {
