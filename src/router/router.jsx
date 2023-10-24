@@ -37,6 +37,14 @@ export const routeTools = {
     }
 
 }
+
+function hiddenError(errorMessage) {
+    const error = new Error(errorMessage)
+    error.stack = undefined
+    error.cause = undefined
+    return error
+}
+
 export default createBrowserRouter([
     {
         path: "/write",
@@ -49,11 +57,7 @@ export default createBrowserRouter([
             if (key === "1742") {
                 return null
             }
-            const errorMessage = "You don't have permission to perform actions on this page"
-            const permissionError = new Error(errorMessage)
-            permissionError.stack = undefined
-            permissionError.cause = undefined
-            throw permissionError
+            throw hiddenError("Access denied, there are always some doors closed to you.")
         },
         children: [
             {
@@ -99,6 +103,7 @@ export default createBrowserRouter([
                 children: [
                     {
                         path: ":query",
+                        element: <></>,
                         children: [
                             {
                                 path: "p/:pageIndex",
@@ -111,6 +116,13 @@ export default createBrowserRouter([
             {
                 path: "category",
                 element: <Category/>,
+            },
+            {
+                path: "guestbook",
+                loader() {
+                    throw hiddenError("It may be accessible later, but not now.")
+                },
+                element: <></>,
             }
         ]
     }

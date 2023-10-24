@@ -56,6 +56,7 @@ function Index() {
         } else {
             // todo 文章列表获取失败的处理
         }
+        console.log(result);
         fetchingArticles = false
     }
 
@@ -83,11 +84,10 @@ function Index() {
 
     useEffect(() => {
         console.log("location.key", location.key);
-        if (routeTools.isSearch(previousRoutePath) || params.pageIndex && routeTools.isArticles() && (pageIndex !== params.pageIndex.toInt())) {
-            getArticleListData({message: "onUpdate recent"})
-        }
         if (params.query && routeTools.isSearch()) {
             getArticleListData({message: "onUpdate search", query: params.query})
+        } else if (routeTools.isSearch(previousRoutePath) || params.pageIndex && routeTools.isArticles() && (pageIndex !== params.pageIndex.toInt())) {
+            getArticleListData({message: "onUpdate recent"})
         }
         previousRoutePath = location.pathname
     }, [params])
