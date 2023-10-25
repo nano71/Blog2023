@@ -83,6 +83,7 @@ export default function PopupProvider({children}) {
     }
 
     function show({
+                      message = "",
                       showMask = true,
                       lockScroll = true,
                       autoClose = false,
@@ -90,14 +91,15 @@ export default function PopupProvider({children}) {
                       onClose = () => {
                       }
                   } = {}) {
+        console.log("visibleState:", visibleState);
         if (visibleState) {
-            taskParams = {showMask, lockScroll, autoClose, task: true, onClose}
+            taskParams = {message: "task", showMask, lockScroll, autoClose, task: true, onClose}
             return close("task", true)
         }
         if (task) {
-            console.info("popup.show", "task");
+            console.info("popup.show", "task", "message:", message);
         } else {
-            console.info("popup.show", "normal");
+            console.info("popup.show", "normal", "message:", message);
         }
         setPopipTitle(titleQueue.shift())
         setTemporaryComponent(temporaryComponentQueue.shift())

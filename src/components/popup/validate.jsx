@@ -22,7 +22,7 @@ function Validate() {
                 <div className="subtitle">
                     Two-factor authentication
                 </div>
-                <a className="close" onClick={popup.close}><Icon icon="ri:close-fill"/></a>
+                <a className="close" onClick={_ => popup.close()}><Icon icon="ri:close-fill"/></a>
             </div>
             <div className="inputArea">
                 <h1>Authentication</h1>

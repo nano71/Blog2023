@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/font.css">
     <title>部落格 - nano71.com</title>
 </head>
+<script>
+    if (location.pathname === "/")
+        location.href = location.pathname + "articles"
+</script>
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>

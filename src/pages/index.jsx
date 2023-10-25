@@ -4,9 +4,9 @@ import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag} from
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
-import {routeTools} from "../router/router.jsx";
+import {routeTools} from "../utils/tools.js";
 
 
 const recentArticlesContextValue = {
@@ -14,7 +14,7 @@ const recentArticlesContextValue = {
 }
 
 const articleListRequestStateContextValue = {code: 0, message: "", data: null}
-export const ArticleListObjectContext = createContext(recentArticlesContextValue)
+export const ArticleListObjectContext = createContext(null)
 export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
 export const CoverImageIndexContext = createContext(null)
 export const TagListContext = createContext(null)
@@ -23,7 +23,7 @@ let fetchingArticles = false
 let fetchingTagList = false
 const resultLimit = 8
 let previousAction = ""
-let previousRoute = ""
+let previousRoute = "initial"
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
@@ -31,6 +31,7 @@ function Index() {
     const [coverImage, setCoverImage] = useState("")
     const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
     const params = useParams()
+    const navigate = useNavigate()
 
     useEffect(() => {
         getTagListData()
@@ -57,13 +58,13 @@ function Index() {
         let result
         if (tag) {
             result = await searchArticlesByTag(tag, resultLimit, page)
-            previousAction = "tag"
+            previousAction = `tag-${tag}-${page}`
         } else if (query) {
             result = await searchArticles(query, resultLimit, page)
-            previousAction = "query"
+            previousAction = `query-${query}-${page}`
         } else {
             result = await getRecentArticles(resultLimit, page)
-            previousAction = "recent"
+            previousAction = `recent-${page}`
         }
 
         setArticleListObject(draft => {
@@ -91,16 +92,20 @@ function Index() {
         }
     }
 
-    // todo 路由待完善
+    // todo 路由待完善, 1:上一次搜索和本次搜索如果相同会不命中
     useEffect(() => {
-        if (params.articleId) {
+        console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
+        if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
             return;
         }
-        if (routeTools.isCategory() || previousRoute === "article" || previousAction === "recent" && routeTools.isDefault()) {
+        if (routeTools.isCategory() || previousRoute === "article" || previousAction === ("recent-" + (params.pageIndex || 1))) {
             previousRoute = location.pathname
             return
         }
+        console.info("location hit", "previousRoute:", previousRoute, "previousAction:", previousAction);
+        previousRoute = location.pathname
+
         let tag = undefined
         if (params.query?.indexOf("Tag:") === 0) {
             tag = params.query.replace("Tag:", "")

@@ -29,5 +29,52 @@ console.log = function (...args) {
     consoleLog(...args)
 }
 console.info = function (...args) {
-    consoleLog("%c" + (args.join(" ")), "padding:2px 4px;color:white;background:dodgerblue;")
+    consoleInfo("%c" + (args.join(" ")), "padding:2px 4px;color:white;background:dodgerblue;")
+}
+
+let p = _ => location.pathname
+export const routeTools = {
+    root: "/",
+    articles: "/articles",
+    default: "/articles",
+    search: "/search",
+    category: "/category",
+    articleDetails(id) {
+        return this.articles + "/" + id
+    },
+    searchArticle(search) {
+        return this.search + "/" + search
+    },
+    isSearch() {
+        return p().indexOf(this.search) === 0
+    },
+    isCategory() {
+        return p().indexOf(this.category) === 0
+    },
+    isSearchByTag(params) {
+        return params.query.indexOf("Tag:") === 0
+    },
+    /**
+     *
+     * @param {number|string} current
+     * @param {number|string} target
+     */
+    isCurrentIndex(current, target) {
+        return current.toInt() === target.toInt()
+    },
+    isRoot() {
+        return p() === this.root
+    },
+    isDefault() {
+        return p() === this.root || p() === this.default
+    },
+    front() {
+        if (this.isDefault())
+            return this.default
+        return p().match(/\w+/g)[0]
+    },
+    isArticles() {
+        return p().indexOf(this.articles) === 0 || p() === this.root
+    }
+
 }

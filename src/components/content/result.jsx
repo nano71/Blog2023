@@ -25,6 +25,7 @@ function Result() {
     }
 
     useEffect(() => {
+        console.log("result render");
         switch (articleRequestState.code) {
             case 504:
                 setView(timeout())

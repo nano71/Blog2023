@@ -21,7 +21,7 @@ function Window({children}) {
             <div className="subtitle">
                 {popup.title() || titles[Object.keys(titles).find(value => location.pathname.includes(value))]}
             </div>
-            <a className="close" onClick={popup.close}><Icon icon="ri:close-fill"/></a>
+            <a className="close" onClick={_ => popup.close()}><Icon icon="ri:close-fill"/></a>
         </div>
         {children}
     </div>

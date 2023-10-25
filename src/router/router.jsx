@@ -20,49 +20,7 @@ const pageRouteTree = [
         path: ":articleId"
     }
 ]
-let p = _ => location.pathname
-export const routeTools = {
-    root: "/",
-    articles: "/articles",
-    default: "/articles",
-    search: "/search",
-    category: "/category",
-    articleDetails(id) {
-        return this.articles + "/" + id
-    },
-    searchArticle(search) {
-        return this.search + "/" + search
-    },
-    isSearch() {
-        return p().indexOf(this.search) === 0
-    },
-    isCategory() {
-        return p().indexOf(this.category) === 0
-    },
-    isSearchByTag(params) {
-        return params.query.indexOf("Tag:") === 0
-    },
-    /**
-     *
-     * @param {number|string} current
-     * @param {number|string} target
-     */
-    isCurrentIndex(current, target) {
-        return current.toInt() === target.toInt()
-    },
-    isDefault() {
-        return p() === this.root || p() === this.default
-    },
-    front() {
-        if (this.isDefault())
-            return this.default
-        return p().match(/\w+/g)[0]
-    },
-    isArticles() {
-        return p().indexOf(this.articles) === 0 || p() === this.root
-    }
 
-}
 
 function hiddenError(errorMessage) {
     const error = new Error(errorMessage)

@@ -2,14 +2,14 @@ import "/src/stylesheets/content/pagination.less"
 import {Icon} from "@iconify/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {routeTools} from "../../router/router.jsx";
+import {routeTools} from "../../utils/tools.js";
 
 export default function Pagination({max}) {
     const navigate = useNavigate()
     const params = useParams()
     const [pageIndex, setPageIndex] = useState(1)
     useEffect(() => {
-        params.pageIndex && setPageIndex(params.pageIndex)
+        params.pageIndex && setPageIndex(params.pageIndex.toInt())
     }, [params]);
 
     function previous() {

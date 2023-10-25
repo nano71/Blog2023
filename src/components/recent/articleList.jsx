@@ -6,7 +6,6 @@ import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
-import {routeTools} from "../../router/router.jsx";
 
 function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)
@@ -16,10 +15,11 @@ function ArticleList() {
     const params = useParams()
 
     useEffect(() => {
-        console.log("ArticleList mounted");
+        console.log("ArticleList render");
         popup.loadComponent(<Window><ArticleDetails/></Window>)
         if (params.articleId) {
             popup.show({
+                message: "firstShow",
                 onClose() {
                     navigate(-1)
                 }
@@ -29,6 +29,7 @@ function ArticleList() {
 
     function readArticle(id) {
         popup.show({
+            message: "readArticle",
             onClose() {
                 navigate(-1)
             }

@@ -2,7 +2,7 @@ import "/src/stylesheets/search/search.less"
 import {useContext, useEffect, useRef, useState} from "react";
 import {Icon} from "@iconify/react";
 import {useNavigate, useParams} from "react-router-dom";
-import {routeTools} from "../../router/router.jsx";
+import {routeTools} from "../../utils/tools.js";
 import {TabContext} from "./content.jsx";
 
 let previousSearchText = ""
