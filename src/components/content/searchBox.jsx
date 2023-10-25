@@ -16,11 +16,8 @@ export default function () {
     const input = useRef(null)
 
     useEffect(() => {
-        previousSearchText = params.query || ""
-        if (previousSearchText) {
-            setInputValue(previousSearchText)
-        }
-    }, []);
+        setInputValue(previousSearchText = params.query)
+    }, [params]);
 
     function search() {
         if (inputValue) {
@@ -32,8 +29,11 @@ export default function () {
         } else {
             setTabActive(0)
             navigate(routeTools.root)
-            input.current.blur()
         }
+        setTimeout(() => {
+            input.current.blur()
+        }, 0)
+
     }
 
     function onInput(e) {

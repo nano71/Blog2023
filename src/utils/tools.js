@@ -20,6 +20,9 @@ export const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, del
 String.prototype.toInt = function () {
     return parseInt(this.replace(/\D+/g, "") || 0)
 }
+Number.prototype.toInt = function () {
+    return this
+}
 
 
 

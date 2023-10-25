@@ -1,6 +1,6 @@
 import "/src/stylesheets/index.less"
 import React, {createContext, useEffect, useState} from "react";
-import {getRecentArticles, getTagList, searchArticles} from "../utils/http.js";
+import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag} from "../utils/http.js";
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
@@ -9,14 +9,18 @@ import {useImmer} from "use-immer";
 import {routeTools} from "../router/router.jsx";
 
 
-let recentArticlesContextValue = {isLoading: true, list: [], total: 0, limit: 0, page: 0}
+const recentArticlesContextValue = {
+    isLoading: true, list: [], total: 0, limit: 0, page: 0
+}
+const articleListRequestStateContextValue = {code: 0, message: "", data: null}
 export const ArticleListObjectContext = createContext(recentArticlesContextValue)
+export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
 export const CoverImageIndexContext = createContext(null)
 export const TagListContext = createContext(null)
 
 let fetchingArticles = false
 let fetchingTagList = false
-let pageIndex = 1
+let currentPageIndex = 1
 const resultLimit = 8
 let previousRoutePath = ""
 
@@ -24,16 +28,18 @@ function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
     const [tagList, setTagList] = useState([])
     const [coverImage, setCoverImage] = useState("")
+    const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
+
     const params = useParams()
     const location = useLocation()
 
     /**
      * 获取文章列表数据
      * @param {string} message debug消息
-     * @param {string} query 搜索文本
+     * @param {boolean} byTag 通过标签搜索
      * @returns {void}
      */
-    async function getArticleListData({message = "", query = ""} = {}) {
+    async function getArticleListData({message = "", byTag = false} = {}) {
         if (fetchingArticles)
             return
         fetchingArticles = true
@@ -41,22 +47,27 @@ function Index() {
             draft.isLoading = true
         })
         message && console.log("getArticleListData", message);
-        pageIndex = parseInt(params.pageIndex || 1)
-        /**
-         * @type {ArticleListObject}
-         */
+        currentPageIndex = parseInt(params.pageIndex || 1)
+
         let result
+        let query = params.query
         if (query) {
-            result = await searchArticles(query, resultLimit, pageIndex)
+            if (byTag) {
+                result = await searchArticlesByTag(query.replace("Tag:", ""), resultLimit, currentPageIndex)
+            } else {
+                result = await searchArticles(query, resultLimit, currentPageIndex)
+            }
         } else {
-            result = await getRecentArticles(resultLimit, pageIndex)
+            result = await getRecentArticles(resultLimit, currentPageIndex)
         }
-        if (result) {
-            setArticleListObject(result)
+        if (result[0]) {
+            setArticleListObject(result[0])
         } else {
-            // todo 文章列表获取失败的处理
+            setArticleListObject(draft => {
+                draft.isLoading = false
+            })
+            setArticleListRequestState(result[1])
         }
-        console.log(result);
         fetchingArticles = false
     }
 
@@ -76,7 +87,7 @@ function Index() {
 
     useEffect(() => {
         if (params.query && routeTools.isSearch())
-            getArticleListData({message: "onUpdate", query: params.query})
+            getArticleListData({message: "onUpdate", query: params.query, byTag: params.query.indexOf("Tag:") === 0})
         else
             getArticleListData({message: "initial"})
         getTagListData()
@@ -84,13 +95,21 @@ function Index() {
 
     useEffect(() => {
         console.log("location.key", location.key);
-        if (params.query && routeTools.isSearch()) {
-            getArticleListData({message: "onUpdate search", query: params.query})
-        } else if (routeTools.isSearch(previousRoutePath) || params.pageIndex && routeTools.isArticles() && (pageIndex !== params.pageIndex.toInt())) {
+        if (isSearchable()) {
+            getArticleListData({message: "onUpdate search", byTag: routeTools.isSearchByTag(params)})
+        } else if (routeTools.isSearch(previousRoutePath) || haveIndex() && routeTools.isArticles() && !routeTools.isCurrentIndex(currentPageIndex, params.pageIndex)) {
             getArticleListData({message: "onUpdate recent"})
         }
         previousRoutePath = location.pathname
     }, [params])
+
+    function isSearchable() {
+        return !!params.query && routeTools.isSearch()
+    }
+
+    function haveIndex() {
+        return !!params.pageIndex
+    }
 
 
     return (<>
@@ -99,7 +118,9 @@ function Index() {
                 <ArticleListObjectContext.Provider value={articleListObject}>
                     <CoverImageIndexContext.Provider value={{coverImage, setCoverImage}}>
                         <Cover/>
-                        <TagListContext.Provider value={tagList}><Content/></TagListContext.Provider>
+                        <ArticleListRequestStateContext.Provider value={articleListRequestState}>
+                            <TagListContext.Provider value={tagList}><Content/></TagListContext.Provider>
+                        </ArticleListRequestStateContext.Provider>
                     </CoverImageIndexContext.Provider>
                 </ArticleListObjectContext.Provider>
             </div>

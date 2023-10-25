@@ -1,17 +1,21 @@
 import ArticleList from "./articleList.jsx";
-import {Outlet} from "react-router-dom";
 import Loading from "/src/components/content/loading.jsx";
-import React, {useContext} from "react";
-import {ArticleListObjectContext} from "../../pages/index.jsx";
+import React, {useContext, useEffect} from "react";
+import {ArticleListObjectContext, ArticleListRequestStateContext} from "../../pages/index.jsx";
 import Result from "../content/result.jsx";
 
 export default () => {
     const recentArticlesObject = useContext(ArticleListObjectContext)
-    return <>{
-        recentArticlesObject.isLoading ? <Loading/> :
-            <div className="tab">
-                {!recentArticlesObject.total ? <Result/> : <ArticleList/>}
-            </div>}
-        <Outlet/></>
+
+    function List() {
+        if (recentArticlesObject.total)
+            return <div className="tab"><ArticleList/></div>
+        return <Result/>
+    }
+
+    return (
+        recentArticlesObject.isLoading ? <Loading/> : <List/>
+    )
+
 }
 

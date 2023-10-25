@@ -22,7 +22,9 @@ export default function Pagination({max}) {
     }
 
     function pathConcatenation(path) {
-        if (routeTools.isDefault()) {
+        if (routeTools.isSearch()) {
+            path = routeTools.search + "/" + params.query + "/" + path
+        } else if (routeTools.isDefault()) {
             path = routeTools.front() + "/" + path
         }
         return path

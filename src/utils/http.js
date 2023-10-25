@@ -27,7 +27,7 @@ async function r(url, data = undefined) {
  * 获取文章列表
  * @param {number} limit 返回多少项
  * @param {number} page 第几页, 1开始
- * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
  */
 export async function getRecentArticles(limit = 8, page = 1) {
     /**
@@ -39,16 +39,8 @@ export async function getRecentArticles(limit = 8, page = 1) {
         page: page - 1
     })
 
-    if (response.data) {
-        for (let object of response.data.list) {
-            sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
-        }
-        response.data.limit = limit
-        response.data.page = page
-        response.data.isLoading = false
-    }
+    return processResponse(response, limit, page)
 
-    return response.data
 }
 
 /**
@@ -120,7 +112,7 @@ export async function publishArticle({title, content, description, createTime, c
  * @param {string} query
  * @param {number} limit 返回多少项
  * @param {number} page 第几页, 1开始
- * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
  */
 export async function searchArticles(query, limit, page) {
     /**
@@ -132,7 +124,37 @@ export async function searchArticles(query, limit, page) {
         limit,
         page: page - 1
     })
+    return processResponse(response, limit, page)
+}
 
+/**
+ * 获取文章列表, 通过Tag
+ * @param {string} tag
+ * @param {number} limit 返回多少项
+ * @param {number} page 第几页, 1开始
+ * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
+ */
+export async function searchArticlesByTag(tag, limit, page) {
+    /**
+     *
+     * @type {{data: ArticlesResponseData, code: number, message: string}}
+     */
+    const response = await r("/searchArticlesByTag", {
+        tag,
+        limit,
+        page: page - 1
+    })
+    return processResponse(response, limit, page)
+}
+
+/**
+ * 数据后处理
+ * @param {ResponseData} response
+ * @param {number} limit 返回多少项
+ * @param {number} page 第几页, 1开始
+ * @return {[ArticleListObject, ResponseData]}
+ */
+function processResponse(response, limit, page) {
     if (response.data) {
         for (let object of response.data.list) {
             sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
@@ -141,6 +163,5 @@ export async function searchArticles(query, limit, page) {
         response.data.page = page
         response.data.isLoading = false
     }
-
-    return response.data
+    return [response.data, response]
 }

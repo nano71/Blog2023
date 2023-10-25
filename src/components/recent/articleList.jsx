@@ -7,7 +7,6 @@ import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
 import {routeTools} from "../../router/router.jsx";
-import Result from "../content/result.jsx";
 
 function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)

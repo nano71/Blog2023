@@ -56,7 +56,11 @@ export default function Editor() {
     function preview() {
         localStorage.setItem("draft", JSON.stringify(preprocessedData()))
         navigate("/write/preview")
-        popup.show()
+        popup.show({
+            onClose() {
+                navigate(-1)
+            }
+        })
     }
 
     async function uploadImage(file) {

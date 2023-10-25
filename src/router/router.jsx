@@ -24,6 +24,17 @@ export const routeTools = {
             return path.indexOf(this.search) === 0
         return p().includes(this.search)
     },
+    isSearchByTag(params) {
+        return params.query.indexOf("Tag:") === 0
+    },
+    /**
+     *
+     * @param {number|string} current
+     * @param {number|string} target
+     */
+    isCurrentIndex(current, target) {
+        return current.toInt() === target.toInt()
+    },
     isDefault() {
         return p() === this.root || p() === this.default
     },
@@ -88,12 +99,10 @@ export default createBrowserRouter([
                 element: <Recent/>,
                 children: [
                     {
-                        path: "p/:pageIndex",
-                        element: <></>
+                        path: "p/:pageIndex"
                     },
                     {
-                        path: ":articleId",
-                        element: <></>
+                        path: ":articleId"
                     }
                 ]
             },
@@ -103,11 +112,9 @@ export default createBrowserRouter([
                 children: [
                     {
                         path: ":query",
-                        element: <></>,
                         children: [
                             {
-                                path: "p/:pageIndex",
-                                element: <></>
+                                path: "p/:pageIndex"
                             }
                         ]
                     }

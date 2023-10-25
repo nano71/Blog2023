@@ -15,8 +15,7 @@ const Content = ({useTabBar = true}) => {
             <TabContext.Provider value={{active, setTabActive}}>
                 {useTabBar ? <TabBar/> : ""}
                 <Outlet/>
-                <Footer/>
-
+                {!location.pathname.includes("/write") && <Footer/>}
             </TabContext.Provider>
         </div>
     );
