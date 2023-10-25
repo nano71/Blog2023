@@ -8,20 +8,18 @@ export default function Pagination({max}) {
     const navigate = useNavigate()
     const params = useParams()
     const [pageIndex, setPageIndex] = useState(1)
-
     useEffect(() => {
-        setPageIndex(parseInt(params.pageIndex || 1))
+        params.pageIndex && setPageIndex(params.pageIndex)
     }, [params]);
 
     function previous() {
         if (pageIndex <= 1)
             return
-        let path = "p/" + (pageIndex - 1)
-
-        navigate(pathConcatenation(path))
+        navigate(pathConcatenation(pageIndex - 1))
     }
 
-    function pathConcatenation(path) {
+    function pathConcatenation(pageIndex) {
+        let path = "p/" + (pageIndex)
         if (routeTools.isSearch()) {
             path = routeTools.search + "/" + params.query + "/" + path
         } else if (routeTools.isDefault()) {
@@ -33,8 +31,7 @@ export default function Pagination({max}) {
     function next() {
         if (pageIndex >= max)
             return
-        let path = "p/" + (pageIndex + 1)
-        navigate(pathConcatenation(path))
+        navigate(pathConcatenation(pageIndex + 1))
     }
 
     return <div className="pagination">

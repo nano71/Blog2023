@@ -32,6 +32,8 @@ const TabBar = () => {
     }
 
     function switchTabItem(i, item) {
+        if (active === i)
+            return
         setTabActive(i)
         navigate("/" + (routeLinks[i] || item.toLowerCase()))
     }

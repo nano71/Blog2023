@@ -20,9 +20,7 @@ let autoCloseTimer
 let taskParams
 let titleQueue = []
 let temporaryComponentQueue = []
-let pathCache = ""
-let callback4Close = () => {
-}
+let callback4Close
 export default function PopupProvider({children}) {
     const navigate = useNavigate()
     const [isHiding, setHiding] = useState(false)
@@ -96,11 +94,10 @@ export default function PopupProvider({children}) {
             taskParams = {showMask, lockScroll, autoClose, task: true, onClose}
             return close("task", true)
         }
-        pathCache = location.search
         if (task) {
-            console.log("popup.show", "task");
+            console.info("popup.show", "task");
         } else {
-            console.log("popup.show", "normal");
+            console.info("popup.show", "normal");
         }
         setPopipTitle(titleQueue.shift())
         setTemporaryComponent(temporaryComponentQueue.shift())

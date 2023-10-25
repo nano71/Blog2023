@@ -4,7 +4,7 @@ import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag} from
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
-import {useLocation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {routeTools} from "../router/router.jsx";
 
@@ -12,6 +12,7 @@ import {routeTools} from "../router/router.jsx";
 const recentArticlesContextValue = {
     isLoading: true, list: [], total: 0, limit: 0, page: 0
 }
+
 const articleListRequestStateContextValue = {code: 0, message: "", data: null}
 export const ArticleListObjectContext = createContext(recentArticlesContextValue)
 export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
@@ -20,54 +21,59 @@ export const TagListContext = createContext(null)
 
 let fetchingArticles = false
 let fetchingTagList = false
-let currentPageIndex = 1
 const resultLimit = 8
-let previousRoutePath = ""
+let previousAction = ""
+let previousRoute = ""
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
     const [tagList, setTagList] = useState([])
     const [coverImage, setCoverImage] = useState("")
     const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
-
     const params = useParams()
-    const location = useLocation()
+
+    useEffect(() => {
+        getTagListData()
+    }, [])
 
     /**
      * 获取文章列表数据
      * @param {string} message debug消息
-     * @param {boolean} byTag 通过标签搜索
+     * @param {string} query
+     * @param {string} tag 通过标签搜索
+     * @param {number|string} page
      * @returns {void}
      */
-    async function getArticleListData({message = "", byTag = false} = {}) {
+    async function getArticleListData({message = "", query = "", tag = "", page = 1} = {}) {
         if (fetchingArticles)
             return
-        fetchingArticles = true
+
         setArticleListObject(draft => {
+            fetchingArticles = true
             draft.isLoading = true
         })
-        message && console.log("getArticleListData", message);
-        currentPageIndex = parseInt(params.pageIndex || 1)
+        console.info("getArticleListData", message, "query:", query, "tag:", tag, "page:", page);
 
         let result
-        let query = params.query
-        if (query) {
-            if (byTag) {
-                result = await searchArticlesByTag(query.replace("Tag:", ""), resultLimit, currentPageIndex)
-            } else {
-                result = await searchArticles(query, resultLimit, currentPageIndex)
-            }
+        if (tag) {
+            result = await searchArticlesByTag(tag, resultLimit, page)
+            previousAction = "tag"
+        } else if (query) {
+            result = await searchArticles(query, resultLimit, page)
+            previousAction = "query"
         } else {
-            result = await getRecentArticles(resultLimit, currentPageIndex)
+            result = await getRecentArticles(resultLimit, page)
+            previousAction = "recent"
         }
-        if (result[0]) {
-            setArticleListObject(result[0])
-        } else {
-            setArticleListObject(draft => {
+
+        setArticleListObject(draft => {
+            if (result[0])
+                return result[0]
+            else
                 draft.isLoading = false
-            })
-            setArticleListRequestState(result[1])
-        }
+        })
+        setArticleListRequestState(result[1])
+
         fetchingArticles = false
     }
 
@@ -85,32 +91,23 @@ function Index() {
         }
     }
 
+    // todo 路由待完善
     useEffect(() => {
-        if (params.query && routeTools.isSearch())
-            getArticleListData({message: "onUpdate", query: params.query, byTag: params.query.indexOf("Tag:") === 0})
-        else
-            getArticleListData({message: "initial"})
-        getTagListData()
-    }, [])
-
-    useEffect(() => {
-        console.log("location.key", location.key);
-        if (isSearchable()) {
-            getArticleListData({message: "onUpdate search", byTag: routeTools.isSearchByTag(params)})
-        } else if (routeTools.isSearch(previousRoutePath) || haveIndex() && routeTools.isArticles() && !routeTools.isCurrentIndex(currentPageIndex, params.pageIndex)) {
-            getArticleListData({message: "onUpdate recent"})
+        if (params.articleId) {
+            previousRoute = "article"
+            return;
         }
-        previousRoutePath = location.pathname
+        if (routeTools.isCategory() || previousRoute === "article" || previousAction === "recent" && routeTools.isDefault()) {
+            previousRoute = location.pathname
+            return
+        }
+        let tag = undefined
+        if (params.query?.indexOf("Tag:") === 0) {
+            tag = params.query.replace("Tag:", "")
+        }
+        getArticleListData({message: "onUpdate", query: params.query, tag, page: params.pageIndex})
+
     }, [params])
-
-    function isSearchable() {
-        return !!params.query && routeTools.isSearch()
-    }
-
-    function haveIndex() {
-        return !!params.pageIndex
-    }
-
 
     return (<>
         <PopupProvider>
@@ -119,7 +116,9 @@ function Index() {
                     <CoverImageIndexContext.Provider value={{coverImage, setCoverImage}}>
                         <Cover/>
                         <ArticleListRequestStateContext.Provider value={articleListRequestState}>
-                            <TagListContext.Provider value={tagList}><Content/></TagListContext.Provider>
+                            <TagListContext.Provider value={tagList}>
+                                <Content/>
+                            </TagListContext.Provider>
                         </ArticleListRequestStateContext.Provider>
                     </CoverImageIndexContext.Provider>
                 </ArticleListObjectContext.Provider>

@@ -16,7 +16,7 @@ export default function () {
     const input = useRef(null)
 
     useEffect(() => {
-        setInputValue(previousSearchText = params.query)
+        setInputValue(previousSearchText = params.query || "")
     }, [params]);
 
     function search() {
@@ -36,10 +36,6 @@ export default function () {
 
     }
 
-    function onInput(e) {
-        setInputValue(e.target.value)
-    }
-
     function onFocus(e) {
         setFocus(true)
     }
@@ -57,7 +53,13 @@ export default function () {
     return (
         <div className="searchBox">
             <label className={focus || inputValue ? " active" : ""} htmlFor="searchInput">
-                <input ref={input} value={inputValue} onKeyDown={onKeyDown} onFocus={onFocus} onBlur={onBlur} onInput={onInput} id="searchInput" type="text"/>
+                <input ref={input}
+                       value={inputValue}
+                       onKeyDown={onKeyDown}
+                       onFocus={onFocus}
+                       onBlur={onBlur}
+                       onChange={e => setInputValue(e.target.value)}
+                       id="searchInput" type="text"/>
                 <a onClick={search}><Icon icon="ri:search-2-line"/></a>
             </label>
         </div>

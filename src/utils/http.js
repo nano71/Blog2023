@@ -26,10 +26,13 @@ async function r(url, data = undefined) {
 /**
  * 获取文章列表
  * @param {number} limit 返回多少项
- * @param {number} page 第几页, 1开始
+ * @param {number|string} page 第几页, 1开始
  * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
  */
 export async function getRecentArticles(limit = 8, page = 1) {
+    console.log("getRecentArticles");
+    page = page.toInt()
+
     /**
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}
@@ -111,10 +114,12 @@ export async function publishArticle({title, content, description, createTime, c
  * 获取文章列表
  * @param {string} query
  * @param {number} limit 返回多少项
- * @param {number} page 第几页, 1开始
+ * @param {number|string} page 第几页, 1开始
  * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
  */
 export async function searchArticles(query, limit, page) {
+    console.log("searchArticles");
+    page = page.toInt()
     /**
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}
@@ -131,10 +136,12 @@ export async function searchArticles(query, limit, page) {
  * 获取文章列表, 通过Tag
  * @param {string} tag
  * @param {number} limit 返回多少项
- * @param {number} page 第几页, 1开始
+ * @param {number|string} page 第几页, 1开始
  * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
  */
 export async function searchArticlesByTag(tag, limit, page) {
+    console.log("searchArticlesByTag");
+    page = page.toInt()
     /**
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}

@@ -7,22 +7,37 @@ import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 import Recent from "../components/recent/recent.jsx";
 
+const pageRouteTree = [
+    {
+        path: "p/:pageIndex",
+        children: [
+            {
+                path: ":articleId"
+            }
+        ]
+    },
+    {
+        path: ":articleId"
+    }
+]
 let p = _ => location.pathname
 export const routeTools = {
     root: "/",
     articles: "/articles",
     default: "/articles",
     search: "/search",
+    category: "/category",
     articleDetails(id) {
         return this.articles + "/" + id
     },
     searchArticle(search) {
         return this.search + "/" + search
     },
-    isSearch(path) {
-        if (path)
-            return path.indexOf(this.search) === 0
-        return p().includes(this.search)
+    isSearch() {
+        return p().indexOf(this.search) === 0
+    },
+    isCategory() {
+        return p().indexOf(this.category) === 0
     },
     isSearchByTag(params) {
         return params.query.indexOf("Tag:") === 0
@@ -97,14 +112,7 @@ export default createBrowserRouter([
             {
                 path: "articles",
                 element: <Recent/>,
-                children: [
-                    {
-                        path: "p/:pageIndex"
-                    },
-                    {
-                        path: ":articleId"
-                    }
-                ]
+                children: pageRouteTree
             },
             {
                 path: "search",
@@ -112,11 +120,7 @@ export default createBrowserRouter([
                 children: [
                     {
                         path: ":query",
-                        children: [
-                            {
-                                path: "p/:pageIndex"
-                            }
-                        ]
+                        children: pageRouteTree
                     }
                 ]
             },

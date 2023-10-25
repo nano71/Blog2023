@@ -1,4 +1,4 @@
-import {useLocation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import "/src/stylesheets/article/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
 import {getArticleContent} from "../../utils/http.js";

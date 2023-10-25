@@ -19,7 +19,11 @@ function ArticleList() {
         console.log("ArticleList mounted");
         popup.loadComponent(<Window><ArticleDetails/></Window>)
         if (params.articleId) {
-            popup.show()
+            popup.show({
+                onClose() {
+                    navigate(-1)
+                }
+            })
         }
     }, []);
 
@@ -29,7 +33,7 @@ function ArticleList() {
                 navigate(-1)
             }
         })
-        navigate(routeTools.articleDetails(id))
+        navigate(location.pathname + "/" + id)
     }
 
     return (
