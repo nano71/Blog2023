@@ -94,6 +94,8 @@ function Index() {
 
     // todo 路由待完善, 1:上一次搜索和本次搜索如果相同会不命中
     useEffect(() => {
+        // todo 本次路由为文章页, 且有上一个路由的时候, 不触发刷新
+        // todo 上一次路由为Category页, 或上一次路由为文章页, 或上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新
         console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
         if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
