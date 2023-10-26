@@ -60,7 +60,7 @@ function ArticleDetails() {
         let ogTitleMeta = document.querySelector('meta[property="og:title"]')
         let giscusBacklinkMeta = document.querySelector('meta[name="giscus:backlink"]')
         ogTitleMeta.setAttribute("content", `Blog#${article.id} ${article.title}`);
-        giscusBacklinkMeta.setAttribute("content", `https://nano71.com/blog/article/${article.id}`);
+        giscusBacklinkMeta.setAttribute("content", `https://nano71.com/blog/#/article/${article.id}`);
     }
 
     /**
