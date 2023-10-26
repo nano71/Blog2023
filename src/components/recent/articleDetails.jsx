@@ -69,7 +69,7 @@ function ArticleDetails() {
      */
     async function loader() {
         console.log("article details loader");
-        if (location.hash === "/write/preview") {
+        if (location.hash === "#/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
             const article = await getArticleContent(parseInt(params.articleId))

@@ -134,9 +134,15 @@ export default function Editor() {
         }
     }
 
+    function back() {
+        location.hash = "/articles"
+    }
+
     return <div className="editor">
-        <h1 className="title"><span>Write an article</span>
-            <Link to={"/"} title="返回"><Icon icon="ri:close-fill"/></Link></h1>
+        <h1 className="title">
+            <span>Write an article</span>
+            <span onClick={back} title="返回"><Icon icon="ri:close-fill"/></span>
+        </h1>
         <div className="inputArea">
             <input onChange={e => setTitle(e.target.value)}
                    type="text" className="titleInput" placeholder="请输入标题"/>
