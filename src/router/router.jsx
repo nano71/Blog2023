@@ -1,4 +1,4 @@
-import {createBrowserRouter, createHashRouter} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import Index from "/src/pages/index.jsx";
 import ErrorView from "/src/pages/errorView.jsx";
 import React from "react";
@@ -29,7 +29,7 @@ function hiddenError(errorMessage) {
     return error
 }
 
-export default createHashRouter([
+export default createBrowserRouter([
     {
         path: "/write",
         element: <Write/>,

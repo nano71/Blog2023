@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "/src/stylesheets/article/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
-import {getArticleContent, staticResourceURL, updateArticleCommentCount} from "../../utils/http.js";
+import {getArticleContent, updateArticleCommentCount} from "../../utils/http.js";
 import Loading from "../content/loading.jsx";
 import 'highlight.js/styles/atom-one-light.css';
 import {Icon} from "@iconify/react";
@@ -9,6 +9,7 @@ import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
 
 let previousDataStringify = ""
+let articleObject = {}
 
 function ArticleDetails() {
     /**
@@ -23,7 +24,6 @@ function ArticleDetails() {
     useEffect(() => {
         console.log("ArticleDetails Mounted");
         loader()
-        window.addEventListener('message', handleMessage);
         return () => {
             window.removeEventListener('message', handleMessage);
         }
@@ -57,10 +57,11 @@ function ArticleDetails() {
 
     function bindDiscussion() {
         console.log("bindDiscussion");
+        window.addEventListener('message', handleMessage);
         let ogTitleMeta = document.querySelector('meta[property="og:title"]')
         let giscusBacklinkMeta = document.querySelector('meta[name="giscus:backlink"]')
-        ogTitleMeta.setAttribute("content", `Blog#${article.id} ${article.title}`);
-        giscusBacklinkMeta.setAttribute("content", `https://nano71.com/blog/#/article/${article.id}`);
+        ogTitleMeta.setAttribute("content", `Blog#${articleObject.id} ${articleObject.title}`);
+        giscusBacklinkMeta.setAttribute("content", `https://nano71.com/blog/articles/${articleObject.id}`);
     }
 
     /**
@@ -74,8 +75,9 @@ function ArticleDetails() {
         } else {
             const article = await getArticleContent(parseInt(params.articleId))
             if (article) {
+                setArticle(article)
+                articleObject = article
                 bindDiscussion()
-                return setArticle(article)
             }
         }
     }

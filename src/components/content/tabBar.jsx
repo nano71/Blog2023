@@ -1,5 +1,5 @@
 import {useContext, useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {TabContext} from "./content.jsx";
 import Search from "./searchBox.jsx";
 import {routeTools} from "../../utils/tools.js";
@@ -10,6 +10,7 @@ let paginationRouteHistory = [""]
 const TabBar = () => {
     const {active, setTabActive} = useContext(TabContext);
     const navigate = useNavigate()
+    const location = useLocation()
     const params = useParams()
     const routeLinks = [routeTools.articles]
     const tabItems = ["Recent", "Category", "Guestbook"];
@@ -18,7 +19,7 @@ const TabBar = () => {
     }, [])
     useEffect(() => {
         if (params.pageIndex && routeTools.isArticles())
-            paginationRouteHistory[0] = location.hash
+            paginationRouteHistory[0] = location.pathname
     }, [params]);
 
     function tabActiveInitial() {
@@ -28,7 +29,7 @@ const TabBar = () => {
         }
         for (let i in tabItems) {
             let path = (routeLinks[i] || tabItems[i]).toLowerCase().replace("/", "")
-            if (location.hash.includes(path)) {
+            if (location.pathname.includes(path)) {
                 setTabActive(i.toInt())
                 break
             }
@@ -43,7 +44,7 @@ const TabBar = () => {
             paginationRouteHistory = []
             return navigate(routeTools.articles)
         }
-        location.hash = (paginationRouteHistory[i] || "/" + (routeLinks[i] || item)).toLowerCase()
+        navigate("/" + (paginationRouteHistory[i] || routeLinks[i] || item).toLowerCase().replace("/", ""))
     }
 
     return (
