@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "/src/stylesheets/article/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
-import {getArticleContent, updateArticleCommentCount} from "../../utils/http.js";
+import {getArticleContent, staticResourceURL, updateArticleCommentCount} from "../../utils/http.js";
 import Loading from "../content/loading.jsx";
 import 'highlight.js/styles/atom-one-light.css';
 import {Icon} from "@iconify/react";
@@ -130,7 +130,7 @@ function ArticleDetails() {
                 emitMetadata="1"
                 inputPosition="top"
                 // loading="lazy"
-                theme="http://localhost:5173/light.css"
+                theme={"https://nano71.com/blog/light.css"}
                 lang="en"
                 async
             />

@@ -46,13 +46,13 @@ export const routeTools = {
         return this.search + "/" + search
     },
     isSearch() {
-        return p().indexOf(this.search) === 0
+        return p().indexOf("#" + this.search) === 0
     },
     isCategory(path) {
         if (path)
-            return path.indexOf(this.category) === 0
+            return path.indexOf("#" + this.category) === 0
 
-        return p().indexOf(this.category) === 0
+        return p().indexOf("#" + this.category) === 0
     },
     isSearchByTag(params) {
         return params.query.indexOf("Tag:") === 0
@@ -69,7 +69,7 @@ export const routeTools = {
         return p() === this.root
     },
     isDefault() {
-        return p() === this.root || p() === this.default
+        return p() === ("#" + this.root) || p() === ("#" + this.default)
     },
     front() {
         if (this.isDefault())
@@ -77,7 +77,7 @@ export const routeTools = {
         return p().match(/\w+/g)[0]
     },
     isArticles() {
-        return p().indexOf(this.articles) === 0 || p() === this.root
+        return p().indexOf("#" + this.articles) === 0 || p() === this.root
     }
 
 }

@@ -1,5 +1,5 @@
 import {useContext, useEffect} from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {TabContext} from "./content.jsx";
 import Search from "./searchBox.jsx";
 import {routeTools} from "../../utils/tools.js";
@@ -10,7 +10,6 @@ let paginationRouteHistory = [""]
 const TabBar = () => {
     const {active, setTabActive} = useContext(TabContext);
     const navigate = useNavigate()
-    const location = useLocation()
     const params = useParams()
     const routeLinks = [routeTools.articles]
     const tabItems = ["Recent", "Category", "Guestbook"];
@@ -44,7 +43,7 @@ const TabBar = () => {
             paginationRouteHistory = []
             return navigate(routeTools.articles)
         }
-        navigate("/" + (paginationRouteHistory[i] || routeLinks[i] || item).toLowerCase().replace("/", ""))
+        location.hash = (paginationRouteHistory[i] || "/" + (routeLinks[i] || item)).toLowerCase()
     }
 
     return (
