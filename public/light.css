@@ -90,17 +90,13 @@ main {
     --color-social-reaction-bg-reacted-hover: var(--color-scale-blue-1);
 }
 
-main .pagination-loader-container {
-    background-image: url("https://github.com/images/modules/pulls/progressive-disclosure-line.svg");
-}
-
 main .gsc-loading {
     height: 150px;
     justify-content: center;
 }
 
 main .gsc-loading-image {
-    background-image: url("https://github.githubassets.com/images/mona-loading-default.gif");
+    background-image: url("./mona-loading-default.gif");
 }
 
 main .gsc-comment-box-write {

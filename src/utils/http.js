@@ -1,9 +1,8 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8080/api";
-const baseStaticResourceURL = "http://localhost:8080"
-
-// axios.defaults.baseURL = "https://api.example.com";
+axios.defaults.baseURL = "https://nano71.com:9000/api";
+const baseStaticResourceURL = "https://nano71.com:9000"
+export const staticResourceURL = "./"
 
 /**
  *  发起一个post请求
@@ -171,4 +170,17 @@ function processResponse(response, limit, page) {
         response.data.isLoading = false
     }
     return [response.data, response]
+}
+
+/**
+ *
+ * @param {number|string} articleId
+ * @param {number|string} count
+ * @return {void}
+ */
+export async function updateArticleCommentCount(articleId, count) {
+    const response = await r("/updateArticleCommentCount", {
+        articleId: articleId.toInt(),
+        count: count.toInt()
+    })
 }

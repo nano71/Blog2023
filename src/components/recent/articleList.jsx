@@ -22,7 +22,7 @@ function ArticleList() {
                 message: "firstShow",
                 onClose() {
                     if (previousRoute === "initial")
-                        navigate(location.pathname.replace(/\/\d+$/g, ""))
+                        navigate(location.hash.replace(/\/\d+$/g, ""))
                     else
                         navigate(-1)
                 }
@@ -37,7 +37,7 @@ function ArticleList() {
                 navigate(-1)
             }
         })
-        navigate(location.pathname.replace(/\/$/g, "") + "/" + id)
+        navigate( location.hash.replace(/\/$|#/g, "") + "/" + id)
     }
 
     return (

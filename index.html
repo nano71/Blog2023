@@ -1,18 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script>
+        if (!location.hash)
+            location.hash = "/articles"
+    </script>
     <meta charset="UTF-8"/>
-    <meta property="og:title" content="部落格" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta property="og:title" content="部落格"/>
+    <meta name="giscus:backlink" content="https://nano71.com/blog">
+    <link rel="icon" type="image/svg+xml" href="/logo-ldt-w.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!--    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC|Inconsolata|Space+Mono:700">-->
     <link rel="stylesheet" href="/font.css">
     <title>部落格 - nano71.com</title>
 </head>
-<script>
-    if (location.pathname === "/")
-        location.href = location.pathname + "articles"
-</script>
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>

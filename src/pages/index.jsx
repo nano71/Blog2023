@@ -1,6 +1,6 @@
 import "/src/stylesheets/index.less"
 import React, {createContext, useEffect, useState} from "react";
-import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag} from "../utils/http.js";
+import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag, staticResourceURL} from "../utils/http.js";
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
@@ -98,7 +98,7 @@ function Index() {
         //  上一次路由为文章页,
         //  上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新,
 
-        console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
+        console.info("location.hash:", location.hash, "previousRoute:", previousRoute);
         if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
             return;
@@ -111,12 +111,12 @@ function Index() {
             || (previousAction === ("recent-" + (params.pageIndex || 1)) && routeTools.isArticles())
             // || routeTools.isSearch() && previousAction === (`query-${params.query}-${params.pageIndex || 1}`)
         ) {
-            previousRoute = location.pathname
+            previousRoute = location.hash
             return
         }
         console.info("location hit", "previousRoute:", previousRoute, "previousAction:", previousAction);
         if (!(previousRoute === "initial" && params.articleId))
-            previousRoute = location.pathname
+            previousRoute = location.hash
 
         let tag = undefined
         if (params.query?.indexOf("Tag:") === 0) {
@@ -139,6 +139,7 @@ function Index() {
                         </ArticleListRequestStateContext.Provider>
                     </CoverImageIndexContext.Provider>
                 </ArticleListObjectContext.Provider>
+                <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt=""/>
             </div>
         </PopupProvider>
     </>)

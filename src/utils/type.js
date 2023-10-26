@@ -9,6 +9,7 @@
  * @property {string} tags - The tags associated with the article.
  * @property {string} coverImage - The URL of the cover image for the article.
  * @property {number} readCount - The number of times the article has been read.
+ * @property {number} commentCount - The number of times the article has been read.
  */
 
 /**

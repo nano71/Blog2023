@@ -32,7 +32,7 @@ console.info = function (...args) {
     consoleInfo("%c" + (args.join(" ")), "padding:2px 4px;color:white;background:dodgerblue;")
 }
 
-let p = _ => location.pathname
+let p = _ => location.hash
 export const routeTools = {
     root: "/",
     articles: "/articles",

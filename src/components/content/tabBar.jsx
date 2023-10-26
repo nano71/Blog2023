@@ -19,7 +19,7 @@ const TabBar = () => {
     }, [])
     useEffect(() => {
         if (params.pageIndex && routeTools.isArticles())
-            paginationRouteHistory[0] = location.pathname
+            paginationRouteHistory[0] = location.hash
     }, [params]);
 
     function tabActiveInitial() {
@@ -29,7 +29,7 @@ const TabBar = () => {
         }
         for (let i in tabItems) {
             let path = (routeLinks[i] || tabItems[i]).toLowerCase().replace("/", "")
-            if (location.pathname.includes(path)) {
+            if (location.hash.includes(path)) {
                 setTabActive(i.toInt())
                 break
             }

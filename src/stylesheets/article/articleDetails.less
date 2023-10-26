@@ -6,67 +6,14 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-
     &:extend(.fadeInAnimation);
-
-    .postComment {
-
-
-        .userInfoInputBox {
-
-
-            .inputBar {
-                background-color: #f5f5f5;
-                padding: 0 16px;
-                width: 250px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-
-                input {
-                    background-color: transparent;
-                    color: #0a0a0a;
-                    letter-spacing: 0.8px;
-                    &:extend(.cnFont);
-                    border: 0;
-                    outline: 0;
-                    height: 40px;
-                    font-size: 14px;
-                }
-            }
-        }
-
-        .inputArea {
-            @lineHeight: 22px;
-            //border: 1px solid #f5f5f5;
-
-
-            textarea {
-                display: block;
-                font-size: 16px;
-                background: transparent;
-                background: @hoverColor;
-
-                padding: 15px;
-                border: 0;
-                outline: 0;
-                resize: none;
-                margin: 0;
-                width: 100%;
-                line-height: @lineHeight;
-                height: calc(4 * @lineHeight);
-            }
-
-
-        }
-    }
 
     strong {
         font-size: 18px;
     }
 
     &.scrollbar {
-        padding: 0 10px 0 15px;
+        padding: 0 5px 0 15px;
 
     }
 
@@ -77,10 +24,10 @@
     .infoBar {
         //display: flex;
         gap: 15px;
-        color: #999;
-        font-size: 14px;
+        color: #666;
+        font-size: 12px;
         font-weight: lighter;
-        &:extend(.enFontS);
+        //&:extend(.enFontS);
         border-bottom: 1px solid #f5f5f5;
         padding-bottom: 15px;
 
@@ -88,11 +35,12 @@
             display: flex;
             height: 24px;
 
-            gap: 3px;
+            gap: 5px;
             align-items: center;
 
             svg {
                 font-size: 16px;
+                color: #333;
             }
         }
 
@@ -196,15 +144,11 @@
             }
         }
 
-        //noinspection LessResolvedByNameOnly
         a {
             color: @themeColor;
         }
     }
 
-    &::-webkit-scrollbar {
-
-    }
 }
 
 #comments::part(iframe) {
