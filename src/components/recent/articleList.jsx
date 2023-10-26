@@ -1,11 +1,12 @@
 import "/src/stylesheets/article/articleList.less"
 import React, {useContext, useEffect} from "react";
-import {ArticleListObjectContext, CoverImageIndexContext} from "/src/pages/index.jsx";
+import {ArticleListObjectContext, CoverImageIndexContext, previousRoute} from "/src/pages/index.jsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
+import {routeTools} from "../../utils/tools.js";
 
 function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)
@@ -21,7 +22,10 @@ function ArticleList() {
             popup.show({
                 message: "firstShow",
                 onClose() {
-                    navigate(-1)
+                    if (previousRoute === "initial")
+                        navigate(location.pathname.replace(/\/\d+$/g, ""))
+                    else
+                        navigate(-1)
                 }
             })
         }
@@ -34,7 +38,7 @@ function ArticleList() {
                 navigate(-1)
             }
         })
-        navigate(location.pathname + "/" + id)
+        navigate(location.pathname.replace(/\/$/g, "") + "/" + id)
     }
 
     return (

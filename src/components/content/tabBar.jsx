@@ -18,7 +18,7 @@ const TabBar = () => {
         tabActiveInitial()
     }, [])
     useEffect(() => {
-        if (params.pageIndex)
+        if (params.pageIndex && routeTools.isArticles())
             paginationRouteHistory[0] = location.pathname
     }, [params]);
 

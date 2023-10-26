@@ -4,7 +4,7 @@ import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag} from
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
 import PopupProvider from "../components/popup/popup.jsx";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {routeTools} from "../utils/tools.js";
 
@@ -23,7 +23,7 @@ let fetchingArticles = false
 let fetchingTagList = false
 const resultLimit = 8
 let previousAction = ""
-let previousRoute = "initial"
+export let previousRoute = "initial"
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
@@ -31,7 +31,6 @@ function Index() {
     const [coverImage, setCoverImage] = useState("")
     const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
     const params = useParams()
-    const navigate = useNavigate()
 
     useEffect(() => {
         getTagListData()
@@ -94,19 +93,30 @@ function Index() {
 
     // todo 路由待完善, 1:上一次搜索和本次搜索如果相同会不命中
     useEffect(() => {
-        // todo 本次路由为文章页, 且有上一个路由的时候, 不触发刷新
-        // todo 上一次路由为Category页, 或上一次路由为文章页, 或上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新
+        // todo 本次路由为文章页, 且有上一个路由的时候, 不触发刷新,
+        //  上一次路由为Category页且本次路由为Articles页且上一次操作为Recent,
+        //  上一次路由为文章页,
+        //  上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新,
+
         console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
         if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
             return;
         }
-        if (routeTools.isCategory() || previousRoute === "article" || previousAction === ("recent-" + (params.pageIndex || 1))) {
+        if ((routeTools.isCategory(previousRoute) &&
+                routeTools.isArticles() &&
+                previousAction.indexOf("recent") === 0)
+            || routeTools.isCategory()
+            || previousRoute === "article"
+            || (previousAction === ("recent-" + (params.pageIndex || 1)) && routeTools.isArticles())
+            // || routeTools.isSearch() && previousAction === (`query-${params.query}-${params.pageIndex || 1}`)
+        ) {
             previousRoute = location.pathname
             return
         }
         console.info("location hit", "previousRoute:", previousRoute, "previousAction:", previousAction);
-        previousRoute = location.pathname
+        if (!(previousRoute === "initial" && params.articleId))
+            previousRoute = location.pathname
 
         let tag = undefined
         if (params.query?.indexOf("Tag:") === 0) {

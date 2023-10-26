@@ -48,7 +48,10 @@ export const routeTools = {
     isSearch() {
         return p().indexOf(this.search) === 0
     },
-    isCategory() {
+    isCategory(path) {
+        if (path)
+            return path.indexOf(this.category) === 0
+
         return p().indexOf(this.category) === 0
     },
     isSearchByTag(params) {
