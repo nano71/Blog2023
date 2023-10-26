@@ -135,7 +135,7 @@ export default function Editor() {
     }
 
     function back() {
-        location.hash = "/articles"
+        location.pathname = "/articles"
     }
 
     return <div className="editor">

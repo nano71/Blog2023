@@ -98,7 +98,7 @@ function Index() {
         //  上一次路由为文章页,
         //  上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新,
 
-        console.info("location.hash:", location.hash, "previousRoute:", previousRoute);
+        console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
         if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
             return;
@@ -111,12 +111,12 @@ function Index() {
             || (previousAction === ("recent-" + (params.pageIndex || 1)) && routeTools.isArticles())
             // || routeTools.isSearch() && previousAction === (`query-${params.query}-${params.pageIndex || 1}`)
         ) {
-            previousRoute = location.hash
+            previousRoute = location.pathname
             return
         }
         console.info("location hit", "previousRoute:", previousRoute, "previousAction:", previousAction);
         if (!(previousRoute === "initial" && params.articleId))
-            previousRoute = location.hash
+            previousRoute = location.pathname
 
         let tag = undefined
         if (params.query?.indexOf("Tag:") === 0) {

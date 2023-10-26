@@ -37,6 +37,7 @@ function ArticleList() {
                 navigate(-1)
             }
         })
+
         navigate(location.pathname.replace(/\/$/g, "") + "/" + id)
     }
 

@@ -61,7 +61,7 @@ function ArticleDetails() {
         let ogTitleMeta = document.querySelector('meta[property="og:title"]')
         let giscusBacklinkMeta = document.querySelector('meta[name="giscus:backlink"]')
         ogTitleMeta.setAttribute("content", `Blog#${articleObject.id} ${articleObject.title}`);
-        giscusBacklinkMeta.setAttribute("content", `https://nano71.com/blog/articles/${articleObject.id}`);
+        giscusBacklinkMeta.setAttribute("content", `https://blog.nano71.com/articles/${articleObject.id}`);
     }
 
     /**
@@ -70,7 +70,7 @@ function ArticleDetails() {
      */
     async function loader() {
         console.log("article details loader");
-        if (location.hash === "#/write/preview") {
+        if (location.pathname === "#/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
             const article = await getArticleContent(parseInt(params.articleId))
@@ -132,7 +132,7 @@ function ArticleDetails() {
                 emitMetadata="1"
                 inputPosition="top"
                 // loading="lazy"
-                theme={"https://nano71.com/blog/light.css"}
+                theme={"https://blog.nano71.com/light.css"}
                 lang="en"
                 async
             />
