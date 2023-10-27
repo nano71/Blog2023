@@ -4,7 +4,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import "/src/stylesheets/write/editor.less";
 import MarkdownIt from "markdown-it";
 import {Icon} from "@iconify/react";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import hljs from 'highlight.js';
 import * as http from "../../utils/http.js";
 import Message from "../popup/message.jsx";
@@ -94,7 +94,7 @@ export default function Editor() {
         }
     }
 
-    async function submit() {
+    function submit() {
         const processedData = preprocessedData()
         const checkMap = {
             title: "缺少标题",
@@ -110,13 +110,21 @@ export default function Editor() {
                 return
             }
         }
-        popup.loadTemporaryComponent(<Modal/>).title("请等待...").show()
-        let result = await http.publishArticle(processedData)
-        if (result) {
-            console.log(result);
-        } else {
-            console.log(result);
-        }
+        popup.loadTemporaryComponent(<Modal/>).title("发布中,请稍等...").show()
+        setTimeout(async () => {
+            let result = await http.publishArticle(processedData)
+            if (result) {
+                popup.loadTemporaryComponent(<Message/>)
+                    .title("文章已发布!")
+                    .show({showMask: false, lockScroll: false, autoClose: true})
+            } else {
+                popup.loadTemporaryComponent(<Message/>)
+                    .title("文章发布失败!")
+                    .show({showMask: false, lockScroll: false, autoClose: true})
+            }
+        }, 2000)
+
+
     }
 
     function formatDateTime(event) {

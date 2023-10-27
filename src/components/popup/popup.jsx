@@ -47,7 +47,7 @@ export default function PopupProvider({children}) {
         return () => {
             document.body.style.overflow = "unset"
         }
-    }, [isVisible])
+    }, [isVisible, isLockScroll])
 
     function title(title) {
         if (title) {
