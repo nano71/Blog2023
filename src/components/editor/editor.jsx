@@ -40,7 +40,7 @@ export default function Editor() {
      * @returns {{createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
      */
     function preprocessedData() {
-        let matches = HTML.match(/<p>(.*?)<\/p>/g)
+        let matches = HTML.match(/<p>.*?<\/p>/gs)
         if (matches)
             matches = matches[0]
         return {

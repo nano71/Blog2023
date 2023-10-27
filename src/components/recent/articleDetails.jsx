@@ -70,7 +70,7 @@ function ArticleDetails() {
      */
     async function loader() {
         console.log("article details loader");
-        if (location.pathname === "#/write/preview") {
+        if (location.pathname === "/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
             const article = await getArticleContent(parseInt(params.articleId))
@@ -105,7 +105,7 @@ function ArticleDetails() {
             </div>
             <div className="description" dangerouslySetInnerHTML={{__html: article.description}}></div>
             {article.coverImage && <img className="image" src={article.coverImage} alt=""/>}
-            <div className="content" dangerouslySetInnerHTML={{__html: article.content}}></div>
+            <div className="content" dangerouslySetInnerHTML={{__html: article.content?.replace(article.description, "")}}></div>
             <div className="infoBar">
                 <div className="item">
                     <Icon icon="ri:user-5-line"/>

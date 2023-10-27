@@ -47,7 +47,7 @@ function ArticleList() {
                 <div key={index} className="article" onClick={_ => readArticle(value.id)} onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
                     <span className="date">{new Date(value.createTime).toLocaleString()}</span>
                     <h2 className="title" itemProp="name">{value.title}</h2>
-                    <p className="text" itemProp="description">{value.description.replace(/<[^>]*>/g, '')}</p>
+                    <p className="text" itemProp="description" dangerouslySetInnerHTML={{__html: value.description.replace(/<p>|<\/p>/g, "")}}/>
                     <div className="button more">view</div>
                     <img src={value.coverImage} style={{display: "none"}} alt=""/>
                 </div>
