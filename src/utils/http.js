@@ -97,14 +97,15 @@ export async function uploadImage(file) {
  * @param {string} title 标题
  * @param {string} content 正文内容
  * @param {string} description 描述/前言
+ * @param {string} markdown 源数据
  * @param {string} createTime 发表时间
  * @param {string} coverImage 封面图
  * @param {string[]} tags 技术栈标签
  * @returns {Promise<boolean>} 发布成功 / 失败
  */
-export async function publishArticle({title, content, description, createTime, coverImage, tags}) {
+export async function publishArticle({title, content, description, markdown, createTime, coverImage, tags}) {
     const response = await r("/publishArticle", {
-        title, content, description, createTime, coverImage, tags: tags.toString()
+        title, content, description, createTime, coverImage, markdown, tags: tags.toString()
     })
     return response.data
 }

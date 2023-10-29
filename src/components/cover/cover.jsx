@@ -34,7 +34,7 @@ export default Cover
 
 export function Cover4Write() {
     return <div className="cover" id="cover">
-        <img className="preview active" src="https://images.pexels.com/photos/4554150/pexels-photo-4554150.jpeg?auto=compress&cs=tinysrgb&w=1200" alt=""/>
+        <img className="preview active" src="https://nano71.com:9000/uploads/pexels-james-wheeler-4554150.jpg" alt=""/>
         <ContainerTemplate subtitle="Write whatever you want" title="Blog write"/>
     </div>
 }

@@ -37,7 +37,7 @@ export default function Editor() {
 
     /**
      *
-     * @returns {{createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
+     * @returns {{markdown: string, createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
      */
     function preprocessedData() {
         let matches = HTML.match(/<p>.*?<\/p>/gs)
@@ -46,6 +46,7 @@ export default function Editor() {
         return {
             title,
             content: HTML,
+            markdown: content,
             description: matches || "",
             createTime,
             coverImage: realCoverImage,
