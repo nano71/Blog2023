@@ -48,16 +48,18 @@ const TabBar = () => {
     }
 
     return (
-        <div className="tabBar">
-            {tabItems.map((item, i) => (
-                <div
-                    key={i}
-                    className={active === i ? "tabItem active" : "tabItem"}
-                    onClick={() => switchTabItem(i, item)}
-                >
-                    {item}
-                </div>
-            ))}
+        <div className="top">
+            <div className="tabBar">
+                {tabItems.map((item, i) => (
+                    <div
+                        key={i}
+                        className={active === i ? "tabItem active" : "tabItem"}
+                        onClick={() => switchTabItem(i, item)}
+                    >
+                        {item}
+                    </div>
+                ))}
+            </div>
             <Search/>
         </div>
     );

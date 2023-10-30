@@ -8,8 +8,28 @@
             width: 100%;
             position: relative;
         }
-    }
-    @media (max-width: 450px) {
 
+        .cover#cover {
+            display: none;
+        }
+    }
+    @media (max-width: 994px) {
+        .searchBox {
+            padding-left: 4vw;
+            padding-bottom: 4vw;
+        }
+    }
+    @media (max-width: 550px) {
+
+    }
+    @media (max-width: 600px) {
+        .searchBox {
+            padding-left: 4vw;
+            padding-bottom: 4vw;
+
+            label {
+                min-width: calc(330px - 4vw);
+            }
+        }
     }
 }
