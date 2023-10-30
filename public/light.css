@@ -106,3 +106,15 @@ main .gsc-comment-box-write {
 main .gsc-comment {
     margin-bottom: 1px;
 }
+
+main .gsc-comment-box-tabs {
+    min-height: 45px;
+}
+
+main .gsc-comment-box-tabs button {
+    min-height: 37px;
+}
+
+main form.gsc-comment-box {
+    min-height: 234px;
+}

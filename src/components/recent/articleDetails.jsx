@@ -89,37 +89,11 @@ function ArticleDetails() {
     const articleDetails =
         <div className={"markdown-body articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
             <h1 className="title">{article.title || "无标题"}</h1>
-            <div className="infoBar">
-                <div className="item">
-                    <Icon icon="ri:user-5-line"/>
-                    <div className="user">nano71.com</div>
-                </div>
-                <div className="item">
-                    <Icon icon="ri:time-line"/>
-                    <div className="date">{new Date(article.createTime).toLocaleString()}</div>
-                </div>
-                <div className="item">
-                    <Icon icon="ri:message-3-line"/>
-                    <div className="date">{article.commentCount} comments</div>
-                </div>
-            </div>
+            <BaseInfoArea article={article}/>
             <div className="description" dangerouslySetInnerHTML={{__html: article.description}}></div>
             {article.coverImage && <img className="image" src={article.coverImage} alt=""/>}
             <div className="content" dangerouslySetInnerHTML={{__html: article.content?.replace(article.description, "")}}></div>
-            <div className="infoBar">
-                <div className="item">
-                    <Icon icon="ri:user-5-line"/>
-                    <div className="user">nano71.com</div>
-                </div>
-                <div className="item">
-                    <Icon icon="ri:time-line"/>
-                    <div className="date">{new Date(article.createTime).toLocaleString()}</div>
-                </div>
-                <div className="item">
-                    <Icon icon="ri:message-3-line"/>
-                    <div className="date">{article.commentCount} comments</div>
-                </div>
-            </div>
+            <BaseInfoArea article={article}/>
             <Giscus
                 id="comments"
                 repo="nano71/Blog-2023"
@@ -138,6 +112,30 @@ function ArticleDetails() {
             />
         </div>
     return (Object.keys(article).length ? articleDetails : <Loading/>);
+}
+
+function BaseInfoArea({article}) {
+    if (!article) {
+        return <></>
+    }
+    return <div className="infoBar">
+        <div className="item">
+            <Icon icon="ri:user-5-line"/>
+            <div className="user">nano71.com</div>
+        </div>
+        <div className="item">
+            <Icon icon="ri:time-line"/>
+            <div className="date">{new Date(article.createTime).toLocaleString()}</div>
+        </div>
+        <div className="item">
+            <Icon icon="ri:message-3-line"/>
+            <div className="date">{article.commentCount} comments</div>
+        </div>
+        <div className="item">
+            <Icon icon="ri:eye-line"/>
+            <div className="date">{article.readCount} views</div>
+        </div>
+    </div>
 }
 
 export default ArticleDetails

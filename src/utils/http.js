@@ -1,6 +1,7 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://nano71.com:9000/api";
+axios.defaults.baseURL = "https://nano71.com:9000/api"
+axios.defaults.withCredentials = true
 const baseStaticResourceURL = "https://nano71.com:9000"
 export const staticResourceURL = "./"
 
