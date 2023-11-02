@@ -109,6 +109,13 @@ main .gsc-comment {
 
 main .gsc-comment-box-tabs {
     min-height: 45px;
+    padding: .5rem .5rem 0;
+}
+
+main .gsc-comment-box-tabs > div:first-child {
+    position: relative;
+    bottom: -1px;
+    margin: 0;
 }
 
 main .gsc-comment-box-tabs button {
@@ -117,4 +124,10 @@ main .gsc-comment-box-tabs button {
 
 main form.gsc-comment-box {
     min-height: 234px;
+}
+
+main .gsc-comment-box-md-toolbar {
+    align-items: center;
+    display: inline-flex;
+    margin: 0;
 }
