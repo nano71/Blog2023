@@ -9,14 +9,22 @@ function Result() {
     const [view, setView] = useState(<></>)
 
     function notFound() {
+        console.log("notFound");
         return <div className="notFound">
             <div className="message">Sorry we couldn't find any matches for "{params.query}"</div>
         </div>
     }
-
+    function forbidden(){
+        console.log("forbidden");
+        return <div>
+            <div className="message">Your IP address is banned.</div>
+        </div>
+    }
     function timeout() {
-        function retry() {
+        console.log("timeout");
 
+        function retry() {
+            location.reload()
         }
 
         return <div className="timeout">
@@ -30,11 +38,14 @@ function Result() {
             case 504:
                 setView(timeout())
                 break
+            case 403:
+                setView(forbidden())
+                break
             default:
                 setView(notFound())
         }
-        console.log(articleRequestState);
     }, []);
+
     return (
         <div className="result">
             {view}
