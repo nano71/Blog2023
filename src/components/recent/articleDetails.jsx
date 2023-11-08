@@ -7,6 +7,7 @@ import 'highlight.js/styles/atom-one-light.css';
 import {Icon} from "@iconify/react";
 import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
+import {routeTools, SEOTools} from "../../utils/tools.js";
 
 let previousDataStringify = ""
 let articleObject = {}
@@ -26,12 +27,14 @@ function ArticleDetails() {
         loader()
         return () => {
             window.removeEventListener('message', handleMessage);
+            SEOTools.reset()
         }
     }, [])
 
     useEffect(() => {
         if (articleDetailsRef.current) {
             setScrollHeight(articleDetailsRef.current.scrollHeight);
+            SEOTools.setTitle(article.title).setDescription(article.description)
         }
     }, [article]);
 

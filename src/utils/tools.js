@@ -34,6 +34,7 @@ console.info = function (...args) {
 
 let p = _ => location.pathname
 export const routeTools = {
+
     root: "/",
     articles: "/articles",
     default: "/articles",
@@ -80,4 +81,32 @@ export const routeTools = {
         return p().indexOf(this.articles) === 0 || p() === this.root
     }
 
+}
+
+export const SEOTools = {
+    defaultTitle: "部落格 - nano71.com",
+    baseTitle: " - nano71.com",
+    defaultDescription: "非常简单的BLOG",
+    ogDescription() {
+        return document.querySelector('meta[property="og:description"]')
+    },
+    description() {
+        return document.querySelector('meta[name="description"]')
+    },
+    reset() {
+        window.document.title = this.defaultTitle
+        this.ogDescription().setAttribute("content", this.defaultDescription)
+        this.description().setAttribute("content", this.defaultDescription)
+        return this
+    },
+    setTitle(title) {
+        window.document.title = title + this.baseTitle
+        return this
+    },
+    setDescription(description) {
+        description = description.replace(/<p>|<\/p>/g, "")
+        this.ogDescription().setAttribute("content", description)
+        this.description().setAttribute("content", description)
+        return this
+    }
 }
