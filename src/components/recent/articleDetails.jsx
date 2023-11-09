@@ -1,13 +1,12 @@
-import {useParams} from "react-router-dom";
 import "/src/stylesheets/article/articleDetails.less"
 import {useEffect, useRef, useState} from "react";
-import {getArticleContent, updateArticleCommentCount} from "../../utils/http.js";
+import {updateArticleCommentCount} from "../../utils/http.js";
 import Loading from "../content/loading.jsx";
 import 'highlight.js/styles/atom-one-light.css';
 import {Icon} from "@iconify/react";
 import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
-import {routeTools, SEOTools} from "../../utils/tools.js";
+import {SEOTools} from "../../utils/tools.js";
 
 let previousDataStringify = ""
 let articleObject = {}
@@ -18,10 +17,10 @@ function ArticleDetails() {
      * @type {[Article, React.Dispatch<React.SetStateAction<any>>]}
      */
     const articleState = useImmer(Object)
-    const params = useParams()
     const articleDetailsRef = useRef(null);
     const [article, setArticle] = articleState
     const [scrollHeight, setScrollHeight] = useState(0)
+
     useEffect(() => {
         console.log("ArticleDetails Mounted");
         loader()
@@ -76,12 +75,17 @@ function ArticleDetails() {
         if (location.pathname === "/write/preview") {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
-            const article = await getArticleContent(parseInt(params.articleId))
-            if (article) {
-                setArticle(article)
-                articleObject = article
-                bindDiscussion()
-            }
+            let timer = setInterval(() => {
+                let article = sessionStorage.getItem("articleDetails")
+                if (article) {
+                    article = JSON.parse(article)
+                    setArticle(article)
+                    articleObject = article
+                    sessionStorage.removeItem("articleDetails")
+                    bindDiscussion()
+                    timer = null
+                }
+            }, 200)
         }
     }
 

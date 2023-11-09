@@ -6,23 +6,32 @@ import Category from "/src/components/category/category.jsx";
 import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 import Recent from "../components/recent/recent.jsx";
+import {SEOTools} from "../utils/tools.js";
 
 const pageRouteTree = [
     {
         path: "p/:pageIndex",
         children: [
             {
-                path: ":articleId"
+                path: ":articleId",
+                loader({params}) {
+                    SEOTools.articleDetailsLoader(params.articleId)
+                    return true
+                }
             }
         ]
     },
     {
-        path: ":articleId"
+        path: ":articleId",
+        loader({params}) {
+            SEOTools.articleDetailsLoader(params.articleId)
+            return true
+        }
     }
 ]
 
 
-function hiddenError(errorMessage) {
+export function hiddenError(errorMessage) {
     const error = new Error(errorMessage)
     error.stack = undefined
     error.cause = undefined

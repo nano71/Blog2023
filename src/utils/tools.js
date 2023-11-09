@@ -1,3 +1,6 @@
+import {getArticleContent} from "./http.js";
+import {hiddenError} from "../router/router.jsx";
+
 export function scrollToTop(scrollDuration = 200) {
     const scrollStep = -window.scrollY / (scrollDuration / 15);
 
@@ -93,20 +96,67 @@ export const SEOTools = {
     description() {
         return document.querySelector('meta[name="description"]')
     },
+    articles: {
+        title() {
+            return document.querySelector("article.article .title")
+        },
+        datetime() {
+            return document.querySelector("article.article .datetime")
+        },
+        description() {
+            return document.querySelector("article.article .description")
+        },
+        content() {
+            return document.querySelector("article.article .content")
+        }
+    },
     reset() {
         window.document.title = this.defaultTitle
         this.ogDescription().setAttribute("content", this.defaultDescription)
         this.description().setAttribute("content", this.defaultDescription)
+        this.articles.title().innerHTML = ""
+        this.articles.description().innerHTML = ""
+        this.articles.datetime().innerHTML = ""
+        this.articles.content().innerHTML = ""
         return this
     },
     setTitle(title) {
         window.document.title = title + this.baseTitle
+        this.articles.title().innerHTML = title
+        return this
+    },
+    setDateTime(datetime) {
+        this.articles.datetime().innerHTML = datetime
+        return this
+    },
+    setContent(content) {
+        this.articles.content().innerHTML = content
         return this
     },
     setDescription(description) {
         description = description.replace(/<p>|<\/p>/g, "")
+        this.articles.description().innerHTML = description
         this.ogDescription().setAttribute("content", description)
         this.description().setAttribute("content", description)
         return this
+    },
+    /**
+     *
+     * @param articleId
+     * @return {Article}
+     */
+    async articleDetailsLoader(articleId) {
+        console.log(articleId);
+        const article = await getArticleContent(parseInt(articleId))
+        if (article) {
+            this.setTitle(article.title)
+            this.setContent(article.content)
+            this.setDateTime(article.updateTime)
+            this.setDescription(article.description)
+        } else {
+            throw hiddenError("The article is non-existent.")
+        }
+        sessionStorage.setItem("articleDetails", JSON.stringify(article))
+        return article
     }
 }
