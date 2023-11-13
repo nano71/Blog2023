@@ -76,6 +76,7 @@ function ArticleDetails() {
             setArticle(JSON.parse(localStorage.getItem("draft")))
         } else {
             let timer = setInterval(() => {
+                console.log("timer");
                 let article = sessionStorage.getItem("articleDetails")
                 if (article) {
                     article = JSON.parse(article)
@@ -83,7 +84,7 @@ function ArticleDetails() {
                     articleObject = article
                     sessionStorage.removeItem("articleDetails")
                     bindDiscussion()
-                    timer = null
+                    clearInterval(timer)
                 }
             }, 200)
         }
