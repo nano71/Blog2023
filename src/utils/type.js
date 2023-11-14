@@ -40,7 +40,7 @@
  * @typedef {Object} ResponseData
  * @property {any} data
  * @property {string} message
- * @property {number} code
+ * @property {number|string} code
  */
 
 /**

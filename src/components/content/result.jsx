@@ -14,12 +14,20 @@ function Result() {
             <div className="message">Sorry we couldn't find any matches for "{params.query}"</div>
         </div>
     }
-    function forbidden(){
+
+    function forbidden() {
         console.log("forbidden");
         return <div>
             <div className="message">Your IP address is banned.</div>
         </div>
     }
+
+    function customMessage(message) {
+        return <div>
+            <div className="message">{message}</div>
+        </div>
+    }
+
     function timeout() {
         console.log("timeout");
 
@@ -40,6 +48,9 @@ function Result() {
                 break
             case 403:
                 setView(forbidden())
+                break
+            case "ERR_NETWORK":
+                setView(customMessage(articleRequestState.message))
                 break
             default:
                 setView(notFound())

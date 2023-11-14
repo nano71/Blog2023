@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = "https://nano71.com:9000/api"
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = false
 const baseStaticResourceURL = "https://nano71.com:9000"
 export const staticResourceURL = "./"
 
@@ -16,8 +16,12 @@ async function r(url, data = undefined) {
         axios.post(url, data).then(response => {
             resolve(response.data)
         }).catch(reason => {
-            console.log(url, reason.response.data);
-            resolve(reason.response.data);
+            console.log(url, reason);
+            resolve({
+                code: reason.code,
+                message: reason.message,
+                data: null
+            });
         })
     })
 
@@ -56,7 +60,7 @@ export async function getTagList() {
      * @type {{data: Tag[]|false, code: number, message: string}}
      */
     const response = await r("/getTagList")
-    return response.data
+    return response?.data
 }
 
 /**
@@ -66,7 +70,7 @@ export async function getTagList() {
  */
 export async function getArticleContent(articleId) {
     const response = await r("/getArticleContent", {articleId})
-    return response.data
+    return response?.data
 }
 
 
@@ -130,6 +134,7 @@ export async function searchArticles(query, limit, page) {
         limit,
         page: page - 1
     })
+    console.log("response:", response);
     return processResponse(response, limit, page)
 }
 
@@ -162,7 +167,7 @@ export async function searchArticlesByTag(tag, limit, page) {
  * @param {number} page 第几页, 1开始
  * @return {[ArticleListObject, ResponseData]}
  */
-function processResponse(response, limit, page) {
+function processResponse(response = {data: null, code: 0, message: ""}, limit, page) {
     if (response.data) {
         for (let object of response.data.list) {
             sessionStorage.setItem("article-" + object.id, JSON.stringify(object))

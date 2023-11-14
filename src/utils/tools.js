@@ -26,11 +26,8 @@ String.prototype.toInt = function () {
 Number.prototype.toInt = function () {
     return this
 }
-const consoleLog = console.log
 const consoleInfo = console.info
-console.log = function (...args) {
-    consoleLog(...args)
-}
+
 console.info = function (...args) {
     consoleInfo("%c" + (args.join(" ")), "padding:2px 4px;color:white;background:dodgerblue;")
 }
