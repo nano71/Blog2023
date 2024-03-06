@@ -12,7 +12,7 @@ import {routeTools} from "../utils/tools.js";
 const recentArticlesContextValue = {
     isLoading: true, list: [], total: 0, limit: 0, page: 0
 }
-const resultLimit = 2
+const resultLimit = 6
 
 const articleListRequestStateContextValue = {code: 0, message: "", data: null}
 export const ArticleListObjectContext = createContext(null)
@@ -116,8 +116,8 @@ function Index() {
             case routeTools.isCategory():
             // 上一次路由为文章页,
             case previousRoute === "article":
-            // 上一次为操作为文章列表
-            case previousAction === (`recent-${params.pageIndex || 1}`):
+            // 上一次为操作页数和当前页数相同
+            case previousAction === (`recent-${params.pageIndex || 1}`) && routeTools.isArticles():
             // 上一次操作为搜索
             case new RegExp(pattern, "g").test(previousAction):
                 previousRoute = location.pathname
