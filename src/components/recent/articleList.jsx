@@ -1,7 +1,7 @@
 import "/src/stylesheets/article/articleList.less"
 import React, {useContext, useEffect} from "react";
 import {ArticleListObjectContext, CoverImageIndexContext, previousRoute} from "/src/pages/index.jsx";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
@@ -40,20 +40,27 @@ function ArticleList() {
                 navigate(-1)
             }
         })
-
         navigate(location.pathname.replace(/\/$/g, "") + "/" + id)
+    }
+
+    function articleHref(id) {
+        return location.origin + "/articles/" + id
     }
 
     return (
         <div className="articleList" id="articleList">
             {recentArticlesObject.list.map((value, index) =>
-                <div key={index} className="article" onClick={_ => readArticle(value.id)} onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
+                <a href={articleHref(value.id)} key={index} className="article" onClick={_ => {
+                    _.preventDefault()
+                    readArticle(value.id)
+                }}
+                   onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
                     <span className="date">{new Date(value.createTime).toLocaleString()}</span>
                     <h2 className="title" itemProp="name">{value.title}</h2>
                     <p className="text" itemProp="description" dangerouslySetInnerHTML={{__html: value.description.replace(/<p>|<\/p>/g, "")}}/>
                     <div className="button more">view</div>
-                    <img src={value.coverImage} style={{display: "none"}} alt=""/>
-                </div>
+                    <img src={value.coverImage} style={{display: "none"}} alt="coverImage"/>
+                </a>
             )}
             <div className="placeholder"/>
             <Pagination max={Math.ceil(recentArticlesObject.total / recentArticlesObject.limit)}/>

@@ -12,18 +12,16 @@ import {routeTools} from "../utils/tools.js";
 const recentArticlesContextValue = {
     isLoading: true, list: [], total: 0, limit: 0, page: 0
 }
+const resultLimit = 2
 
 const articleListRequestStateContextValue = {code: 0, message: "", data: null}
 export const ArticleListObjectContext = createContext(null)
 export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
 export const CoverImageIndexContext = createContext(null)
 export const TagListContext = createContext(null)
-
-let fetchingArticles = false
-let fetchingTagList = false
-const resultLimit = 8
-let previousAction = ""
 export let previousRoute = "initial"
+let previousAction = ""
+let fetchingArticles = false
 
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
@@ -91,30 +89,45 @@ function Index() {
         }
     }
 
-    // todo 路由待完善, 1:上一次搜索和本次搜索如果相同会不命中
-    useEffect(() => {
-        // todo 本次路由为文章页, 且有上一个路由的时候, 不触发刷新,
-        //  上一次路由为Category页且本次路由为Articles页且上一次操作为Recent,
-        //  上一次路由为文章页,
-        //  上一次数据请求和本次即将发起的数据请求一致时, 不触发刷新,
+    function routeEffectInfo() {
+        return {
+            previousRoute,
+            previousAction,
+            params
+        }
+    }
 
-        console.info("location.pathname:", location.pathname, "previousRoute:", previousRoute);
+    function routeEffectPreCheck() {
+        console.log("effect before", routeEffectInfo());
+        // 本次路由为文章页, 且有上一个路由的时候, 不触发刷新,
         if (params.articleId && previousRoute !== "initial") {
             previousRoute = "article"
-            return;
+            return false;
         }
-        if ((routeTools.isCategory(previousRoute) &&
-                routeTools.isArticles() &&
-                previousAction.indexOf("recent") === 0)
-            || routeTools.isCategory()
-            || previousRoute === "article"
-            || (previousAction === ("recent-" + (params.pageIndex || 1)) && routeTools.isArticles())
-            // || routeTools.isSearch() && previousAction === (`query-${params.query}-${params.pageIndex || 1}`)
-        ) {
-            previousRoute = location.pathname
-            return
+        return true;
+    }
+
+    function routeEffectCheck() {
+        let pattern = `\\w+-\\${params.query?.split(":")[1]}+-${params.pageIndex || 1}`
+        switch (true) {
+            // 上一次路由为Category页,且本次路由为Articles页,且上一次操作为Recent,
+            case routeTools.isCategory(previousRoute) && routeTools.isArticles() && previousAction.indexOf("recent") === 0:
+            // 本次路由为为Category页
+            case routeTools.isCategory():
+            // 上一次路由为文章页,
+            case previousRoute === "article":
+            // 上一次为操作为文章列表
+            case previousAction === (`recent-${params.pageIndex || 1}`):
+            // 上一次操作为搜索
+            case new RegExp(pattern, "g").test(previousAction):
+                previousRoute = location.pathname
+                return false
         }
-        console.info("location hit", "previousRoute:", previousRoute, "previousAction:", previousAction);
+        return true
+    }
+
+    function routeEffect() {
+        console.log("effect hit", routeEffectInfo());
         if (!(previousRoute === "initial" && params.articleId))
             previousRoute = location.pathname
 
@@ -124,6 +137,10 @@ function Index() {
         }
         getArticleListData({message: "onUpdate", query: params.query, tag, page: params.pageIndex})
 
+    }
+
+    useEffect(() => {
+        routeEffectPreCheck() && routeEffectCheck() && routeEffect()
     }, [params])
 
     return (<>

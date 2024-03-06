@@ -87,7 +87,8 @@ export default createBrowserRouter([
                 children: [
                     {
                         path: ":query",
-                        children: pageRouteTree
+                        element: <></>,
+                        children: pageRouteTree,
                     }
                 ]
             },
