@@ -12,7 +12,8 @@ export default function Pagination({max}) {
         params.pageIndex && setPageIndex(params.pageIndex.toInt())
     }, [params]);
 
-    function previous() {
+    function previous(e) {
+        e.preventDefault()
         if (pageIndex <= 1)
             return
         navigate(pathConcatenation(pageIndex - 1))
@@ -24,23 +25,26 @@ export default function Pagination({max}) {
             path = routeTools.search + "/" + params.query + "/" + path
         } else if (routeTools.isDefault()) {
             path = routeTools.front() + "/" + path
-        }
+        } else if (routeTools.isArticles())
+            path = routeTools.articles + "/" + path
         return path
     }
 
-    function next() {
+    function next(e) {
+        e.preventDefault()
         if (pageIndex >= max)
             return
         navigate(pathConcatenation(pageIndex + 1))
     }
 
     return <div className="pagination">
-        <a className={"previous " + (pageIndex <= 1 && "disabled")} onClick={previous}><Icon icon="ri:arrow-left-s-line"/>Newer</a>
+        <a href={location.origin + pathConcatenation((pageIndex - 1) || 1)} className={"previous " + (pageIndex <= 1 && "disabled")} onClick={previous}><Icon
+            icon="ri:arrow-left-s-line"/>Newer</a>
         <div className="indicator">
             <div className="currentIndex">{pageIndex}</div>
             /
             <div className="max">{max || 1}</div>
         </div>
-        <a className={"next " + (pageIndex >= max && "disabled")} onClick={next}>Older<Icon icon="ri:arrow-right-s-line"/></a>
+        <a href={location.origin + pathConcatenation(pageIndex + 1)} className={"next " + (pageIndex >= max && "disabled")} onClick={next}>Older<Icon icon="ri:arrow-right-s-line"/></a>
     </div>
 }
