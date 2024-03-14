@@ -1,0 +1,15 @@
+POST /webmaster/api.svc/json/SubmitUrl?apikey=f839b645f47f4b83b7bad2ef86486a77 HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Host: ssl.bing.com
+
+{
+    "siteUrl": "https://blog.nano71.com",
+    "url": "https://blog.nano71.com/articles/49"
+}
+
+<> 2024-03-14T115927.401.json
+<> 2024-03-14T115843.401.json
+<> 2024-03-14T115646.401.json
+<> 2024-03-14T115631.401.json
+<> 2024-03-14T115510.401.json
+<> 2024-03-14T115349.400.json

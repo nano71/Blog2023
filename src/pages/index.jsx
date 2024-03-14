@@ -156,7 +156,7 @@ function Index() {
                         </ArticleListRequestStateContext.Provider>
                     </CoverImageIndexContext.Provider>
                 </ArticleListObjectContext.Provider>
-                <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt=""/>
+                <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt="loading-GIF"/>
             </div>
         </PopupProvider>
     </>)

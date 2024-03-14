@@ -113,7 +113,7 @@ export const SEOTools = {
     },
     reset() {
         window.document.title = this.defaultTitle
-        this.H1().innerText = this.defaultH1
+        // this.H1().innerText = this.defaultH1
         this.ogDescription().setAttribute("content", this.defaultDescription)
         this.description().setAttribute("content", this.defaultDescription)
         this.article.title().innerHTML = ""
@@ -124,7 +124,7 @@ export const SEOTools = {
     },
     setTitle(title) {
         window.document.title = title + this.baseTitle
-        this.H1().innerText = title
+        // this.H1().innerText = title
         this.article.title().innerHTML = title
         return this
     },
