@@ -84,16 +84,20 @@ export const routeTools = {
 }
 
 export const SEOTools = {
+    defaultH1: "文章列表",
     defaultTitle: "部落格 - nano71.com",
     baseTitle: " - nano71.com",
-    defaultDescription: "非常简单的BLOG",
+    defaultDescription: "Hi! 这里是nano71的个人博客, 一个极简的blog网站, 分享互联网里的编程技术!",
     ogDescription() {
         return document.querySelector('meta[property="og:description"]')
     },
     description() {
         return document.querySelector('meta[name="description"]')
     },
-    articles: {
+    H1() {
+        return document.querySelector("body > h1.title")
+    },
+    article: {
         title() {
             return document.querySelector("article.article .title")
         },
@@ -109,30 +113,32 @@ export const SEOTools = {
     },
     reset() {
         window.document.title = this.defaultTitle
+        this.H1().innerText = this.defaultH1
         this.ogDescription().setAttribute("content", this.defaultDescription)
         this.description().setAttribute("content", this.defaultDescription)
-        this.articles.title().innerHTML = ""
-        this.articles.description().innerHTML = ""
-        this.articles.datetime().innerHTML = ""
-        this.articles.content().innerHTML = ""
+        this.article.title().innerHTML = ""
+        this.article.description().innerHTML = ""
+        this.article.datetime().innerHTML = ""
+        this.article.content().innerHTML = ""
         return this
     },
     setTitle(title) {
         window.document.title = title + this.baseTitle
-        this.articles.title().innerHTML = title
+        this.H1().innerText = title
+        this.article.title().innerHTML = title
         return this
     },
     setDateTime(datetime) {
-        this.articles.datetime().innerHTML = datetime
+        this.article.datetime().innerHTML = datetime
         return this
     },
     setContent(content) {
-        this.articles.content().innerHTML = content
+        this.article.content().innerHTML = content
         return this
     },
     setDescription(description) {
         description = description.replace(/<p>|<\/p>/g, "")
-        this.articles.description().innerHTML = description
+        this.article.description().innerHTML = description
         this.ogDescription().setAttribute("content", description)
         this.description().setAttribute("content", description)
         return this

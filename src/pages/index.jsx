@@ -12,7 +12,7 @@ import {routeTools} from "../utils/tools.js";
 const recentArticlesContextValue = {
     isLoading: true, list: [], total: 0, limit: 0, page: 0
 }
-const resultLimit = 2
+const resultLimit = 6
 
 const articleListRequestStateContextValue = {code: 0, message: "", data: null}
 export const ArticleListObjectContext = createContext(null)
