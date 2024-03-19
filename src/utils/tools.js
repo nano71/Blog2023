@@ -116,29 +116,29 @@ export const SEOTools = {
         // this.H1().innerText = this.defaultH1
         this.ogDescription().setAttribute("content", this.defaultDescription)
         this.description().setAttribute("content", this.defaultDescription)
-        this.article.title().innerHTML = ""
-        this.article.description().innerHTML = ""
-        this.article.datetime().innerHTML = ""
-        this.article.content().innerHTML = ""
+        // this.article.title().innerHTML = ""
+        // this.article.description().innerHTML = ""
+        // this.article.datetime().innerHTML = ""
+        // this.article.content().innerHTML = ""
         return this
     },
     setTitle(title) {
         window.document.title = title + this.baseTitle
         // this.H1().innerText = title
-        this.article.title().innerHTML = title
+        // this.article.title().innerHTML = title
         return this
     },
     setDateTime(datetime) {
-        this.article.datetime().innerHTML = datetime
+        // this.article.datetime().innerHTML = datetime
         return this
     },
     setContent(content) {
-        this.article.content().innerHTML = content
+        // this.article.content().innerHTML = content
         return this
     },
     setDescription(description) {
         description = description.replace(/<p>|<\/p>/g, "")
-        this.article.description().innerHTML = description
+        // this.article.description().innerHTML = description
         this.ogDescription().setAttribute("content", description)
         this.description().setAttribute("content", description)
         return this

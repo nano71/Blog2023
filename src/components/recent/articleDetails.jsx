@@ -99,7 +99,7 @@ function ArticleDetails() {
             <h1 className="title">{article.title || "无标题"}</h1>
             <BaseInfoArea article={article}/>
             <div className="description" dangerouslySetInnerHTML={{__html: article.description}}></div>
-            {article.coverImage && <img className="image" src={article.coverImage} alt=""/>}
+            {article.coverImage && <img className="image" src={article.coverImage} alt="articleCoverImage"/>}
             <div className="content" dangerouslySetInnerHTML={{__html: article.content?.replace(article.description, "")}}></div>
             <BaseInfoArea article={article}/>
             <Giscus

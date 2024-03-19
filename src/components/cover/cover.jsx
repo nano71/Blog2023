@@ -34,7 +34,7 @@ export default Cover
 
 export function Cover4Write() {
     return <div className="cover" id="cover">
-        <img className="preview active" src="https://nano71.com:9000/uploads/pexels-james-wheeler-4554150.jpg" alt=""/>
+        <img className="preview active" src="https://nano71.com:9000/uploads/pexels-james-wheeler-4554150.jpg" alt="websiteCoverImage"/>
         <ContainerTemplate subtitle="Write whatever you want" title="Blog write"/>
     </div>
 }
@@ -42,6 +42,6 @@ export function Cover4Write() {
 function ContainerTemplate({subtitle, title}) {
     return <div className="container">
         <span>{subtitle}</span>
-        <h1>{title}</h1>
+        <span>{title}</span>
     </div>
 }
