@@ -1,16 +1,9 @@
 import {useNavigate} from "react-router-dom";
 import React, {createContext, useEffect, useState} from "react";
 import "/src/stylesheets/popup/popup.less"
+import Message from "./message.jsx";
 
 class PopupContextValue {
-    isVisible
-    setVisibility
-    isHiding
-    loadTemporaryComponent
-    loadComponent
-    close
-    show
-    title
 }
 
 export const PopupContext = createContext(PopupContextValue)
@@ -29,6 +22,7 @@ export default function PopupProvider({children}) {
     const [temporaryComponent, setTemporaryComponent] = useState(null)
     const [isShowMask, setMaskVisibility] = useState(true)
     const [isLockScroll, setLockScroll] = useState(true)
+    const [isLockMask, setLockMask] = useState(false)
     const [popipTitle, setPopipTitle] = useState("")
 
     PopupContextValue = {
@@ -39,7 +33,8 @@ export default function PopupProvider({children}) {
         loadComponent,
         close,
         show,
-        title
+        title,
+        tip
     }
     useEffect(() => {
         if (isLockScroll)
@@ -48,6 +43,12 @@ export default function PopupProvider({children}) {
             document.body.style.overflow = "unset"
         }
     }, [isVisible, isLockScroll])
+
+    function tip(message) {
+        loadTemporaryComponent(<Message/>)
+            .title(message)
+            .show({showMask: false, lockScroll: false, autoClose: true})
+    }
 
     function title(title) {
         if (title) {
@@ -63,6 +64,8 @@ export default function PopupProvider({children}) {
     }
 
     function close(message, haveTask) {
+        if (message === "mask" && isLockMask)
+            return
         console.log("close", message);
         setHiding(true)
         clearTimeout(autoCloseTimer)
@@ -88,12 +91,13 @@ export default function PopupProvider({children}) {
                       lockScroll = true,
                       autoClose = false,
                       task = false,
+                      lockMask = false,
                       onClose = () => {
                       }
                   } = {}) {
         console.log("visibleState:", visibleState);
         if (visibleState) {
-            taskParams = {message: "task", showMask, lockScroll, autoClose, task: true, onClose}
+            taskParams = {message: "task", showMask, lockScroll, autoClose, task: true, onClose, lockMask}
             return close("task", true)
         }
         if (task) {
@@ -101,6 +105,7 @@ export default function PopupProvider({children}) {
         } else {
             console.info("popup.show", "normal", "message:", message);
         }
+        setLockMask(lockMask)
         setPopipTitle(titleQueue.shift())
         setTemporaryComponent(temporaryComponentQueue.shift())
         lockScroll || setLockScroll(false)

@@ -111,17 +111,13 @@ export default function Editor() {
                 return
             }
         }
-        popup.loadTemporaryComponent(<Modal/>).title("发布中,请稍等...").show()
+        popup.loadTemporaryComponent(<Modal/>).title("发布中,请稍等...").show({lockMask: true})
         setTimeout(async () => {
             let result = await http.publishArticle(processedData)
             if (result) {
-                popup.loadTemporaryComponent(<Message/>)
-                    .title("文章已发布!")
-                    .show({showMask: false, lockScroll: false, autoClose: true})
+                popup.tip("文章已发布!")
             } else {
-                popup.loadTemporaryComponent(<Message/>)
-                    .title("文章发布失败!")
-                    .show({showMask: false, lockScroll: false, autoClose: true})
+                popup.tip("文章发布失败!")
             }
         }, 2000)
 

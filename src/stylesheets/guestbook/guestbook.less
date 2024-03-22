@@ -1,0 +1,271 @@
+#guestbook {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .inputArea {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 4vw;
+
+        input, textarea {
+            outline: unset;
+            border: 0;
+            padding: 10px;
+            font-family: "Noto Sans SC", monospace;
+            font-size: 16px;
+        }
+
+        input {
+            //width: 200px;
+            flex: 1;
+        }
+
+        .label {
+            font-size: 14px;
+        }
+
+        > .top {
+            display: flex;
+            gap: 20px;
+            white-space: nowrap;
+
+            .item {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex: 1;
+
+
+            }
+
+            .face {
+                background-color: #fff;
+                height: 44px;
+                padding: 0 10px;
+                flex: unset;
+                cursor: pointer;
+                transition: .2s;
+                position: relative;
+
+                &:hover {
+                    background-color: @themeColor;
+                    color: white;
+                }
+
+                @keyframes showDownDropMenu {
+                    from {
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                    to {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes hideDownDropMenu {
+                    from {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                    to {
+                        opacity: 0;
+                        visibility: hidden;
+
+                    }
+                }
+
+                &.show {
+                    .downDropMenu {
+                        animation: showDownDropMenu .2s both;
+                    }
+                }
+
+                &.hide {
+                    .downDropMenu {
+                        animation: hideDownDropMenu .2s both;
+                    }
+                }
+
+                .emoji {
+                    font-size: 28px;
+                }
+
+                .label {
+                    display: flex;
+                    line-height: 1;
+                    align-items: center;
+                    &:extend(.enFontS);
+                    font-size: 16px;
+
+                    svg {
+                        font-size: 20px;
+                    }
+                }
+
+                .downDropMenu {
+                    position: absolute;
+                    padding-top: 10px;
+                    top: 100%;
+                    right: 0;
+                    z-index: 1;
+                    opacity: 0;
+                    visibility: hidden;
+
+                    .box {
+                        width: 343px;
+                        height: 400px;
+                        padding: 10px 0 10px 10px;
+                        background-color: #ffffff;
+                        box-shadow: 0 10px 20px 0 #00000005;
+
+                        .content {
+                            display: flex;
+                            flex-wrap: wrap;
+                            overflow: auto;
+                            height: 100%;
+                            padding-right: 5px;
+                            cursor: auto !important;
+
+                            svg {
+                                width: 53px;
+                                height: 53px;
+                                display: block;
+                                border: 2px solid transparent;
+                                padding: 5px;
+                                cursor: pointer;
+
+                                &:hover {
+                                    border: 2px solid @themeColor;
+                                }
+                            }
+
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+        > .item {
+            display: flex;
+            gap: 10px;
+
+            .label {
+                height: 44px;
+                display: flex;
+                align-items: center;
+            }
+
+            .right {
+                flex: 1;
+                background-color: #fff;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 240px;
+                align-items: center;
+
+                .bottom {
+                    display: flex;
+                    gap: 20px;
+                    padding: 10px 0;
+                    width: calc(100% - 20px);
+                    align-items: center;
+                    justify-content: space-between;
+                    border-top: 1px solid #f1f1f1;
+
+                    .count {
+                        //padding-left: 15px;
+                        font-size: 14px;
+                        color: #666666;
+                    }
+
+                    .submit {
+                        font-size: 14px;
+                        padding: 6px;
+                    }
+                }
+            }
+
+            textarea {
+                width: 100%;
+                height: 180px;
+                flex: 1;
+                resize: none;
+            }
+
+        }
+
+
+    }
+
+    .messageList {
+        padding: 0 4vw;
+
+        .list {
+            padding: 20px 0;
+            display: flex;
+
+            flex-direction: column;
+            gap: 40px;
+
+            .item {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+
+                .avatar {
+
+                    width: 44px;
+                    height: 44px;
+                    padding: 4px;
+                    background-color: #fff;
+                }
+
+                .right {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    .top {
+                        height: 44px;
+                        display: flex;
+                        flex-direction: column;
+                        flex-wrap: nowrap;
+                        justify-content: center;
+                        align-items: flex-start;
+                        line-height: 1;
+                        gap: 5px;
+
+                        .nickname {
+                            font-size: 18px;
+                            &:extend(.hybridFont);
+                            color: #000000
+                        }
+
+                        a.nickname:hover {
+                            color: @themeColor;
+                        }
+
+                        .time {
+                            color: #999;
+                            //font-size: 14px;
+                            &:extend(.enFontS);
+                        }
+                    }
+
+                    .message {
+                        white-space: break-spaces;
+                    }
+                }
+            }
+        }
+    }
+}
+

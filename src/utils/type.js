@@ -55,3 +55,17 @@
  * @type {{total: number, limit: number, page: number, list: Article[],isLoading:boolean}|false}
  */
 
+/**
+ * @typedef {Object} MessageListObject
+ * @type {{total: number, limit: number, page: number, list: MessageItem[],isLoading:boolean}|false}
+ */
+
+
+/**
+ * @typedef {Object} MessageItem
+ * @property {string} nickname
+ * @property {string} url
+ * @property {string} face
+ * @property {string} content
+ * @property {string} createTime
+ */

@@ -19,6 +19,8 @@ export const ArticleListObjectContext = createContext(null)
 export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
 export const CoverImageIndexContext = createContext(null)
 export const TagListContext = createContext(null)
+export const MessageListContext = createContext(null)
+
 export let previousRoute = "initial"
 let previousAction = ""
 let fetchingArticles = false
@@ -26,6 +28,7 @@ let fetchingArticles = false
 function Index() {
     const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
     const [tagList, setTagList] = useState([])
+    const [messageList, setMessageList] = useImmer([])
     const [coverImage, setCoverImage] = useState("")
     const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
     const params = useParams()
@@ -151,7 +154,9 @@ function Index() {
                         <Cover/>
                         <ArticleListRequestStateContext.Provider value={articleListRequestState}>
                             <TagListContext.Provider value={tagList}>
-                                <Content/>
+                                <MessageListContext.Provider value={{messageList,setMessageList}}>
+                                    <Content/>
+                                </MessageListContext.Provider>
                             </TagListContext.Provider>
                         </ArticleListRequestStateContext.Provider>
                     </CoverImageIndexContext.Provider>

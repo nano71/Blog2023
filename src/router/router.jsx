@@ -7,6 +7,7 @@ import Write from "../pages/write.jsx";
 import Editor from "../components/editor/editor.jsx";
 import Recent from "../components/recent/recent.jsx";
 import {SEOTools} from "../utils/tools.js";
+import Guestbook from "../components/guestbook/guestbook.jsx";
 
 const pageRouteTree = [
     {
@@ -98,10 +99,10 @@ export default createBrowserRouter([
             },
             {
                 path: "guestbook",
-                loader() {
-                    throw hiddenError("It may be accessible later, but not now.")
-                },
-                element: <></>,
+                // loader() {
+                //     throw hiddenError("It may be accessible later, but not now.")
+                // },
+                element: <Guestbook/>,
             }
         ]
     }

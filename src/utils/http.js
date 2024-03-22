@@ -1,9 +1,12 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://nano71.com:9000/api"
+// axios.defaults.baseURL = "https://nano71.com:9000/api"
+axios.defaults.baseURL = "http://localhost:9000/api"
 axios.defaults.withCredentials = false
-const baseStaticResourceURL = "https://nano71.com:9000"
+// const baseStaticResourceURL = "https://nano71.com:9000"
+const baseStaticResourceURL = "http://localhost:9000"
 export const staticResourceURL = "./"
+const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/gm;
 
 /**
  *  发起一个post请求
@@ -64,6 +67,29 @@ export async function getTagList() {
 }
 
 /**
+ * 获取留言列表
+ * @param {number} limit 返回多少项
+ * @param {number|string} page 第几页, 1开始
+ * @returns {Promise<MessageItem[]|false>} 文章列表,包含文章总数 / 失败
+ */
+export async function getMessageList(limit = 10000, page = 1) {
+    console.log("getMessageList");
+    page = page.toInt()
+
+    /**
+     *
+     * @type {{data: MessageItem[]|false, code: number, message: string}}
+     */
+    const response = await r("/getMessageList", {
+        limit,
+        page: page - 1
+    })
+
+    return response?.data
+
+}
+
+/**
  *  获取一个文章的内容
  * @param {number} articleId 文章id
  * @returns {Promise<Article>} 文章
@@ -111,6 +137,22 @@ export async function uploadImage(file) {
 export async function publishArticle({title, content, description, markdown, createTime, coverImage, tags}) {
     const response = await r("/publishArticle", {
         title, content, description, createTime, coverImage, markdown, tags: tags.toString()
+    })
+    return response.data
+}
+
+/**
+ *  发布一个留言
+ * @param {string} nickname 昵称
+ * @param {string} url 网址
+ * @param {string} face 头像
+ * @param {string} content 内容
+ * @param {string} createTime 发表时间
+ * @returns {Promise<boolean>} 发布成功 / 失败
+ */
+export async function leaveMessage({nickname, url, face, content, createTime}) {
+    const response = await r("/leaveMessage", {
+        nickname, url, face, content, createTime
     })
     return response.data
 }
@@ -190,4 +232,10 @@ export async function updateArticleCommentCount(articleId, count) {
         articleId: articleId.toInt(),
         count: count.toInt()
     })
+}
+
+
+export function isValidUrl(url) {
+
+    return urlRegex.test(url);
 }
