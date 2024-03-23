@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import {MessageListContext} from "../../pages/index.jsx";
 import Loading from "../content/loading.jsx";
 import MessageList from "./messageList.jsx";
@@ -10,29 +10,10 @@ import {PopupContext} from "../popup/popup.jsx";
 import Modal from "../popup/modal.jsx";
 import * as http from "../../utils/http.js";
 import {isValidUrl} from "../../utils/http.js";
+import {sleep} from "../../utils/tools.js";
 
 export default function () {
-    const {messageList, setMessageList} = useContext(MessageListContext)
-
-    useEffect(() => {
-        getMessageList()
-    }, [])
-
-    /**
-     * 获取留言列表数据
-     * @returns {void}
-     */
-    async function getMessageList() {
-        console.log("getTagListData");
-        // let messageList = await http.getMessageList()
-        let {list} = await http.getMessageList()
-        if (list) {
-            setMessageList(list)
-        } else {
-            // todo 消息列表获取失败的处理
-        }
-    }
-
+    const {messageList} = useContext(MessageListContext)
     return (
         <div className="tab active">
             <div id="guestbook">
@@ -53,7 +34,7 @@ function InputArea() {
     const [faceIndex, setFaceIndex] = useState(200 - 15)
     const face = useRef(null)
 
-    function submit() {
+    async function submit() {
         let data = {
             nickname,
             url,
@@ -75,19 +56,19 @@ function InputArea() {
         }
         popup.loadTemporaryComponent(<Modal/>).title("处理中, 稍等一会...")
             .show({lockMask: true})
-        setTimeout(async () => {
-            let result = await http.leaveMessage(data)
-            console.log(result);
-            if (result) {
-                setMessageList(draft => {
-                    draft.unshift(data)
-                })
-                setMessage("")
-                popup.tip("留言成功!")
-            } else {
-                popup.tip("留言失败!")
-            }
-        }, 2000)
+        await sleep(1000)
+
+        let result = await http.leaveMessage(data)
+        console.log(result);
+        if (result) {
+            setMessageList(draft => {
+                draft.unshift(data)
+            })
+            setMessage("")
+            popup.tip("留言成功!")
+        } else {
+            popup.tip("留言失败!")
+        }
     }
 
     return <div className="inputArea">

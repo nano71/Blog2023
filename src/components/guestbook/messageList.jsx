@@ -6,7 +6,6 @@ import {Icon} from "@iconify/react";
  * @return {JSX.Element}
  */
 export default function ({messageList}) {
-    console.log(messageList);
     return <div className={"messageList"}>
         <h2 className="title">messages</h2>
         <div className="list">

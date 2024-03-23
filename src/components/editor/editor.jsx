@@ -95,7 +95,7 @@ export default function Editor() {
         }
     }
 
-    function submit() {
+    async function submit() {
         const processedData = preprocessedData()
         const checkMap = {
             title: "缺少标题",
@@ -112,14 +112,14 @@ export default function Editor() {
             }
         }
         popup.loadTemporaryComponent(<Modal/>).title("发布中,请稍等...").show({lockMask: true})
-        setTimeout(async () => {
-            let result = await http.publishArticle(processedData)
-            if (result) {
-                popup.tip("文章已发布!")
-            } else {
-                popup.tip("文章发布失败!")
-            }
-        }, 2000)
+
+        await sleep(1000)
+        let result = await http.publishArticle(processedData)
+        if (result) {
+            popup.tip("文章已发布!")
+        } else {
+            popup.tip("文章发布失败!")
+        }
 
 
     }

@@ -39,6 +39,7 @@ export const routeTools = {
     articles: "/articles",
     default: "/articles",
     search: "/search",
+    guestbook: "/guestbook",
     category: "/category",
     articleDetails(id) {
         return this.articles + "/" + id
@@ -47,16 +48,19 @@ export const routeTools = {
         return this.search + "/" + search
     },
     isSearch() {
-        return p().indexOf(this.search) === 0
+        return p().startsWith(this.search)
+    },
+    isGuestbook() {
+        return p().startsWith(this.guestbook)
     },
     isCategory(path) {
         if (path)
-            return path.indexOf(this.category) === 0
+            return path.startsWith(this.category)
 
-        return p().indexOf(this.category) === 0
+        return p().startsWith(this.category)
     },
     isSearchByTag(params) {
-        return params.query.indexOf("Tag:") === 0
+        return params.query.startsWith("Tag:")
     },
     /**
      *
@@ -78,7 +82,7 @@ export const routeTools = {
         return p().match(/\w+/g)[0]
     },
     isArticles() {
-        return p().indexOf(this.articles) === 0 || p() === this.root
+        return p().startsWith(this.articles) || p() === this.root
     }
 
 }

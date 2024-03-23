@@ -7,6 +7,7 @@ import PopupProvider from "../components/popup/popup.jsx";
 import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {routeTools} from "../utils/tools.js";
+import * as http from "../utils/http.js";
 
 
 const recentArticlesContextValue = {
@@ -35,7 +36,23 @@ function Index() {
 
     useEffect(() => {
         getTagListData()
+        getMessageList()
     }, [])
+
+    /**
+     * 获取留言列表数据
+     * @returns {void}
+     */
+    async function getMessageList() {
+        console.log("getTagListData");
+        // let messageList = await http.getMessageList()
+        let {list} = await http.getMessageList()
+        if (list) {
+            setMessageList(list)
+        } else {
+            // todo 消息列表获取失败的处理
+        }
+    }
 
     /**
      * 获取文章列表数据
@@ -114,9 +131,11 @@ function Index() {
         let pattern = `\\w+-\\${params.query?.split(":")[1]}+-${params.pageIndex || 1}`
         switch (true) {
             // 上一次路由为Category页,且本次路由为Articles页,且上一次操作为Recent,
-            case routeTools.isCategory(previousRoute) && routeTools.isArticles() && previousAction.indexOf("recent") === 0:
+            case routeTools.isCategory(previousRoute) && routeTools.isArticles() && previousAction.startsWith("recent"):
             // 本次路由为为Category页
             case routeTools.isCategory():
+            // 本次路由为为Guestbook页
+            case routeTools.isGuestbook():
             // 上一次路由为文章页,
             case previousRoute === "article":
             // 上一次为操作页数和当前页数相同
@@ -135,7 +154,7 @@ function Index() {
             previousRoute = location.pathname
 
         let tag = undefined
-        if (params.query?.indexOf("Tag:") === 0) {
+        if (params.query?.startsWith("Tag:")) {
             tag = params.query.replace("Tag:", "")
         }
         getArticleListData({message: "onUpdate", query: params.query, tag, page: params.pageIndex})

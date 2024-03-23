@@ -1,4 +1,5 @@
 import axios from "axios";
+import {sleep} from "./tools.js";
 
 // axios.defaults.baseURL = "https://nano71.com:9000/api"
 axios.defaults.baseURL = "http://localhost:9000/api"
@@ -40,6 +41,8 @@ export async function getRecentArticles(limit = 8, page = 1) {
     console.log("getRecentArticles");
     page = page.toInt()
 
+    await sleep(1000)
+
     /**
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}
@@ -58,6 +61,9 @@ export async function getRecentArticles(limit = 8, page = 1) {
  * @returns {Promise<Tag[]|false>} 技术栈标签列表 / 失败
  */
 export async function getTagList() {
+
+    await sleep(1000)
+
     /**
      *
      * @type {{data: Tag[]|false, code: number, message: string}}
@@ -75,6 +81,8 @@ export async function getTagList() {
 export async function getMessageList(limit = 10000, page = 1) {
     console.log("getMessageList");
     page = page.toInt()
+
+    await sleep(1000)
 
     /**
      *
