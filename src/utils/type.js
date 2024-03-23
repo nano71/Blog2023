@@ -50,15 +50,58 @@
  * @property {number} code
  */
 
-/**
- * @typedef {Object} ArticleListObject
- * @type {{total: number, limit: number, page: number, list: Article[],isLoading:boolean}|false}
- */
 
-/**
- * @typedef {Object} MessageListObject
- * @type {{total: number, limit: number, page: number, list: MessageItem[],isLoading:boolean}|false}
- */
+class ListObject {
+    /**
+     * @type number
+     */
+    total
+    /**
+     * @type []
+     */
+    list
+    /**
+     * @type boolean
+     */
+    isLoading
+    /**
+     * @type ResponseData
+     */
+    result
+
+    constructor({
+                    total = 0,
+                    list = [],
+                    isLoading = false,
+                    result
+                }) {
+        this.isLoading = isLoading
+        this.total = total
+        this.list = list
+        this.result = result
+    }
+}
+
+export class ArticleListObject extends ListObject {
+    /**
+     * @type number
+     */
+    limit
+    /**
+     * @type number
+     */
+    page
+
+    constructor({limit, page, ...props}) {
+        super(props);
+        this.limit = limit
+        this.page = page
+    }
+}
+
+export class TagListObject extends ListObject {}
+
+export class MessageListObject extends ListObject{}
 
 
 /**

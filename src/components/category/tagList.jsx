@@ -1,6 +1,6 @@
 import "/src/stylesheets/tagList.less"
 import {useNavigate} from "react-router-dom";
-import {useContext} from "react";
+import React, {useContext} from "react";
 import {TabContext} from "../content/content.jsx";
 import {routeTools} from "../../utils/tools.js";
 
@@ -24,6 +24,7 @@ function TagList({tagList}) {
                         <div className="count">{value["count"]}</div>
                     </div>
                 </div>)}
+            <div className="placeholder"></div>
         </div>)
 }
 

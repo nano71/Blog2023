@@ -1,5 +1,6 @@
 import axios from "axios";
 import {sleep} from "./tools.js";
+import {ArticleListObject, MessageListObject, TagListObject} from "./type.js";
 
 // axios.defaults.baseURL = "https://nano71.com:9000/api"
 axios.defaults.baseURL = "http://localhost:9000/api"
@@ -35,7 +36,7 @@ async function r(url, data = undefined) {
  * 获取文章列表
  * @param {number} limit 返回多少项
  * @param {number|string} page 第几页, 1开始
- * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
 export async function getRecentArticles(limit = 8, page = 1) {
     console.log("getRecentArticles");
@@ -58,7 +59,7 @@ export async function getRecentArticles(limit = 8, page = 1) {
 
 /**
  * 获取技术栈标签列表
- * @returns {Promise<Tag[]|false>} 技术栈标签列表 / 失败
+ * @returns {Promise<TagListObject>} 技术栈标签列表 / 失败
  */
 export async function getTagList() {
 
@@ -69,14 +70,21 @@ export async function getTagList() {
      * @type {{data: Tag[]|false, code: number, message: string}}
      */
     const response = await r("/getTagList")
-    return response?.data
+    let returnValue = new TagListObject({
+        result: response
+    })
+    if (response.data) {
+        returnValue.list = response.data
+        returnValue.total = returnValue.list.length
+    }
+    return returnValue
 }
 
 /**
  * 获取留言列表
  * @param {number} limit 返回多少项
  * @param {number|string} page 第几页, 1开始
- * @returns {Promise<MessageItem[]|false>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<MessageListObject>} 文章列表,包含文章总数 / 失败
  */
 export async function getMessageList(limit = 10000, page = 1) {
     console.log("getMessageList");
@@ -84,16 +92,20 @@ export async function getMessageList(limit = 10000, page = 1) {
 
     await sleep(1000)
 
-    /**
-     *
-     * @type {{data: MessageItem[]|false, code: number, message: string}}
-     */
+
     const response = await r("/getMessageList", {
         limit,
         page: page - 1
     })
 
-    return response?.data
+    let returnValue = new MessageListObject({
+        result: response
+    })
+    if (response.data) {
+        returnValue.list = response.data.list
+        returnValue.total = returnValue.list.length
+    }
+    return returnValue
 
 }
 
@@ -170,7 +182,7 @@ export async function leaveMessage({nickname, url, face, content, createTime}) {
  * @param {string} query
  * @param {number} limit 返回多少项
  * @param {number|string} page 第几页, 1开始
- * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
 export async function searchArticles(query, limit, page) {
     console.log("searchArticles");
@@ -184,7 +196,6 @@ export async function searchArticles(query, limit, page) {
         limit,
         page: page - 1
     })
-    console.log("response:", response);
     return processResponse(response, limit, page)
 }
 
@@ -193,7 +204,7 @@ export async function searchArticles(query, limit, page) {
  * @param {string} tag
  * @param {number} limit 返回多少项
  * @param {number|string} page 第几页, 1开始
- * @returns {Promise<[ArticleListObject,ResponseData]>} 文章列表,包含文章总数 / 失败
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
 export async function searchArticlesByTag(tag, limit, page) {
     console.log("searchArticlesByTag");
@@ -215,18 +226,23 @@ export async function searchArticlesByTag(tag, limit, page) {
  * @param {ResponseData} response
  * @param {number} limit 返回多少项
  * @param {number} page 第几页, 1开始
- * @return {[ArticleListObject, ResponseData]}
+ * @return {ArticleListObject}
  */
-function processResponse(response = {data: null, code: 0, message: ""}, limit, page) {
-    if (response.data) {
+function processResponse(response, limit, page) {
+
+    let returnValue = new ArticleListObject({
+        result: response,
+        limit,
+        page
+    })
+    if (response.data && response.data.total) {
         for (let object of response.data.list) {
             sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
         }
-        response.data.limit = limit
-        response.data.page = page
-        response.data.isLoading = false
+        returnValue.list = response.data.list
+        returnValue.total = returnValue.list.length
     }
-    return [response.data, response]
+    return returnValue
 }
 
 /**

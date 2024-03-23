@@ -1,5 +1,6 @@
 import "/src/stylesheets/index.less"
 import React, {createContext, useEffect, useState} from "react";
+import * as http from "../utils/http.js";
 import {getRecentArticles, getTagList, searchArticles, searchArticlesByTag, staticResourceURL} from "../utils/http.js";
 import Cover from "../components/cover/cover.jsx";
 import Content from "../components/content/content.jsx";
@@ -7,32 +8,39 @@ import PopupProvider from "../components/popup/popup.jsx";
 import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {routeTools} from "../utils/tools.js";
-import * as http from "../utils/http.js";
 
+const resultObjectDefault = {code: 0, message: "", data: null}
+const listObjectDefault = {isLoading: true, list: [], total: 0}
 
-const recentArticlesContextValue = {
-    isLoading: true, list: [], total: 0, limit: 0, page: 0
+const articleListObjectContextValue = {
+    ...listObjectDefault, limit: 0, page: 0, result: resultObjectDefault
 }
+const tagListContextValue = {
+    ...listObjectDefault, result: resultObjectDefault
+}
+
+const messageListContextValue = {
+    ...tagListContextValue
+}
+
 const resultLimit = 6
 
-const articleListRequestStateContextValue = {code: 0, message: "", data: null}
-export const ArticleListObjectContext = createContext(null)
-export const ArticleListRequestStateContext = createContext(articleListRequestStateContextValue)
+export const ArticleListObjectContext = createContext(articleListObjectContextValue)
+export const TagListObjectContext = createContext(tagListContextValue)
 export const CoverImageIndexContext = createContext(null)
-export const TagListContext = createContext(null)
-export const MessageListContext = createContext(null)
+export const MessageListObjectContext = createContext(messageListContextValue)
 
 export let previousRoute = "initial"
 let previousAction = ""
 let fetchingArticles = false
 
 function Index() {
-    const [articleListObject, setArticleListObject] = useImmer(recentArticlesContextValue)
-    const [tagList, setTagList] = useState([])
-    const [messageList, setMessageList] = useImmer([])
+    const [articleListObject, setArticleListObject] = useImmer(articleListObjectContextValue)
+    const [tagListObject, setTagListObject] = useImmer(tagListContextValue)
+    const [messageListObject, setMessageListObject] = useImmer(messageListContextValue)
     const [coverImage, setCoverImage] = useState("")
-    const [articleListRequestState, setArticleListRequestState] = useState(articleListRequestStateContextValue)
     const params = useParams()
+
 
     useEffect(() => {
         getTagListData()
@@ -46,12 +54,8 @@ function Index() {
     async function getMessageList() {
         console.log("getTagListData");
         // let messageList = await http.getMessageList()
-        let {list} = await http.getMessageList()
-        if (list) {
-            setMessageList(list)
-        } else {
-            // todo 消息列表获取失败的处理
-        }
+        let result = await http.getMessageList()
+        setMessageListObject(result)
     }
 
     /**
@@ -65,9 +69,8 @@ function Index() {
     async function getArticleListData({message = "", query = "", tag = "", page = 1} = {}) {
         if (fetchingArticles)
             return
-
+        fetchingArticles = true
         setArticleListObject(draft => {
-            fetchingArticles = true
             draft.isLoading = true
         })
         console.info("getArticleListData", message, "query:", query, "tag:", tag, "page:", page);
@@ -84,13 +87,7 @@ function Index() {
             previousAction = `recent-${page}`
         }
 
-        setArticleListObject(draft => {
-            if (result[0])
-                return result[0]
-            else
-                draft.isLoading = false
-        })
-        setArticleListRequestState(result[1])
+        setArticleListObject({...result})
 
         fetchingArticles = false
     }
@@ -101,12 +98,8 @@ function Index() {
      */
     async function getTagListData() {
         console.log("getTagListData");
-        let tagList = await getTagList()
-        if (tagList) {
-            setTagList(tagList)
-        } else {
-            // todo 技术栈标签列表获取失败的处理
-        }
+        let result = await getTagList()
+        setTagListObject(result)
     }
 
     function routeEffectInfo() {
@@ -171,13 +164,20 @@ function Index() {
                 <ArticleListObjectContext.Provider value={articleListObject}>
                     <CoverImageIndexContext.Provider value={{coverImage, setCoverImage}}>
                         <Cover/>
-                        <ArticleListRequestStateContext.Provider value={articleListRequestState}>
-                            <TagListContext.Provider value={tagList}>
-                                <MessageListContext.Provider value={{messageList,setMessageList}}>
-                                    <Content/>
-                                </MessageListContext.Provider>
-                            </TagListContext.Provider>
-                        </ArticleListRequestStateContext.Provider>
+                        <TagListObjectContext.Provider value={tagListObject}>
+                            <MessageListObjectContext.Provider value={{
+                                ...messageListObject,
+                                push: (data) => {
+                                    setMessageListObject({
+                                        ...messageListObject,
+                                        total: messageListObject.total + 1,
+                                        list: [data, ...messageListObject.list]
+                                    })
+                                }
+                            }}>
+                                <Content/>
+                            </MessageListObjectContext.Provider>
+                        </TagListObjectContext.Provider>
                     </CoverImageIndexContext.Provider>
                 </ArticleListObjectContext.Provider>
                 <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt="loading-GIF"/>

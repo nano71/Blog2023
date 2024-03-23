@@ -1,30 +1,33 @@
 import "/src/stylesheets/content/result.less"
 import {useParams} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
-import {ArticleListRequestStateContext} from "../../pages/index.jsx";
+import {useEffect, useState} from "react";
 
-function Result() {
+/**
+ *
+ * @param {ResponseData} result
+ * @return {JSX.Element}
+ * @constructor
+ */
+function Result({result}) {
     const params = useParams()
-    const articleRequestState = useContext(ArticleListRequestStateContext)
     const [view, setView] = useState(<></>)
 
     function notFound() {
         console.log("notFound");
         return <div className="notFound">
-            <div className="message">Sorry we couldn't find any matches for "{params.query}"</div>
+            <Message>{params.query ? `Sorry we couldn't find any matches for "${params.query}".` : "There's nothing here."}</Message>
         </div>
     }
 
     function forbidden() {
         console.log("forbidden");
-        return <div>
-            <div className="message">Your IP address is banned.</div>
-        </div>
+        return customMessage("Your IP address is banned.")
     }
 
     function customMessage(message) {
+        let string = message.endsWith(".") ? message : message + "."
         return <div>
-            <div className="message">{message}</div>
+            <Message>{string}</Message>
         </div>
     }
 
@@ -36,13 +39,17 @@ function Result() {
         }
 
         return <div className="timeout">
-            <div className="message">The article list request timed out, please <a onClick={retry}>try again</a>.</div>
+            <Message>The list request timed out, please <a onClick={retry}>try again</a>.</Message>
         </div>
+    }
+
+    function Message({children}) {
+        return <div className="message">{children}</div>
     }
 
     useEffect(() => {
         console.log("result render");
-        switch (articleRequestState.code) {
+        switch (result.code) {
             case 504:
                 setView(timeout())
                 break
@@ -50,7 +57,7 @@ function Result() {
                 setView(forbidden())
                 break
             case "ERR_NETWORK":
-                setView(customMessage(articleRequestState.message))
+                setView(customMessage(result.message))
                 break
             default:
                 setView(notFound())

@@ -5,15 +5,16 @@ import {ArticleListObjectContext} from "../../pages/index.jsx";
 import Result from "../content/result.jsx";
 
 export default () => {
-    const recentArticlesObject = useContext(ArticleListObjectContext)
+    const articleListObject = useContext(ArticleListObjectContext)
+
     function List() {
-        if (recentArticlesObject.total)
+        if (articleListObject.total)
             return <div className="tab"><ArticleList/></div>
-        return <Result/>
+        return <Result result={articleListObject.result}/>
     }
 
     return (
-        recentArticlesObject.isLoading ? <Loading/> : <List/>
+        articleListObject.isLoading ? <Loading/> : <List/>
     )
 
 }

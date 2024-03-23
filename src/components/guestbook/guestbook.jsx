@@ -1,5 +1,5 @@
 import React, {useContext, useRef, useState} from "react";
-import {MessageListContext} from "../../pages/index.jsx";
+import {MessageListObjectContext} from "../../pages/index.jsx";
 import Loading from "../content/loading.jsx";
 import MessageList from "./messageList.jsx";
 import "/src/stylesheets/guestbook/guestbook.less"
@@ -11,21 +11,28 @@ import Modal from "../popup/modal.jsx";
 import * as http from "../../utils/http.js";
 import {isValidUrl} from "../../utils/http.js";
 import {sleep} from "../../utils/tools.js";
+import Result from "../content/result.jsx";
 
 export default function () {
-    const {messageList} = useContext(MessageListContext)
+    const messageListObject = useContext(MessageListObjectContext)
+    function List() {
+        if (messageListObject.total)
+            return <MessageList messageList={messageListObject.list}/>
+        return <Result result={messageListObject.result}/>
+    }
+
     return (
         <div className="tab active">
             <div id="guestbook">
                 <InputArea/>
-                {messageList.length ? <MessageList messageList={messageList}/> : <Loading/>}
+                {messageListObject.isLoading ? <Loading/> : <List/>}
             </div>
         </div>
     )
 }
 
 function InputArea() {
-    const {setMessageList} = useContext(MessageListContext)
+    const messageListObject = useContext(MessageListObjectContext)
     const popup = useContext(PopupContext)
 
     const [message, setMessage] = useImmer("")
@@ -61,9 +68,7 @@ function InputArea() {
         let result = await http.leaveMessage(data)
         console.log(result);
         if (result) {
-            setMessageList(draft => {
-                draft.unshift(data)
-            })
+            messageListObject.push(data)
             setMessage("")
             popup.tip("留言成功!")
         } else {

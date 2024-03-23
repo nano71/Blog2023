@@ -9,7 +9,8 @@ export const TabContext = createContext(null);
 
 // 父组件
 const Content = ({useTabBar = true}) => {
-    const [active, setTabActive] = useState(0);
+    const [active, setTabActive] = useState(location.pathname === "/" ? 0 : -1);
+
     return (
         <div className="content" id="content">
             <TabContext.Provider value={{active, setTabActive}}>
