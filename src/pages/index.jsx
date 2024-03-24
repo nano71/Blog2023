@@ -10,7 +10,7 @@ import {useImmer} from "use-immer";
 import {routeTools} from "../utils/tools.js";
 
 const resultObjectDefault = {code: 0, message: "", data: null}
-const listObjectDefault = {isLoading: true, list: [], total: 0}
+const listObjectDefault = {isLoading: true, list: [], total: 0, isInitialized: false}
 
 const articleListObjectContextValue = {
     ...listObjectDefault, limit: 0, page: 0, result: resultObjectDefault
@@ -39,13 +39,8 @@ function Index() {
     const [tagListObject, setTagListObject] = useImmer(tagListContextValue)
     const [messageListObject, setMessageListObject] = useImmer(messageListContextValue)
     const [coverImage, setCoverImage] = useState("")
+    const [initializedCount, setInitializedCount] = useState(0)
     const params = useParams()
-
-
-    useEffect(() => {
-        getTagListData()
-        getMessageList()
-    }, [])
 
     /**
      * 获取留言列表数据
@@ -55,6 +50,7 @@ function Index() {
         console.log("getTagListData");
         let result = await http.getMessageList()
         setMessageListObject(result)
+        setInitializedCount(initializedCount + 1)
     }
 
     /**
@@ -86,7 +82,7 @@ function Index() {
             previousAction = `recent-${page}`
         }
         setArticleListObject(result)
-
+        setInitializedCount(initializedCount + 1)
         fetchingArticles = false
     }
 
@@ -98,6 +94,7 @@ function Index() {
         console.log("getTagListData");
         let result = await getTagList()
         setTagListObject(result)
+        setInitializedCount(initializedCount + 1)
     }
 
     function routeEffectInfo() {
@@ -109,6 +106,7 @@ function Index() {
     }
 
     function routeEffectPreCheck() {
+        console.info("routeEffectPreCheck");
         console.log("effect before", routeEffectInfo());
         // 本次路由为文章页, 且有上一个路由的时候, 不触发刷新,
         if (params.articleId && previousRoute !== "initial") {
@@ -152,8 +150,27 @@ function Index() {
 
     }
 
+    function isInitializedCheck() {
+        if (initializedCount === 3)
+            return true
+        if (!articleListObject.isInitialized && routeTools.isArticles()) {
+            getArticleListData()
+            return false
+        }
+        if (!messageListObject.isInitialized && routeTools.isGuestbook()) {
+            getMessageList()
+            return false
+        }
+        if (!tagListObject.isInitialized && routeTools.isCategory()) {
+            getTagListData()
+            return false
+        }
+        return true
+    }
+
     useEffect(() => {
-        routeEffectPreCheck() && routeEffectCheck() && routeEffect()
+
+        isInitializedCheck() && routeEffectPreCheck() && routeEffectCheck() && routeEffect()
     }, [params])
 
     return (<>

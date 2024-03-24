@@ -1,6 +1,7 @@
 import "/src/stylesheets/content/result.less"
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {Icon} from "@iconify/react";
 
 /**
  *
@@ -66,6 +67,7 @@ function Result({result}) {
 
     return (
         <div className="result">
+            <Icon icon="emojione-v1:confused-face" style={{marginRight: "5px"}}/>
             {view}
         </div>)
 }

@@ -68,17 +68,22 @@ class ListObject {
      * @type ResponseData
      */
     result
-
+    /**
+     * @type boolean
+     */
+    isInitialized
     constructor({
                     total = 0,
                     list = [],
                     isLoading = false,
-                    result
+                    result,
+                    isInitialized = true
                 }) {
         this.isLoading = isLoading
         this.total = total
         this.list = list
         this.result = result
+        this.isInitialized = isInitialized
         return {...this}
     }
 }
@@ -101,9 +106,11 @@ export class ArticleListObject extends ListObject {
     }
 }
 
-export class TagListObject extends ListObject {}
+export class TagListObject extends ListObject {
+}
 
-export class MessageListObject extends ListObject{}
+export class MessageListObject extends ListObject {
+}
 
 
 /**
