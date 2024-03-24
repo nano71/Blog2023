@@ -45,7 +45,7 @@ export default function () {
     }
 
     function onKeyDown(e) {
-        if (e.code.includes("Enter")) {
+        if (e.code?.includes("Enter")) {
             search()
         }
     }

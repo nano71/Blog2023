@@ -122,7 +122,7 @@ export default function Editor() {
     }
 
     function formatDateTime(event) {
-        if (event.code.includes("Enter")) {
+        if (event.code?.includes("Enter")) {
             const value = event.target.value
             if (!value) {
                 setTime(new Date().toLocaleString());
