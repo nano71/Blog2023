@@ -1,6 +1,6 @@
 import "/src/stylesheets/article/articleList.less"
 import React, {useContext, useEffect} from "react";
-import {ArticleListObjectContext, CoverImageIndexContext, previousRoute} from "/src/pages/index.jsx";
+import {ArticleListObjectContext, CoverImageContext, previousRoute} from "/src/pages/index.jsx";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
@@ -10,7 +10,7 @@ import {routeTools} from "../../utils/tools.js";
 
 function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)
-    const {setCoverImage} = useContext(CoverImageIndexContext)
+    const {setCoverImage} = useContext(CoverImageContext)
     const navigate = useNavigate()
     const popup = useContext(PopupContext)
     const params = useParams()

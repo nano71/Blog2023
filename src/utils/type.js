@@ -79,6 +79,7 @@ class ListObject {
         this.total = total
         this.list = list
         this.result = result
+        return {...this}
     }
 }
 
@@ -96,6 +97,7 @@ export class ArticleListObject extends ListObject {
         super(props);
         this.limit = limit
         this.page = page
+        return {...this}
     }
 }
 

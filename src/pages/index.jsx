@@ -25,10 +25,10 @@ const messageListContextValue = {
 
 const resultLimit = 6
 
-export const ArticleListObjectContext = createContext(articleListObjectContextValue)
-export const TagListObjectContext = createContext(tagListContextValue)
-export const CoverImageIndexContext = createContext(null)
-export const MessageListObjectContext = createContext(messageListContextValue)
+export const ArticleListObjectContext = createContext(undefined)
+export const TagListObjectContext = createContext(undefined)
+export const MessageListObjectContext = createContext(undefined)
+export const CoverImageContext = createContext(undefined)
 
 export let previousRoute = "initial"
 let previousAction = ""
@@ -86,8 +86,7 @@ function Index() {
             result = await getRecentArticles(resultLimit, page)
             previousAction = `recent-${page}`
         }
-
-        setArticleListObject({...result})
+        setArticleListObject(result)
 
         fetchingArticles = false
     }
@@ -162,23 +161,22 @@ function Index() {
         <PopupProvider>
             <div className="index">
                 <ArticleListObjectContext.Provider value={articleListObject}>
-                    <CoverImageIndexContext.Provider value={{coverImage, setCoverImage}}>
+                    <CoverImageContext.Provider value={{coverImage, setCoverImage}}>
                         <Cover/>
                         <TagListObjectContext.Provider value={tagListObject}>
                             <MessageListObjectContext.Provider value={{
                                 ...messageListObject,
                                 push: (data) => {
-                                    setMessageListObject({
-                                        ...messageListObject,
-                                        total: messageListObject.total + 1,
-                                        list: [data, ...messageListObject.list]
+                                    setMessageListObject(draft => {
+                                        draft.total += 1
+                                        draft.list.unshift(data)
                                     })
                                 }
                             }}>
                                 <Content/>
                             </MessageListObjectContext.Provider>
                         </TagListObjectContext.Provider>
-                    </CoverImageIndexContext.Provider>
+                    </CoverImageContext.Provider>
                 </ArticleListObjectContext.Provider>
                 <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt="loading-GIF"/>
             </div>

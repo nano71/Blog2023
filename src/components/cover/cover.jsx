@@ -1,6 +1,6 @@
 import "/src/stylesheets/cover/cover.less"
 import {useContext, useEffect, useState} from "react";
-import {CoverImageIndexContext} from "../../pages/index.jsx";
+import {CoverImageContext} from "../../pages/index.jsx";
 
 
 /**
@@ -9,7 +9,7 @@ import {CoverImageIndexContext} from "../../pages/index.jsx";
  * @constructor
  */
 function Cover() {
-    const {coverImage} = useContext(CoverImageIndexContext)
+    const {coverImage} = useContext(CoverImageContext)
     const [image, setImage] = useState(<></>)
 
     useEffect(() => {
