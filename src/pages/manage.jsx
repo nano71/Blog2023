@@ -85,15 +85,14 @@ function Manage() {
                 </h1>
                 <div className="manageArea">
                     <div className="sidebar">
-                        {sidebarItems.map((value, index) => {
-                            return <div
+                        {sidebarItems.map((value, index) => <div
                                 key={index}
                                 className={activeIndex === index ? "barItem active" : "barItem"}
                                 onClick={() => switchSidebarItem(index, value)}
                             >
                                 {value}
                             </div>
-                        })}
+                        )}
                     </div>
                     <div className="content">
                         <ArticleListObjectContextForManage.Provider value={articleListObject}>

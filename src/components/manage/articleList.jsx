@@ -13,12 +13,9 @@ import {sleep} from "../../utils/tools.js";
 export default function ArticleListForManage() {
     const articleListObject = useContext(ArticleListObjectContextForManage)
     const popup = useContext(PopupContext)
-    useEffect(() => {
-        popup.loadComponent(<Modal/>)
-    }, [])
 
     async function editArticle(id) {
-        popup.title("数据获取中, 请稍等...").show({lockMask: true})
+        popup.loadTemporaryComponent(<Modal/>).title("数据获取中, 请稍等...").show({lockMask: true})
         let result = await getArticleContent(id)
         await sleep(1000)
         if (result) {
