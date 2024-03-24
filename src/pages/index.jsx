@@ -53,7 +53,6 @@ function Index() {
      */
     async function getMessageList() {
         console.log("getTagListData");
-        // let messageList = await http.getMessageList()
         let result = await http.getMessageList()
         setMessageListObject(result)
     }

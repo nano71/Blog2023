@@ -1,12 +1,13 @@
 import "/src/stylesheets/article/articleList.less"
 import React, {useContext, useEffect} from "react";
 import {ArticleListObjectContext, CoverImageContext, previousRoute} from "/src/pages/index.jsx";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
 import {routeTools} from "../../utils/tools.js";
+import sanitizeHtml from "sanitize-html";
 
 function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)
@@ -47,20 +48,29 @@ function ArticleList() {
         return location.origin + "/articles/" + id
     }
 
+    function clean(html) {
+        return sanitizeHtml(html, {
+            allowedTags: ['code'],
+            allowedAttributes: false
+        })
+    }
+
     return (
         <div className="articleList" id="articleList">
-            {recentArticlesObject.list.map((value, index) =>
-                <a href={articleHref(value.id)} key={index} className="article" onClick={_ => {
-                    _.preventDefault()
-                    readArticle(value.id)
-                }}
-                   onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
-                    <span className="date">{new Date(value.createTime).toLocaleString()}</span>
-                    <h2 className="title" itemProp="name">{value.title}</h2>
-                    <p className="text" itemProp="description" dangerouslySetInnerHTML={{__html: value.description.replace(/<p>|<\/p>/g, "")}}/>
-                    <div className="button more">view</div>
-                    <img src={value.coverImage} style={{display: "none"}} alt="coverImage"/>
-                </a>
+            {recentArticlesObject.list.map((value, index) => {
+                    let processedHTML = clean(value.description)
+                    return (<a href={articleHref(value.id)} key={index} className="article" onClick={_ => {
+                        _.preventDefault()
+                        readArticle(value.id)
+                    }}
+                               onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
+                        <span className="date">{new Date(value.createTime).toLocaleString()}</span>
+                        <h2 className="title" itemProp="name" title={value.title}>{value.title}</h2>
+                        <p className="description" itemProp="description" title={processedHTML} dangerouslySetInnerHTML={{__html: processedHTML}}/>
+                        <div className="button more" title={"查看文章"}>view</div>
+                        <img src={value.coverImage} style={{display: "none"}} alt="coverImage"/>
+                    </a>)
+                }
             )}
             <div className="placeholder"/>
             <Pagination max={Math.ceil(recentArticlesObject.total / recentArticlesObject.limit)}/>

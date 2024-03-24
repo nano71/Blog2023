@@ -7,7 +7,6 @@ import {Icon} from "@iconify/react";
 import {useNavigate} from "react-router-dom";
 import hljs from 'highlight.js';
 import * as http from "../../utils/http.js";
-import Message from "../popup/message.jsx";
 import {PopupContext} from "../popup/popup.jsx";
 import Window from "../popup/window.jsx";
 import ArticleDetails from "../recent/articleDetails.jsx";
@@ -105,9 +104,7 @@ export default function Editor() {
         for (let checkMapKey in checkMap) {
             if (!processedData[checkMapKey]) {
                 console.log(checkMapKey);
-                popup.loadTemporaryComponent(<Message/>)
-                    .title(checkMap[checkMapKey])
-                    .show({showMask: false, lockScroll: false, autoClose: true})
+                popup.tip(checkMap[checkMapKey])
                 return
             }
         }
