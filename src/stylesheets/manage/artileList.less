@@ -1,0 +1,38 @@
+#manage.manage .articleList {
+
+
+    .id {
+        text-align: center;
+        justify-content: center;
+        width: 40px;
+    }
+
+
+    .title {
+        flex: 1;
+        text-align: left;
+    }
+
+
+    .item {
+
+
+        .id {
+            color: #666;
+            &:extend(.enFontB);
+            font-size: 14px;
+        }
+
+        .title {
+            cursor: pointer;
+            //color: @themeColor;
+            flex: unset;
+            transition: .2s;
+            font-weight: bolder;
+
+            &:hover {
+                color: @themeColor;
+            }
+        }
+    }
+}

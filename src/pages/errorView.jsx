@@ -5,7 +5,6 @@ import {Icon} from "@iconify/react";
 export default function ErrorView() {
     const error = useRouteError();
     console.error(error);
-    window.previousLocation = "/error"
 
     return (
         <div className="errorPage">

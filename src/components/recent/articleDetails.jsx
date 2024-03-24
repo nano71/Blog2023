@@ -73,7 +73,7 @@ function ArticleDetails() {
     async function loader() {
         console.log("article details loader");
         if (location.pathname === "/write/preview") {
-            setArticle(JSON.parse(localStorage.getItem("draft")))
+            setArticle(JSON.parse(localStorage.getItem("preview")))
         } else {
             let timer = setInterval(() => {
                 console.log("timer");

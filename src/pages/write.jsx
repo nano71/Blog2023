@@ -12,7 +12,7 @@ function Write() {
         <PopupProvider>
             <div className="write">
                 <Cover4Write/>
-                <Content useTabBar={false}/>
+                <Content useTabBar={false} useFooter={false}/>
             </div>
         </PopupProvider>
     </>

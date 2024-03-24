@@ -8,7 +8,7 @@ import {Footer} from "./footer.jsx";
 export const TabContext = createContext(null);
 
 // 父组件
-const Content = ({useTabBar = true}) => {
+const Content = ({useTabBar = true, useFooter = true}) => {
     const [active, setTabActive] = useState(location.pathname === "/" ? 0 : -1);
 
     return (
@@ -16,7 +16,7 @@ const Content = ({useTabBar = true}) => {
             <TabContext.Provider value={{active, setTabActive}}>
                 {useTabBar ? <TabBar/> : ""}
                 <Outlet/>
-                {!location.pathname.includes("/write") && <Footer/>}
+                {useFooter && <Footer/>}
             </TabContext.Provider>
         </div>
     );

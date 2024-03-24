@@ -3,10 +3,11 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    &:extend(.fadeInAnimation);
+
     @media (max-width: 450px) {
         width: 100%;
     }
-    &:extend(.fadeInAnimation);
 
     .tab {
         flex: 1;

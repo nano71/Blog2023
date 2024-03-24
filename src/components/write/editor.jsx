@@ -17,13 +17,16 @@ import {sleep} from "../../utils/tools.js";
 import Feedback from "../content/feedback.jsx";
 
 let realCoverImage = ""
+let id = 0
+let saving = false
 let coverImageDefaultValue = {url: "", uploadCompleted: false, errorMessage: ""}
-export default function Editor() {
-    const [content, setContent] = useState("");
-    const [HTML, setHTML] = useState("");
+export default function Editor({isEditMode = false}) {
+    const [markdown, setMarkdown] = useState("");
+    const [html, setHTML] = useState("");
     const [title, setTitle] = useState("")
     const [coverImage, setCoverImage] = useImmer(coverImageDefaultValue)
-    const [createTime, setTime] = useState("")
+    const [time, setTime] = useState("")
+    const [description, setDescription] = useState("")
     const [isFormat, setFormatStatus] = useState(false)
     const [tags, setTags] = useState([])
     const navigate = useNavigate()
@@ -31,30 +34,63 @@ export default function Editor() {
 
     useEffect(() => {
         popup.loadComponent(<Window><ArticleDetails/></Window>)
-        setTime(new Date().toLocaleString())
+        readLocalStorageData()
     }, []);
 
-    /**
-     *
-     * @returns {{markdown: string, createTime: string, coverImage: string, description: (string|string), title: string, content: string, tags: string[]}}
-     */
-    function preprocessedData() {
-        let matches = HTML.match(/<p>.*?<\/p>/gs)
+    useEffect(() => {
+        save()
+    }, [time, title, coverImage, html, tags])
+
+    useEffect(() => {
+        let matches = html.match(/<p>.*?<\/p>/gs)
         if (matches)
-            matches = matches[0]
+            setDescription(matches[0])
+    }, [html])
+
+    function readLocalStorageData() {
+        let data
+        if (isEditMode) {
+            data = JSON.parse(sessionStorage.getItem("draft"))
+            id = data.id
+        } else
+            data = JSON.parse(localStorage.getItem("draft"))
+        setTitle(data.title)
+        setCoverImage(draft => {
+            draft.uploadCompleted = true
+            draft.url = data.coverImage
+            realCoverImage = data.coverImage
+        })
+        setHTML(data.html)
+        setMarkdown(data.markdown)
+        setTime(data.time)
+        setTags(data.tags)
+    }
+
+    function template() {
         return {
             title,
-            content: HTML,
-            markdown: content,
-            description: matches || "",
-            createTime,
+            html,
+            markdown,
+            description,
             coverImage: realCoverImage,
+            time,
             tags
         }
     }
 
+    function save() {
+        if (saving)
+            return;
+        saving = true
+        console.log("autosave");
+        if (isEditMode)
+            return
+        localStorage.setItem("draft", JSON.stringify(template()))
+        saving = false
+    }
+
     function preview() {
-        localStorage.setItem("draft", JSON.stringify(preprocessedData()))
+        localStorage.setItem("preview", JSON.stringify(template()))
         navigate("/write/preview")
         popup.show({
             onClose() {
@@ -74,7 +110,7 @@ export default function Editor() {
         setCoverImage(draft => {
             draft.uploadCompleted = true
             if (!realCoverImage) {
-                draft.errorMessage = "上传失败,请重试"
+                draft.errorMessage = "上传失败, 请重试"
             }
         })
     }
@@ -94,8 +130,33 @@ export default function Editor() {
         }
     }
 
+    async function update(processedData) {
+        popup.loadTemporaryComponent(<Modal/>).title("处理中, 请稍等...").show({lockMask: true})
+
+        await sleep(1000)
+        let result = await http.updateArticle({id, ...processedData})
+        if (result) {
+            popup.tip("文章已更新!")
+        } else {
+            popup.tip("文章更新失败!")
+        }
+    }
+
+    function editorChangeHandler({html, text}) {
+        setHTML(html)
+        setMarkdown(text)
+    }
+
     async function submit() {
-        const processedData = preprocessedData()
+        const processedData = {
+            title,
+            content: html,
+            description,
+            markdown,
+            coverImage: realCoverImage,
+            createTime: time,
+            tags
+        }
         const checkMap = {
             title: "缺少标题",
             content: "缺少内容",
@@ -108,7 +169,11 @@ export default function Editor() {
                 return
             }
         }
-        popup.loadTemporaryComponent(<Modal/>).title("发布中,请稍等...").show({lockMask: true})
+
+        if (isEditMode)
+            return update(processedData)
+
+        popup.loadTemporaryComponent(<Modal/>).title("发布中, 请稍等...").show({lockMask: true})
 
         await sleep(1000)
         let result = await http.publishArticle(processedData)
@@ -117,8 +182,6 @@ export default function Editor() {
         } else {
             popup.tip("文章发布失败!")
         }
-
-
     }
 
     function formatDateTime(event) {
@@ -136,20 +199,16 @@ export default function Editor() {
         }
     }
 
-    function back() {
-        location.pathname = "/articles"
-    }
-
     return <div className="editor">
-        <h1 className="title">
+        {isEditMode || <h1 className="title">
             <span>Write an article</span>
-            <span onClick={back} title="返回"><Icon icon="ri:close-fill"/></span>
-        </h1>
+            <a href={"/"} title="返回"><Icon icon="ri:close-fill"/></a>
+        </h1>}
         <div className="inputArea">
-            <input onChange={e => setTitle(e.target.value)}
+            <input value={title} onChange={e => setTitle(e.target.value)}
                    type="text" className="titleInput" placeholder="请输入标题"/>
             <div className="previewButton" title="预览" onClick={preview}><Icon icon="ri:bill-line"/></div>
-            <MarkdownEditor value={content} setValue={setContent} setOut={setHTML}/>
+            <MarkdownEditor value={markdown} handler={editorChangeHandler}/>
             <div className="options">
                 <div className="item">
                     <div className="label">文章的封面</div>
@@ -180,7 +239,7 @@ export default function Editor() {
                                onKeyDown={addTag}/>
                         {!!tags.length && <div className="tags">
                             {tags.map((value, index) =>
-                                <div className="tag"
+                                <div key={index} className="tag"
                                      title={"删除" + value}
                                      onClick={() =>
                                          setTags(tags.filter((v, i) => i !== index))}>
@@ -196,7 +255,7 @@ export default function Editor() {
                 <div className="item">
                     <div className="label">自定义时间</div>
                     <div className="inputBox">
-                        <input type="text" value={createTime} className="dateTime"
+                        <input type="text" value={time} className="dateTime"
                                onChange={e => setTime(e.target.value)}
                                onKeyDown={formatDateTime}/>
                         <div className="tip">按回车键, 自动格式化时间</div>
@@ -206,15 +265,14 @@ export default function Editor() {
             </div>
             <div className="buttons">
                 <div className="button preview" onClick={preview}>preview</div>
-
-                <div className="button" onClick={submit}>publish</div>
+                <div className="button" onClick={submit}>{isEditMode ? "update" : "publish"}</div>
             </div>
         </div>
 
     </div>
 }
 
-function MarkdownEditor({value, setValue, setOut}) {
+function MarkdownEditor({value, handler}) {
     const mdParser = new MarkdownIt({
         html: true,
         linkify: true,
@@ -227,18 +285,6 @@ function MarkdownEditor({value, setValue, setOut}) {
     });
 
     const plugins = ["font-bold", "font-italic", "font-underline", "font-strikethrough", "list-unordered", "list-ordered", "block-quote", "block-code-inline", "block-code-block", "image", "link", "logger"]
-
-    useEffect(() => {
-        setValue(localStorage.getItem("markdownInputHistory") || "")
-        setOut(localStorage.getItem("markdownOutHistory") || "")
-    }, []);
-
-    function handleEditorChange({html, text}) {
-        setValue(text)
-        setOut(html)
-        localStorage.setItem("markdownInputHistory", text)
-        localStorage.setItem("markdownOutHistory", html)
-    }
 
     async function onImageUpload(file) {
         const url = await http.uploadImage(file)
@@ -258,5 +304,5 @@ function MarkdownEditor({value, setValue, setOut}) {
         renderHTML={text => mdParser.render(text)}
         view={{menu: true, md: true, html: false}}
         onImageUpload={onImageUpload}
-        onChange={handleEditorChange}/>
+        onChange={handler}/>
 }

@@ -6,14 +6,14 @@ import {useNavigate} from "react-router-dom";
 /**
  * @return {PopupComponent}
  */
-function Validate() {
+function Validate({target}) {
     const popup = useContext(PopupContext)
     const authenticationCode = useRef(null)
     const navigate = useNavigate()
 
     function confirm() {
         sessionStorage.setItem("authenticationCode", authenticationCode.current.value)
-        navigate("/write")
+        navigate("/" + target)
     }
 
     return (

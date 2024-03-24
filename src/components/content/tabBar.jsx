@@ -53,7 +53,7 @@ const TabBar = () => {
                 {tabItems.map((item, i) => (
                     <div
                         key={i}
-                        className={active === i ? "tabItem active" : "tabItem"}
+                        className={active === i ? "barItem active" : "barItem"}
                         onClick={() => switchTabItem(i, item)}
                     >
                         {item}

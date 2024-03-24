@@ -7,9 +7,9 @@ import "/src/stylesheets/content/footer.less"
 export const Footer = () => {
     const popup = useContext(PopupContext)
 
-    function goWrite() {
+    function verifyIdentity(target) {
         console.log("goWrite");
-        popup.loadTemporaryComponent(<Validate/>).show()
+        popup.loadTemporaryComponent(<Validate target={target}/>).show()
     }
 
     return (
@@ -18,7 +18,8 @@ export const Footer = () => {
             <a href="https://codepen.io/Lightning-Development-Team" target="_blank" title="CodePen"><Icon icon="ri:codepen-fill"/></a>
             <a href="https://nano71.zcool.com.cn" target="_blank" title="ZCool"><Icon icon="ri:zcool-fill"/></a>
             <a href="mailto://master@nano71.com" target="_blank" title="E-Mail"><Icon icon="ri:at-fill"/></a>
-            <a onClick={goWrite} title="Writing"><Icon icon="ri:pen-nib-fill"/></a>
+            <a onClick={_=>verifyIdentity("write")} title="Writing"><Icon icon="ri:pen-nib-fill"/></a>
+            <a onClick={_=>verifyIdentity("manage")} title="Manage"><Icon icon="ri:database-2-fill"/></a>
             <a href="https://nano71.com/resume" target="_blank" title="Resume"><Icon icon="academicons:cv"/></a>
         </footer>
     )

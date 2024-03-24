@@ -12,14 +12,14 @@ import {routeTools} from "../utils/tools.js";
 const resultObjectDefault = {code: 0, message: "", data: null}
 const listObjectDefault = {isLoading: true, list: [], total: 0, isInitialized: false}
 
-const articleListObjectContextValue = {
+export const articleListObjectContextValue = {
     ...listObjectDefault, limit: 0, page: 0, result: resultObjectDefault
 }
-const tagListContextValue = {
+export const tagListContextValue = {
     ...listObjectDefault, result: resultObjectDefault
 }
 
-const messageListContextValue = {
+export const messageListContextValue = {
     ...tagListContextValue
 }
 
@@ -46,7 +46,7 @@ function Index() {
      * 获取留言列表数据
      * @returns {void}
      */
-    async function getMessageList() {
+    async function getMessageListData() {
         console.log("getTagListData");
         let result = await http.getMessageList()
         setMessageListObject(result)
@@ -158,7 +158,7 @@ function Index() {
             return false
         }
         if (!messageListObject.isInitialized && routeTools.isGuestbook()) {
-            getMessageList()
+            getMessageListData()
             return false
         }
         if (!tagListObject.isInitialized && routeTools.isCategory()) {

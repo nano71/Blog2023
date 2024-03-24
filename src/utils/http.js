@@ -2,11 +2,10 @@ import axios from "axios";
 import {sleep} from "./tools.js";
 import {ArticleListObject, MessageListObject, TagListObject} from "./type.js";
 
-// axios.defaults.baseURL = "https://nano71.com:9000/api"
-axios.defaults.baseURL = "http://localhost:9000/api"
+axios.defaults.baseURL = import.meta.env.DEV ? "http://localhost:9000/api" : "https://nano71.com:9000/api"
 axios.defaults.withCredentials = false
-// const baseStaticResourceURL = "https://nano71.com:9000"
-const baseStaticResourceURL = "http://localhost:9000"
+
+const baseStaticResourceURL = import.meta.env.DEV ? "http://localhost:9000" : "https://nano71.com:9000"
 export const staticResourceURL = "./"
 const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/gm;
 
@@ -36,9 +35,10 @@ async function r(url, data = undefined) {
  * 获取文章列表
  * @param {number} limit 返回多少项
  * @param {number|string} page 第几页, 1开始
+ * @param {boolean} isManager 是否管理员
  * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
-export async function getRecentArticles(limit = 8, page = 1) {
+export async function getRecentArticles(limit = 8, page = 1, isManager = false) {
     console.log("getRecentArticles");
     page = page.toInt()
 
@@ -48,7 +48,7 @@ export async function getRecentArticles(limit = 8, page = 1) {
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}
      */
-    const response = await r("/getArticleList", {
+    const response = await r((isManager ? "/manage" : "") + "/getArticleList", {
         limit,
         page: page - 1
     })
@@ -162,6 +162,25 @@ export async function publishArticle({title, content, description, markdown, cre
 }
 
 /**
+ *  更新一篇文章
+ * @param {number} id
+ * @param {string} title 标题
+ * @param {string} content 正文内容
+ * @param {string} description 描述/前言
+ * @param {string} markdown 源数据
+ * @param {string} createTime 发表时间
+ * @param {string} coverImage 封面图
+ * @param {string[]} tags 技术栈标签
+ * @returns {Promise<boolean>} 更新成功 / 失败
+ */
+export async function updateArticle({id, title, content, description, markdown, createTime, coverImage, tags}) {
+    const response = await r("/updateArticle", {
+        id, title, content, description, createTime, coverImage, markdown, tags: tags.toString()
+    })
+    return response.data
+}
+
+/**
  *  发布一个留言
  * @param {string} nickname 昵称
  * @param {string} url 网址
@@ -240,7 +259,7 @@ function processResponse(response, limit, page) {
             sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
         }
         returnValue.list = response.data.list
-        returnValue.total = returnValue.list.length
+        returnValue.total = response.data.total
     }
     return returnValue
 }

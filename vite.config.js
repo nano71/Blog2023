@@ -21,11 +21,12 @@ export default defineConfig({
         include: ["/src/utils/log.js"],
     },
     css: {
+        hash: true,
         preprocessorOptions: {
             less: {
                 charset: false,
                 additionalData: `@import "/src/reference.less";`,
             }
-        },
+        }
     },
 })

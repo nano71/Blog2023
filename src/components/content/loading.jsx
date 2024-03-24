@@ -1,5 +1,4 @@
 import "/src/stylesheets/content/loading.less"
-import {useEffect} from "react";
 
 const Loading = () => {
     return (
