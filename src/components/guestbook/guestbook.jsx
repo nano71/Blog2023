@@ -10,7 +10,7 @@ import {PopupContext} from "../popup/popup.jsx";
 import Modal from "../popup/modal.jsx";
 import * as http from "../../utils/http.js";
 import {isValidUrl} from "../../utils/http.js";
-import {sleep} from "../../utils/tools.js";
+import {formatDatetime, sleep} from "../../utils/tools.js";
 import Result from "../content/result.jsx";
 
 export default function () {
@@ -47,7 +47,7 @@ function InputArea() {
             url,
             face: emojiLabels[faceIndex],
             content: message,
-            createTime: new Date().toLocaleString()
+            createTime: formatDatetime()
         }
         if (!data.content) {
             popup.tip("多少写点!")

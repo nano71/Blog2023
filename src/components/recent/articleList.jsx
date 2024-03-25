@@ -6,7 +6,7 @@ import {PopupContext} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
-import {routeTools} from "../../utils/tools.js";
+import {formatDatetime, routeTools} from "../../utils/tools.js";
 import sanitizeHtml from "sanitize-html";
 
 function ArticleList() {
@@ -64,7 +64,7 @@ function ArticleList() {
                         readArticle(value.id)
                     }}
                                onMouseEnter={() => value.coverImage && setCoverImage(value.coverImage)}>
-                        <span className="date">{new Date(value.createTime).toLocaleString()}</span>
+                        <span className="date">{formatDatetime(value.createTime)}</span>
                         <h2 className="title" itemProp="name" title={value.title}>{value.title}</h2>
                         <p className="description" itemProp="description" title={processedHTML} dangerouslySetInnerHTML={{__html: processedHTML}}/>
                         <div className="button more" title={"查看文章"}>view</div>

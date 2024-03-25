@@ -5,6 +5,7 @@ import {MessageListObjectContextForManage} from "../../pages/manage.jsx";
 import {Icon} from "@iconify/react";
 import Loading from "../content/loading.jsx";
 import {PopupContext} from "../popup/popup.jsx";
+import {formatDatetime} from "../../utils/tools.js";
 
 export default function MessageListForManage() {
     const popup = useContext(PopupContext)
@@ -37,7 +38,7 @@ export default function MessageListForManage() {
                             ? <a href={value.url} className="url">{value.url}</a>
                             : <div className="url">无</div>}
                         <div className="content">{value.content}</div>
-                        <div className="datetime">{new Date(value.createTime).toLocaleString()}</div>
+                        <div className="datetime">{formatDatetime(value.createTime)}</div>
                         <div className="operation">
                             <Icon icon="ri:delete-bin-3-line" onClick={deleteMessage(value.id)} className={"delete"}/>
                         </div>

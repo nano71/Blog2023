@@ -32,6 +32,10 @@ console.info = function (...args) {
     consoleInfo("%c" + (args.join(" ")), "padding:2px 4px;color:white;background:dodgerblue;")
 }
 
+export function formatDatetime(datetime) {
+    return new Date(datetime || Date()).toLocaleString()
+}
+
 let p = _ => location.pathname
 export const routeTools = {
 

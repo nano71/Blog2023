@@ -13,22 +13,21 @@ import ArticleDetails from "../recent/articleDetails.jsx";
 import Modal from "../popup/modal.jsx";
 import {useImmer} from "use-immer";
 import Loading from "../content/loading.jsx";
-import {sleep} from "../../utils/tools.js";
+import {formatDatetime, sleep} from "../../utils/tools.js";
 import Feedback from "../content/feedback.jsx";
 
 let realCoverImage = ""
 let id = 0
 let coverImageDefaultValue = {url: "", uploadCompleted: false, errorMessage: ""}
-let firstLoad = true
+let isFormatDateTime = true
 let saveTimer
 export default function Editor({isEditMode = false}) {
     const [markdown, setMarkdown] = useState("");
     const [html, setHTML] = useState("");
     const [title, setTitle] = useState("")
     const [coverImage, setCoverImage] = useImmer(coverImageDefaultValue)
-    const [time, setTime] = useState(new Date().toLocaleString())
+    const [time, setTime] = useState(formatDatetime())
     const [description, setDescription] = useState("")
-    const [isFormat, setFormatStatus] = useState(false)
     const [tags, setTags] = useState([])
     const navigate = useNavigate()
     const popup = useContext(PopupContext)
@@ -180,6 +179,11 @@ export default function Editor({isEditMode = false}) {
             content: "缺少内容",
             description: "缺少内容",
         }
+        if (!isFormatDateTime && formatDatetime(time) === "Invalid Date") {
+            popup.tip("时间格式不正确!")
+            return
+        }
+
         for (let checkMapKey in checkMap) {
             if (!processedData[checkMapKey]) {
                 console.log(checkMapKey);
@@ -202,19 +206,16 @@ export default function Editor({isEditMode = false}) {
         }
     }
 
-    function formatDateTime(event) {
+    function format(event) {
         if (event.code?.includes("Enter")) {
             const value = event.target.value
             if (!value) {
-                setTime(new Date().toLocaleString());
-                setFormatStatus(true)
+                setTime(formatDatetime());
                 return
             }
-            setTime(new Date(value).toLocaleString());
-            setFormatStatus(true)
-        } else {
-            setFormatStatus(false)
+            setTime(formatDatetime(value));
         }
+        isFormatDateTime = false
     }
 
     return <div className="editor">
@@ -275,7 +276,7 @@ export default function Editor({isEditMode = false}) {
                     <div className="inputBox">
                         <input type="text" value={time} className="dateTime"
                                onChange={e => setTime(e.target.value)}
-                               onKeyDown={formatDateTime}/>
+                               onKeyDown={format}/>
                         <div className="tip">按回车键, 自动格式化时间</div>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ import Editor from "../write/editor.jsx";
 import Window from "../popup/window.jsx";
 import {getArticleContent} from "../../utils/http.js";
 import Modal from "../popup/modal.jsx";
-import {sleep} from "../../utils/tools.js";
+import {formatDatetime, sleep} from "../../utils/tools.js";
 
 export default function ArticleListForManage() {
     const articleListObject = useContext(ArticleListObjectContextForManage)
@@ -23,7 +23,7 @@ export default function ArticleListForManage() {
             sessionStorage.setItem("draft", JSON.stringify({
                 id,
                 title,
-                time: new Date(time).toLocaleString(),
+                time:formatDatetime(time),
                 html,
                 markdown,
                 coverImage,
@@ -51,7 +51,7 @@ export default function ArticleListForManage() {
                         <div className="id">#{value.id}</div>
                         <div className="title">{value.title}</div>
                         <div className="placeholder"></div>
-                        <div className="datetime">{new Date(value.createTime).toLocaleString()}</div>
+                        <div className="datetime">{formatDatetime(value.createTime)}</div>
                         <div className="operation">
                             <Icon icon="ri:edit-line" onClick={_ => editArticle(value.id)} className={"edit"}/>
                             <Icon icon="ri:delete-bin-3-line" className={"delete"}/>

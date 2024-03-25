@@ -6,7 +6,7 @@ import 'highlight.js/styles/atom-one-light.css';
 import {Icon} from "@iconify/react";
 import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
-import {SEOTools} from "../../utils/tools.js";
+import {formatDatetime, SEOTools} from "../../utils/tools.js";
 
 let previousDataStringify = ""
 let articleObject = {}
@@ -133,7 +133,7 @@ function BaseInfoArea({article}) {
         </div>
         <div className="item">
             <Icon icon="ri:time-line"/>
-            <div className="date">{new Date(article.createTime).toLocaleString()}</div>
+            <div className="date">{formatDatetime(article.createTime)}</div>
         </div>
         <div className="item">
             <Icon icon="ri:message-3-line"/>

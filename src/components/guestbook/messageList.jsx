@@ -1,4 +1,5 @@
 import {Icon} from "@iconify/react";
+import {formatDatetime} from "../../utils/tools.js";
 
 /**
  *
@@ -30,7 +31,7 @@ function MessageItem({value}) {
                 {value.url
                     ? <a href={value.url} className="nickname">{value.nickname || "匿名网友"}</a>
                     : <div className="nickname">{value.nickname || "匿名网友"}</div>}
-                <div className="time">{new Date(value.createTime).toLocaleString()}</div>
+                <div className="time">{formatDatetime(value.createTime)}</div>
             </div>
             <div className="message">
                 {value.content}
