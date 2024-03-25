@@ -18,14 +18,15 @@ import Feedback from "../content/feedback.jsx";
 
 let realCoverImage = ""
 let id = 0
-let saving = false
 let coverImageDefaultValue = {url: "", uploadCompleted: false, errorMessage: ""}
+let firstLoad = true
+let saveTimer
 export default function Editor({isEditMode = false}) {
     const [markdown, setMarkdown] = useState("");
     const [html, setHTML] = useState("");
     const [title, setTitle] = useState("")
     const [coverImage, setCoverImage] = useImmer(coverImageDefaultValue)
-    const [time, setTime] = useState("")
+    const [time, setTime] = useState(new Date().toLocaleString())
     const [description, setDescription] = useState("")
     const [isFormat, setFormatStatus] = useState(false)
     const [tags, setTags] = useState([])
@@ -42,27 +43,29 @@ export default function Editor({isEditMode = false}) {
     }, [time, title, coverImage, html, tags])
 
     useEffect(() => {
-        let matches = html.match(/<p>.*?<\/p>/gs)
-        if (matches)
-            setDescription(matches[0])
+        let matches = html?.match(/<p>.*?<\/p>/gs)
+        matches && setDescription(matches[0])
     }, [html])
 
     function readLocalStorageData() {
+        console.info("readLocalStorageData");
         let data
         if (isEditMode) {
             data = JSON.parse(sessionStorage.getItem("draft"))
             id = data.id
         } else
             data = JSON.parse(localStorage.getItem("draft"))
+        if (!data)
+            return
         setTitle(data.title)
-        setCoverImage(draft => {
+        data.time && setTime(data.time)
+        data.coverImage && setCoverImage(draft => {
             draft.uploadCompleted = true
             draft.url = data.coverImage
             realCoverImage = data.coverImage
         })
         setHTML(data.html)
         setMarkdown(data.markdown)
-        setTime(data.time)
         setTags(data.tags)
     }
 
@@ -79,14 +82,13 @@ export default function Editor({isEditMode = false}) {
     }
 
     function save() {
-        if (saving)
-            return;
-        saving = true
-        console.log("autosave");
-        if (isEditMode)
-            return
-        localStorage.setItem("draft", JSON.stringify(template()))
-        saving = false
+        saveTimer && clearTimeout(saveTimer)
+        saveTimer = setTimeout(() => {
+            console.log("autosave");
+            if (isEditMode)
+                return
+            localStorage.setItem("draft", JSON.stringify(template()))
+        }, 1000)
     }
 
     function preview() {
@@ -99,7 +101,10 @@ export default function Editor({isEditMode = false}) {
         })
     }
 
-    async function uploadImage(file) {
+    async function uploadImage(e) {
+        console.log(e);
+        let file = e.target.files[0]
+        e.target.value = ""
         setCoverImage(draft => {
             draft.url = URL.createObjectURL(file)
             draft.uploadCompleted = false
@@ -227,8 +232,8 @@ export default function Editor({isEditMode = false}) {
                                 <img src={coverImage.url} alt=""/>
                             </div>
                         }
-                        <input type="file" className="imgUpload" alt={""} accept={"image/*"}
-                               onChange={e => uploadImage(e.target.files[0])}/>
+                        <input type="file" title="文章封面" className="imgUpload" alt={""} accept={"image/*"}
+                               onChange={uploadImage}/>
                         <div className="tip">图片上传格式支持 JPEG、JPG、PNG</div>
                     </div>
                 </div>

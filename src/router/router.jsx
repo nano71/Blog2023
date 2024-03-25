@@ -53,8 +53,12 @@ export default createBrowserRouter([
             console.info("Manage loader");
             const key = sessionStorage.getItem("authenticationCode")
             sessionStorage.removeItem("authenticationCode")
-            return null
-            // throw hiddenError("Access denied, There are always some doors closed to you.")
+            if (import.meta.env.DEV)
+                return null
+            if (key === "1742") {
+                return null
+            }
+            throw hiddenError("Access denied, There are always some doors closed to you.")
         },
         children: [
             {
@@ -93,10 +97,12 @@ export default createBrowserRouter([
             console.info("Write loader");
             const key = sessionStorage.getItem("authenticationCode")
             sessionStorage.removeItem("authenticationCode")
-            // if (key === "1742") {
-            return null
-            // }
-            // throw hiddenError("Access denied, There are always some doors closed to you.")
+            if (import.meta.env.DEV)
+                return null
+            if (key === "1742") {
+                return null
+            }
+            throw hiddenError("Access denied, There are always some doors closed to you.")
         },
         children: [
             {

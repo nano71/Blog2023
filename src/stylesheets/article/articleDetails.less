@@ -57,15 +57,15 @@
             margin: 0;
         }
 
-        p {
-            > code {
-                color: #333;
-                background-color: #f8f8f8;
-                padding: 4px 6px;
-                margin: 0 2px;
-                &:extend(.enFontS);
-            }
-        }
+
+    }
+
+    code {
+        color: #333;
+        background-color: #f8f8f8;
+        padding: 4px 6px;
+        margin: 0 2px;
+        &:extend(.enFontS);
     }
 
     .content {
@@ -102,20 +102,12 @@
         pre {
             code {
                 &:extend(.enFontS);
+                color: unset;
                 padding: 15px;
                 background-color: #f9fcfa;
+                margin: 0;
                 display: block;
                 overflow-x: scroll;
-            }
-        }
-
-        p {
-            > code {
-                color: #333;
-                background-color: #f8f8f8;
-                padding: 4px 6px;
-                margin: 0 2px;
-                &:extend(.enFontS);
             }
         }
 
