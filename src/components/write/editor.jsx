@@ -135,6 +135,19 @@ export default function Editor({isEditMode = false}) {
         }
     }
 
+    /**
+     * 更新文章
+     * @param {{
+     * title: string,
+     * content: string,
+     * description: string,
+     * markdown: string,
+     * createTime: string,
+     * coverImage: string,
+     * tags: string[]
+     * }} processedData
+     * @return {Promise<void>}
+     */
     async function update(processedData) {
         popup.loadTemporaryComponent(<Modal/>).title("处理中, 请稍等...").show({lockMask: true})
 
