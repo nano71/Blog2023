@@ -3,12 +3,13 @@
 }
 
 body {
-    &:extend(.cnFont);
+    &:extend(.hybridFont);
     font-feature-settings: "liga" 0;
     line-height: 1.6;
     background-color: #f8f9f9;
     padding: 0;
     margin: 0;
+    color: #191b1f;
 
     &::-webkit-scrollbar {
         display: none;
@@ -51,7 +52,7 @@ a {
 input {
     color: #0a0a0a;
     letter-spacing: 0.8px;
-    &:extend(.cnFont);
+    &:extend(.hybridFont);
 }
 
 //noinspection LessResolvedByNameOnly
@@ -69,7 +70,7 @@ input {
 div.button {
     display: inline-block;
     padding: 8px;
-    font-family: "Space Mono", monospace;
+    &:extend(.enFontB);
     color: #05b45d;
     border: 3px solid @themeColor;
     transition: all 0.4s ease-out;
