@@ -1,6 +1,7 @@
 import React, {useContext, useRef} from "react";
 import {PopupContext} from "./popup.jsx";
 import {Icon} from "@iconify/react";
+import {addCategory} from "../../utils/http.js";
 
 function AddCategory({target}) {
     const popup = useContext(PopupContext)
@@ -8,12 +9,17 @@ function AddCategory({target}) {
     const name = useRef(null)
     const errorMessage = ""
 
-    function submit() {
+    async function submit() {
         let data = {
             content: content.current.value,
             name: name.current.value
         }
-        popup.tip("内容不完整")
+        let result = await addCategory(data)
+        if (result) {
+            popup.close()
+        } else {
+
+        }
     }
 
     return (

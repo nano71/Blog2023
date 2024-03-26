@@ -174,6 +174,19 @@ export async function publishArticle({title, content, description, markdown, cre
 }
 
 /**
+ * 添加一条标签
+ * @param {string} name 名称
+ * @param {string} content 内容
+ * @returns {Promise<boolean>} 发布成功 / 失败
+ */
+export async function addCategory({name, content}) {
+    const response = await r("/manage/addCategory", {
+        name, content
+    })
+    return response?.data
+}
+
+/**
  *  更新一篇文章
  * @param {number} id
  * @param {string} title 标题
