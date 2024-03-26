@@ -1,29 +1,34 @@
 import "/src/stylesheets/manage/messageList.less"
 
-import {useContext} from "react";
+import React, {useContext} from "react";
 import {MessageListObjectContextForManage} from "../../pages/manage.jsx";
 import {Icon} from "@iconify/react";
 import Loading from "../content/loading.jsx";
 import {PopupContext} from "../popup/popup.jsx";
 import {formatDatetime} from "../../utils/tools.js";
+import * as http from "../../utils/http.js";
+import Result from "../content/result.jsx";
 
 export default function MessageListForManage() {
     const popup = useContext(PopupContext)
     const messageListObject = useContext(MessageListObjectContextForManage)
 
-    function deleteMessage(id) {
-
+    async function deleteMessage(id) {
+        let result = await http.deleteMessage(id)
+        if (result) {
+            popup.tip("删除成功")
+        }
     }
 
     return <div className="messageList">
         <div className="head">
-            <div className="label face">face</div>
-            <div className="label nickname">nickname</div>
-            <div className="label url">url</div>
-            <div className="label content">content</div>
+            <div className="label face">Face</div>
+            <div className="label nickname">Nickname</div>
+            <div className="label url">URL</div>
+            <div className="label content">Content</div>
             <div className="placeholder"></div>
-            <div className="label datetime">datetime</div>
-            <div className="label operation">operation</div>
+            <div className="label datetime">Datetime</div>
+            <div className="label operation">Operation</div>
         </div>
         {messageListObject.isLoading
             ? <Loading/>
@@ -40,13 +45,14 @@ export default function MessageListForManage() {
                         <div className="content">{value.content}</div>
                         <div className="datetime">{formatDatetime(value.createTime)}</div>
                         <div className="operation">
-                            <Icon icon="ri:delete-bin-3-line" onClick={deleteMessage(value.id)} className={"delete"}/>
+                            <Icon icon="ri:eye-off-line" />
+                            <Icon icon="ri:delete-bin-3-line" onClick={_ => deleteMessage(value.id)} className={"delete"}/>
                         </div>
                     </div>
                 )}
-                <div className="placeholder"></div>
-            </div>
-        }
+                {messageListObject.total || <Result result={messageListObject.result}/>}
+                {messageListObject.total ? <div className="placeholder"></div> : null}
+            </div>}
         <div className="bottomBar">
             <div className="total">Total: {messageListObject.total}</div>
             <div className="pagination"></div>

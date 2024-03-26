@@ -119,6 +119,18 @@ export async function getArticleContent(articleId) {
     return response?.data
 }
 
+/**
+ * 删除一条留言
+ * @param {number} messageId 留言id
+ * @returns {Promise<boolean>} 发布成功 / 失败
+ */
+export async function deleteMessage(messageId) {
+    const response = await r("/manage/deleteMessage", {messageId})
+    return response?.data
+}
+
+
+
 
 /**
  *  上传图片
@@ -158,7 +170,7 @@ export async function publishArticle({title, content, description, markdown, cre
     const response = await r("/publishArticle", {
         title, content, description, createTime, coverImage, markdown, tags: tags.toString()
     })
-    return response.data
+    return response?.data
 }
 
 /**
@@ -254,12 +266,13 @@ function processResponse(response, limit, page) {
         limit,
         page
     })
-    if (response.data && response.data.total) {
-        for (let object of response.data.list) {
+    let {list, total} = response.data
+    if (response.data && total) {
+        for (let object of list) {
             sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
         }
-        returnValue.list = response.data.list
-        returnValue.total = response.data.total
+        returnValue.list = list
+        returnValue.total = total
     }
     return returnValue
 }

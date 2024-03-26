@@ -7,17 +7,20 @@ import {Icon} from "@iconify/react";
 import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
 import {formatDatetime, SEOTools} from "../../utils/tools.js";
+import Result from "../content/result.jsx";
 
 let previousDataStringify = ""
 let articleObject = {}
 
-function ArticleDetails() {
+function ArticleDetails({isPreviewMode = true}) {
     /**
      *
      * @type {[Article, React.Dispatch<React.SetStateAction<any>>]}
      */
     const articleState = useImmer(Object)
     const articleDetailsRef = useRef(null);
+    // const [isPreviewMode, setPreviewMode] = useState(true)
+    const [isGiscusLoading, setGiscusLoading] = useState(true)
     const [article, setArticle] = articleState
     const [scrollHeight, setScrollHeight] = useState(0)
 
@@ -41,6 +44,7 @@ function ArticleDetails() {
         if (event.origin !== 'https://giscus.app') return;
         if (!(typeof event.data === 'object' && event.data["giscus"])) return;
         const giscusData = event.data["giscus"];
+        setGiscusLoading(false)
         const currentDataStringify = JSON.stringify(event.data["giscus"])
         if (previousDataStringify === currentDataStringify) {
             return;
@@ -83,7 +87,7 @@ function ArticleDetails() {
                     setArticle(article)
                     articleObject = article
                     sessionStorage.removeItem("articleDetails")
-                    bindDiscussion()
+                    isPreviewMode || bindDiscussion()
                     clearInterval(timer)
                 }
             }, 200)
@@ -93,7 +97,6 @@ function ArticleDetails() {
     function haveScrollbar(scrollHeight) {
         return scrollHeight > window.innerHeight * 0.95 - 62
     }
-
     const articleDetails =
         <div className={"markdown-body articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
             <h1 className="title">{article.title || "无标题"}</h1>
@@ -102,22 +105,27 @@ function ArticleDetails() {
             {article.coverImage && <img className="image" src={article.coverImage} alt="articleCoverImage"/>}
             <div className="content" dangerouslySetInnerHTML={{__html: article.content?.replace(article.description, "")}}></div>
             <BaseInfoArea article={article}/>
-            <Giscus
-                id="comments"
-                repo="nano71/Blog-2023"
-                repoId="R_kgDOKh1WEg"
-                category="Announcements"
-                categoryId="DIC_kwDOKh1WEs4Cacuy"
-                mapping="og:title"
-                reactionsEnabled="1"
-                strict="0"
-                emitMetadata="1"
-                inputPosition="top"
-                // loading="lazy"
-                theme={"https://blog.nano71.com/light.css"}
-                lang="en"
-                async
-            />
+            {isPreviewMode
+                ? <Result
+                    minHeight={"380px"}
+                    result={{code: 0, message: "The comment section is not accessible in preview mode."}}/>
+                : <Giscus
+                    id="comments"
+                    repo="nano71/Blog-2023"
+                    repoId="R_kgDOKh1WEg"
+                    category="Announcements"
+                    categoryId="DIC_kwDOKh1WEs4Cacuy"
+                    mapping="og:title"
+                    reactionsEnabled="1"
+                    strict="0"
+                    emitMetadata="1"
+                    inputPosition="top"
+                    loading="eager"
+                    theme={"https://blog.nano71.com/light.css"}
+                    lang="en"
+                    async
+                />
+            }
         </div>
     return (Object.keys(article).length ? articleDetails : <Loading/>);
 }

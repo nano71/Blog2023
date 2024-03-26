@@ -154,16 +154,19 @@ export const SEOTools = {
     /**
      *
      * @param articleId
+     * @param isUseSEOTools 是否使用SEO工具
      * @return {Article}
      */
-    async articleDetailsLoader(articleId) {
+    async articleDetailsLoader(articleId,isUseSEOTools = true) {
         console.log(articleId);
         const article = await getArticleContent(parseInt(articleId))
         if (article) {
-            this.setTitle(article.title)
-            this.setContent(article.content)
-            this.setDateTime(article.updateTime)
-            this.setDescription(article.description)
+            if (isUseSEOTools) {
+                this.setTitle(article.title)
+                this.setContent(article.content)
+                this.setDateTime(article.updateTime)
+                this.setDescription(article.description)
+            }
         } else {
             throw hiddenError("The article is non-existent.")
         }

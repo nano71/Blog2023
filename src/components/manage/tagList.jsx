@@ -8,11 +8,11 @@ export default function TagListForManage() {
     const tagListObject = useContext(TagListObjectContextForManage)
     return <div className="tagList">
         <div className="head">
-            <div className="label id">id</div>
-            <div className="label name">name</div>
-            <div className="label content">content</div>
+            <div className="label id">No</div>
+            <div className="label name">Name</div>
+            <div className="label content">Content</div>
             <div className="placeholder"></div>
-            <div className="label operation">operation</div>
+            <div className="label operation">Operation</div>
         </div>
         {tagListObject.isLoading
             ? <Loading/>
@@ -23,6 +23,7 @@ export default function TagListForManage() {
                         <div className="name">{value.name}</div>
                         <div className="content">{value.content}</div>
                         <div className="operation">
+                            <Icon icon="ri:eye-off-line" />
                             <Icon icon="ri:edit-line" className={"edit"}/>
                             <Icon icon="ri:delete-bin-3-line" className={"delete"}/>
                         </div>
@@ -34,7 +35,7 @@ export default function TagListForManage() {
         }
         <div className="bottomBar">
             <div className="total">Total: {tagListObject.total}</div>
-            <div className="pagination"></div>
+            <div className="add"><Icon icon="ri:apps-2-add-line" />ADD</div>
         </div>
     </div>
 }

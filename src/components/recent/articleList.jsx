@@ -18,7 +18,7 @@ function ArticleList() {
 
     useEffect(() => {
         console.log("ArticleList render");
-        popup.loadComponent(<Window><ArticleDetails/></Window>)
+        popup.loadComponent(<Window><ArticleDetails isPreviewMode={false}/></Window>)
         if (params.articleId) {
             popup.show({
                 message: "firstShow",

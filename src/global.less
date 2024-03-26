@@ -16,6 +16,11 @@ body {
     }
 }
 
+code {
+    &:extend(.enFontS);
+
+}
+
 //noinspection LessResolvedByNameOnly
 ::-webkit-scrollbar-thumb {
     background-color: @themeColor;
@@ -38,7 +43,7 @@ p {
 }
 
 a {
-    color: #0a0a0a;
+    color: #191b1f;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.4s ease-out;
@@ -49,11 +54,12 @@ a {
     }
 }
 
-input {
+input, textarea {
     color: #0a0a0a;
     letter-spacing: 0.8px;
-    &:extend(.hybridFont);
+    font-family: inherit;
 }
+
 
 //noinspection LessResolvedByNameOnly
 ::selection {

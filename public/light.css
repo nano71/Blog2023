@@ -90,6 +90,16 @@ main {
     --color-social-reaction-bg-reacted-hover: var(--color-scale-blue-1);
 }
 
+html {
+    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+}
+
+::selection {
+    color: #fff;
+    background-color: #05b45d;
+    text-shadow: none;
+}
+
 main .gsc-loading {
     height: 150px;
     justify-content: center;

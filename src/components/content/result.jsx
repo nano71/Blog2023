@@ -6,10 +6,11 @@ import {Icon} from "@iconify/react";
 /**
  *
  * @param {ResponseData} result
+ * @param {string} minHeight
  * @return {JSX.Element}
  * @constructor
  */
-function Result({result}) {
+function Result({result, minHeight = "auto"}) {
     const params = useParams()
     const [view, setView] = useState(<></>)
 
@@ -58,6 +59,7 @@ function Result({result}) {
                 setView(forbidden())
                 break
             case "ERR_NETWORK":
+            case 0:
                 setView(customMessage(result.message))
                 break
             default:
@@ -66,7 +68,7 @@ function Result({result}) {
     }, []);
 
     return (
-        <div className="result">
+        <div className="result" style={{minHeight}}>
             <Icon icon="emojione-v1:confused-face" style={{marginRight: "5px"}}/>
             {view}
         </div>)
