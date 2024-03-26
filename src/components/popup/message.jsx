@@ -6,7 +6,7 @@ function Message() {
     const popup = useContext(PopupContext)
     return (
         <div className={"messageContainer container" + (popup.isHiding ? " hide" : "")}>
-            <div className="subtitle">
+            <div className="title">
                 <Icon icon="ri:information-fill"/>{popup.title()}
             </div>
             <a className="close" onClick={_ => popup.close("icon")}><Icon icon="ri:close-fill"/></a>

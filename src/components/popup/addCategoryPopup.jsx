@@ -1,15 +1,19 @@
 import React, {useContext, useRef} from "react";
 import {PopupContext} from "./popup.jsx";
-import {useNavigate} from "react-router-dom";
 import {Icon} from "@iconify/react";
 
 function AddCategory({target}) {
     const popup = useContext(PopupContext)
-    const description = useRef(null)
+    const content = useRef(null)
     const name = useRef(null)
+    const errorMessage = ""
 
-    function confirm() {
-
+    function submit() {
+        let data = {
+            content: content.current.value,
+            name: name.current.value
+        }
+        popup.tip("内容不完整")
     }
 
     return (
@@ -28,13 +32,16 @@ function AddCategory({target}) {
                 </div>
                 <div className="inputItem">
                     <div className="label">Description</div>
-                    <textarea maxLength={255} ref={description} placeholder="标签介绍"/>
+                    <textarea maxLength={255} ref={content} placeholder="标签介绍"/>
                 </div>
                 <div className="tip">
-                    Open your two-factor authenticator (TOTP) app or browser extension to view your authentication code.
+                    A short description, recommended 150 characters or less.
+                </div>
+                <div className="warring">
+
                 </div>
                 <div className="buttons">
-                    <div className="confirm button" onClick={confirm}>confirm</div>
+                    <div className="confirm button" onClick={submit}>Submit</div>
                 </div>
             </div>
         </div>)
