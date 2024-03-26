@@ -10,10 +10,12 @@ import {getArticleContent} from "../../utils/http.js";
 import Modal from "../popup/modal.jsx";
 import {formatDatetime, SEOTools, sleep} from "../../utils/tools.js";
 import ArticleDetails from "../recent/articleDetails.jsx";
+import {useNavigate} from "react-router-dom";
 
 export default function ArticleListForManage() {
     const articleListObject = useContext(ArticleListObjectContextForManage)
     const popup = useContext(PopupContext)
+    const navigate = useNavigate()
 
     async function editArticle(id) {
         popup.loadTemporaryComponent(<Modal/>).title("数据获取中, 请稍等...").show({lockMask: true})
@@ -40,6 +42,13 @@ export default function ArticleListForManage() {
     function viewArticleContent(id) {
         SEOTools.articleDetailsLoader(id, false)
         popup.loadTemporaryComponent(<Window><ArticleDetails/></Window>).title("Preview article").show()
+    }
+
+    function writeArticle() {
+        popup.confirm("About to leave the current page and jump to the writing page, Are you sure?",
+            () => {
+                navigate("/write")
+            })
     }
 
     return <div className="articleList">
@@ -70,7 +79,7 @@ export default function ArticleListForManage() {
         }
         <div className="bottomBar">
             <div className="total">Total: {articleListObject.total}</div>
-            <div className="add"><Icon icon="ri:sticky-note-add-line"/>Write</div>
+            <div className="add" onClick={writeArticle}><Icon icon="ri:sticky-note-add-line"/>Write</div>
         </div>
     </div>
 }

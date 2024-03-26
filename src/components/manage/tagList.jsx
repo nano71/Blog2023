@@ -3,9 +3,17 @@ import React, {useContext} from "react";
 import {TagListObjectContextForManage} from "../../pages/manage.jsx";
 import Loading from "../content/loading.jsx";
 import {Icon} from "@iconify/react";
+import {PopupContext} from "../popup/popup.jsx";
+import AddCategoryPopup from "../popup/addCategoryPopup.jsx";
 
 export default function TagListForManage() {
     const tagListObject = useContext(TagListObjectContextForManage)
+    const popup = useContext(PopupContext)
+
+    function addCategory() {
+        popup.loadTemporaryComponent(<AddCategoryPopup/>).show()
+    }
+
     return <div className="tagList">
         <div className="head">
             <div className="label id">No</div>
@@ -23,7 +31,7 @@ export default function TagListForManage() {
                         <div className="name">{value.name}</div>
                         <div className="content">{value.content}</div>
                         <div className="operation">
-                            <Icon icon="ri:eye-off-line" />
+                            <Icon icon="ri:eye-off-line"/>
                             <Icon icon="ri:edit-line" className={"edit"}/>
                             <Icon icon="ri:delete-bin-3-line" className={"delete"}/>
                         </div>
@@ -35,7 +43,7 @@ export default function TagListForManage() {
         }
         <div className="bottomBar">
             <div className="total">Total: {tagListObject.total}</div>
-            <div className="add"><Icon icon="ri:apps-2-add-line" />ADD</div>
+            <div className="add" onClick={addCategory}><Icon icon="ri:apps-2-add-line"/>Add</div>
         </div>
     </div>
 }

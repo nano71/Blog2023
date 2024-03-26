@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import React, {createContext, useEffect, useState} from "react";
 import "/src/stylesheets/popup/popup.less"
 import Message from "./message.jsx";
+import Confirm from "./confirm.jsx";
 
 class PopupContextValue {
 }
@@ -34,7 +35,8 @@ export default function PopupProvider({children}) {
         close,
         show,
         title,
-        tip
+        tip,
+        confirm
     }
     useEffect(() => {
         if (isLockScroll)
@@ -43,6 +45,10 @@ export default function PopupProvider({children}) {
             document.body.style.overflow = "unset"
         }
     }, [isVisible, isLockScroll])
+
+    function confirm(message, confirmFn) {
+        loadTemporaryComponent(<Confirm confirmFn={confirmFn} tip={message}/>).show()
+    }
 
     function tip(message) {
         loadTemporaryComponent(<Message/>)
