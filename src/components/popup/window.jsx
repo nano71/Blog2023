@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {Icon} from "@iconify/react";
-import {PopupContext} from "./popup.jsx";
+import {PopupContext, usePopup} from "./popup.jsx";
 
 /**
  *
@@ -8,7 +8,7 @@ import {PopupContext} from "./popup.jsx";
  * @returns {PopupComponent}
  */
 function Window({children}) {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
 
     const titles = {
         "article": "Article details",

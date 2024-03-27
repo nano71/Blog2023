@@ -1,0 +1,68 @@
+#tip.tip {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 100vh;
+    z-index: 1743;
+
+    .container {
+        .close {
+            display: flex;
+            align-items: center;
+            font-size: 32px;
+        }
+    }
+
+    @keyframes showPrompt {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(calc(-100% - 30px));
+        }
+    }
+
+    @keyframes hidePrompt {
+        from {
+            transform: translateY(calc(-100% - 30px));
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .messageContainer {
+        position: absolute;
+        top: 0;
+        min-width: 300px;
+        max-width: calc(100vw - 30px);
+        display: flex;
+        flex-direction: row;
+        padding: 15px;
+        align-items: center;
+        justify-content: space-between;
+        animation: showPrompt .2s both;
+        box-shadow: 0 10px 20px 0 #00000005;
+        background-color: #fff;
+
+        .title {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            line-height: 22px;
+
+            svg {
+                font-size: 22px;
+            }
+        }
+
+        &.hide {
+            animation: hidePrompt .2s both;
+        }
+    }
+
+}

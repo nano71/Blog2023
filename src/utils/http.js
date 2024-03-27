@@ -114,10 +114,20 @@ export async function getArticleContent(articleId) {
 /**
  * 删除一条留言
  * @param {number} messageId 留言id
- * @returns {Promise<boolean>} 发布成功 / 失败
+ * @returns {Promise<boolean>} 删除成功 / 失败
  */
 export async function deleteMessage(messageId) {
     const response = await r("/manage/deleteMessage", {messageId})
+    return response?.data
+}
+
+/**
+ * 删除一个标签
+ * @param {string} tagName 标签名
+ * @returns {Promise<boolean>} 删除成功 / 失败
+ */
+export async function deleteCategory(tagName) {
+    const response = await r("/manage/deleteCategory", {tagName})
     return response?.data
 }
 
@@ -156,7 +166,7 @@ export async function uploadImage(file) {
  * @returns {Promise<boolean>} 发布成功 / 失败
  */
 export async function publishArticle({title, content, description, markdown, createTime, coverImage, tags}) {
-    const response = await r("/publishArticle", {
+    const response = await r("/manage/publishArticle", {
         title, content, description, createTime, coverImage, markdown, tags: tags.toString()
     })
     return response?.data
@@ -176,6 +186,19 @@ export async function addCategory({name, content}) {
 }
 
 /**
+ * 更新一条标签
+ * @param {string} name 名称
+ * @param {string} content 内容
+ * @returns {Promise<boolean>} 发布成功 / 失败
+ */
+export async function updateCategory({name, content}) {
+    const response = await r("/manage/updateCategory", {
+        name, content
+    })
+    return response?.data
+}
+
+/**
  *  更新一篇文章
  * @param {number} id
  * @param {string} title 标题
@@ -188,7 +211,7 @@ export async function addCategory({name, content}) {
  * @returns {Promise<boolean>} 更新成功 / 失败
  */
 export async function updateArticle({id, title, content, description, markdown, createTime, coverImage, tags}) {
-    const response = await r("/updateArticle", {
+    const response = await r("/manage/updateArticle", {
         id, title, content, description, createTime, coverImage, markdown, tags: tags.toString()
     })
     return response.data

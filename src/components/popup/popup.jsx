@@ -1,7 +1,5 @@
-import {useNavigate} from "react-router-dom";
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import "/src/stylesheets/popup/popup.less"
-import Message from "./message.jsx";
 import Confirm from "./confirm.jsx";
 
 class PopupContextValue {
@@ -16,7 +14,6 @@ let titleQueue = []
 let temporaryComponentQueue = []
 let callback4Close
 export default function PopupProvider({children}) {
-    const navigate = useNavigate()
     const [isHiding, setHiding] = useState(false)
     const [PopupChildren, loadComponent] = useState(<></>)
     const [isVisible, setVisibility] = useState(false)
@@ -24,7 +21,7 @@ export default function PopupProvider({children}) {
     const [isShowMask, setMaskVisibility] = useState(true)
     const [isLockScroll, setLockScroll] = useState(true)
     const [isLockMask, setLockMask] = useState(false)
-    const [popipTitle, setPopipTitle] = useState("")
+    const [popupTitle, setPopupTitle] = useState("")
 
     PopupContextValue = {
         isVisible,
@@ -35,7 +32,6 @@ export default function PopupProvider({children}) {
         close,
         show,
         title,
-        tip,
         confirm
     }
     useEffect(() => {
@@ -50,18 +46,12 @@ export default function PopupProvider({children}) {
         loadTemporaryComponent(<Confirm confirmFn={confirmFn} tip={message}/>).show()
     }
 
-    function tip(message) {
-        loadTemporaryComponent(<Message/>)
-            .title(message)
-            .show({showMask: false, lockScroll: false, autoClose: true})
-    }
-
     function title(title) {
         if (title) {
             titleQueue.push(title)
             return PopupContextValue
         } else
-            return popipTitle
+            return popupTitle
     }
 
     function loadTemporaryComponent(element) {
@@ -80,7 +70,7 @@ export default function PopupProvider({children}) {
             visibleState = false
             isShowMask || setMaskVisibility(true)
             isLockScroll || setLockScroll(true)
-            setPopipTitle("")
+            setPopupTitle("")
             setTemporaryComponent(null)
             if (haveTask) {
                 show(taskParams)
@@ -112,7 +102,7 @@ export default function PopupProvider({children}) {
             console.info("popup.show", "normal", "message:", message);
         }
         setLockMask(lockMask)
-        setPopipTitle(titleQueue.shift())
+        setPopupTitle(titleQueue.shift())
         setTemporaryComponent(temporaryComponentQueue.shift())
         lockScroll || setLockScroll(false)
         showMask || setMaskVisibility(false)
@@ -137,4 +127,8 @@ export default function PopupProvider({children}) {
             </div>}
             {children}
         </PopupContext.Provider>)
+}
+
+export function usePopup() {
+    return useContext(PopupContext)
 }

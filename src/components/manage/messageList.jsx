@@ -1,23 +1,32 @@
 import "/src/stylesheets/manage/messageList.less"
 
 import React, {useContext} from "react";
-import {MessageListObjectContextForManage} from "../../pages/manage.jsx";
+import {ManagementConsoleUpdateContext, MessageListObjectContextForManage} from "../../pages/manage.jsx";
 import {Icon} from "@iconify/react";
 import Loading from "../content/loading.jsx";
-import {PopupContext} from "../popup/popup.jsx";
+import {usePopup} from "../popup/popup.jsx";
 import {formatDatetime} from "../../utils/tools.js";
 import * as http from "../../utils/http.js";
 import Result from "../content/result.jsx";
+import {useTip} from "../popup/tip.jsx";
 
 export default function MessageListForManage() {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
+    const tip = useTip()
+    const managementConsole = useContext(ManagementConsoleUpdateContext)
     const messageListObject = useContext(MessageListObjectContextForManage)
 
     async function deleteMessage(id) {
-        let result = await http.deleteMessage(id)
-        if (result) {
-            popup.tip("删除成功")
-        }
+        popup.confirm("Your action will delete this message, Are you sure?",
+            async () => {
+                popup.close()
+                let result = await http.deleteMessage(id)
+                if (result) {
+                    tip.show("删除成功")
+                } else {
+                    tip.show("删除失败")
+                }
+            })
     }
 
     return <div className="messageList">
@@ -45,13 +54,12 @@ export default function MessageListForManage() {
                         <div className="content">{value.content}</div>
                         <div className="datetime">{formatDatetime(value.createTime)}</div>
                         <div className="operation">
-                            <Icon icon="ri:eye-off-line" />
+                            <Icon icon="ri:eye-off-line"/>
                             <Icon icon="ri:delete-bin-3-line" onClick={_ => deleteMessage(value.id)} className={"delete"}/>
                         </div>
                     </div>
                 )}
-                {messageListObject.total || <Result result={messageListObject.result}/>}
-                {messageListObject.total ? <div className="placeholder"></div> : null}
+                {messageListObject.total ? <div className="placeholder"></div> : <Result result={messageListObject.result}/>}
             </div>}
         <div className="bottomBar">
             <div className="total">Total: {messageListObject.total}</div>

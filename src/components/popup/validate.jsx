@@ -1,5 +1,5 @@
 import React, {useContext, useRef} from "react";
-import {PopupContext} from "./popup.jsx";
+import {PopupContext, usePopup} from "./popup.jsx";
 import {Icon} from "@iconify/react";
 import {useNavigate} from "react-router-dom";
 
@@ -7,12 +7,13 @@ import {useNavigate} from "react-router-dom";
  * @return {PopupComponent}
  */
 function Validate({target}) {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
     const authenticationCode = useRef(null)
     const navigate = useNavigate()
 
     function confirm() {
         sessionStorage.setItem("authenticationCode", authenticationCode.current.value)
+        popup.close()
         navigate("/" + target)
     }
 

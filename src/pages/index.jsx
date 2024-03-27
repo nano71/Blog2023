@@ -173,9 +173,7 @@ function Index() {
         isInitializedCheck() && routeEffectPreCheck() && routeEffectCheck() && routeEffect()
     }, [params])
 
-    return (<>
-        <PopupProvider>
-            <div className="index">
+    return <div className="index">
                 <ArticleListObjectContext.Provider value={articleListObject}>
                     <CoverImageContext.Provider value={{coverImage, setCoverImage}}>
                         <Cover/>
@@ -196,8 +194,6 @@ function Index() {
                 </ArticleListObjectContext.Provider>
                 <img src={staticResourceURL + "mona-loading-default.gif"} style={{display: "none"}} alt="loading-GIF"/>
             </div>
-        </PopupProvider>
-    </>)
 }
 
 export default Index

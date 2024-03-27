@@ -2,7 +2,7 @@ import "/src/stylesheets/article/articleList.less"
 import React, {useContext, useEffect} from "react";
 import {ArticleListObjectContext, CoverImageContext, previousRoute} from "/src/pages/index.jsx";
 import {useNavigate, useParams} from "react-router-dom";
-import {PopupContext} from "../popup/popup.jsx";
+import {PopupContext, usePopup} from "../popup/popup.jsx";
 import ArticleDetails from "./articleDetails.jsx";
 import Window from "../popup/window.jsx";
 import Pagination from "../content/pagination.jsx";
@@ -13,7 +13,7 @@ function ArticleList() {
     const recentArticlesObject = useContext(ArticleListObjectContext)
     const {setCoverImage} = useContext(CoverImageContext)
     const navigate = useNavigate()
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
     const params = useParams()
 
     useEffect(() => {

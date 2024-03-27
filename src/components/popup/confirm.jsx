@@ -1,12 +1,12 @@
 import React, {useContext, useRef} from "react";
-import {PopupContext} from "./popup.jsx";
+import {PopupContext, usePopup} from "./popup.jsx";
 import {Icon} from "@iconify/react";
 
 /**
  * @return {PopupComponent}
  */
 function Confirm({tip,confirmFn}) {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
 
     return (
         <div className={"confirmContainer container" + (popup.isHiding ? " hide" : "")}>

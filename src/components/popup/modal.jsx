@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
-import {PopupContext} from "./popup.jsx";
+import {PopupContext, usePopup} from "./popup.jsx";
 import {Icon} from "@iconify/react";
 
 function Modal() {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
     return (
         <div className={"modalContainer container" + (popup.isHiding ? " hide" : "")}>
             <div className="message">

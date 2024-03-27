@@ -1,15 +1,16 @@
 import React, {useContext} from "react";
 import {PopupContext} from "./popup.jsx";
 import {Icon} from "@iconify/react";
+import {TipContext, useTip} from "./tip.jsx";
 
 function Message() {
-    const popup = useContext(PopupContext)
+    const tip = useTip()
     return (
-        <div className={"messageContainer container" + (popup.isHiding ? " hide" : "")}>
+        <div className={"messageContainer container" + (tip.isHiding ? " hide" : "")}>
             <div className="title">
-                <Icon icon="ri:information-fill"/>{popup.title()}
+                <Icon icon="ri:information-fill"/>{tip.title()}
             </div>
-            <a className="close" onClick={_ => popup.close("icon")}><Icon icon="ri:close-fill"/></a>
+            <a className="close" onClick={_ => tip.close("icon")}><Icon icon="ri:close-fill"/></a>
         </div>)
 }
 

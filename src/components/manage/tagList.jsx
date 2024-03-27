@@ -1,17 +1,40 @@
 import "/src/stylesheets/manage/tagList.less"
 import React, {useContext} from "react";
-import {TagListObjectContextForManage} from "../../pages/manage.jsx";
+import {ManagementConsoleUpdateContext, TagListObjectContextForManage} from "../../pages/manage.jsx";
 import Loading from "../content/loading.jsx";
 import {Icon} from "@iconify/react";
-import {PopupContext} from "../popup/popup.jsx";
-import AddCategoryPopup from "../popup/addCategoryPopup.jsx";
+import {usePopup} from "../popup/popup.jsx";
+import EditCategory from "../popup/addCategoryPopup.jsx";
+import * as http from "../../utils/http.js";
+import {useTip} from "../popup/tip.jsx";
 
 export default function TagListForManage() {
     const tagListObject = useContext(TagListObjectContextForManage)
-    const popup = useContext(PopupContext)
+    const managementConsole = useContext(ManagementConsoleUpdateContext)
+
+    const popup = usePopup()
+    const tip = useTip()
 
     function addCategory() {
-        popup.loadTemporaryComponent(<AddCategoryPopup/>).show()
+        popup.loadTemporaryComponent(<EditCategory isAddMode={true}/>).show()
+    }
+
+    function editCategory(value) {
+        sessionStorage.setItem("category", JSON.stringify(value))
+        popup.loadTemporaryComponent(<EditCategory/>).show()
+    }
+
+    function deleteCategory(tagName) {
+        popup.confirm("Your action will delete this category, Are you sure?",
+            async () => {
+                popup.close()
+                let result = await http.deleteCategory(tagName)
+                if (result) {
+                    tip.show("删除成功")
+                } else {
+                    tip.show("删除失败")
+                }
+            })
     }
 
     return <div className="tagList">
@@ -32,8 +55,8 @@ export default function TagListForManage() {
                         <div className="content">{value.content}</div>
                         <div className="operation">
                             <Icon icon="ri:eye-off-line"/>
-                            <Icon icon="ri:edit-line" className={"edit"}/>
-                            <Icon icon="ri:delete-bin-3-line" className={"delete"}/>
+                            <Icon icon="ri:edit-line" className={"edit"} onClick={_ => editCategory(value)}/>
+                            <Icon icon="ri:delete-bin-3-line" className={"delete"} onClick={_ => deleteCategory(value.name)}/>
                         </div>
                     </div>
                 )}

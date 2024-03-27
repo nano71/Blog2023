@@ -1,11 +1,11 @@
 import {Icon} from "@iconify/react";
 import {useContext} from "react";
-import {PopupContext} from "../popup/popup.jsx";
+import {PopupContext, usePopup} from "../popup/popup.jsx";
 import Validate from "../popup/validate.jsx";
 import "/src/stylesheets/content/footer.less"
 
 export const Footer = () => {
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
 
     function verifyIdentity(target) {
         console.log("goWrite");

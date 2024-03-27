@@ -13,6 +13,7 @@ import ArticleListForManage from "../components/manage/articleList.jsx";
 import TagListForManage from "../components/manage/tagList.jsx";
 import MessageListForManage from "../components/manage/messageList.jsx";
 import Result from "../components/content/result.jsx";
+import Provider from "../pages/provider.jsx";
 
 const pageRouteTree = [
     {
@@ -47,7 +48,7 @@ export function hiddenError(errorMessage) {
 export default createBrowserRouter([
     {
         path: "/manage",
-        element: <Manage/>,
+        element: <Provider><Manage/></Provider>,
         errorElement: <ErrorView/>,
         loader() {
             console.info("Manage loader");
@@ -91,7 +92,7 @@ export default createBrowserRouter([
     },
     {
         path: "/write",
-        element: <Write/>,
+        element: <Provider><Write/></Provider>,
         errorElement: <ErrorView/>,
         loader() {
             console.info("Write loader");
@@ -117,7 +118,7 @@ export default createBrowserRouter([
     },
     {
         path: "/",
-        element: <Index/>,
+        element: <Provider><Index/></Provider>,
         errorElement: <ErrorView/>,
         loader: () => {
             console.info("Index loader");

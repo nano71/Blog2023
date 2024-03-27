@@ -7,7 +7,7 @@ import {Icon} from "@iconify/react";
 import {useNavigate} from "react-router-dom";
 import hljs from 'highlight.js';
 import * as http from "../../utils/http.js";
-import {PopupContext} from "../popup/popup.jsx";
+import {usePopup} from "../popup/popup.jsx";
 import Window from "../popup/window.jsx";
 import ArticleDetails from "../recent/articleDetails.jsx";
 import Modal from "../popup/modal.jsx";
@@ -15,6 +15,8 @@ import {useImmer} from "use-immer";
 import Loading from "../content/loading.jsx";
 import {formatDatetime, sleep} from "../../utils/tools.js";
 import Feedback from "../content/feedback.jsx";
+import {useTip} from "../popup/tip.jsx";
+import {ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
 
 let realCoverImage = ""
 let id = 0
@@ -29,8 +31,11 @@ export default function Editor({isEditMode = false}) {
     const [time, setTime] = useState(formatDatetime())
     const [description, setDescription] = useState("")
     const [tags, setTags] = useState([])
+    const managementConsole = useContext(ManagementConsoleUpdateContext)
+
     const navigate = useNavigate()
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
+    const tip = useTip()
 
     useEffect(() => {
         popup.loadComponent(<Window><ArticleDetails/></Window>)
@@ -148,14 +153,16 @@ export default function Editor({isEditMode = false}) {
      * @return {Promise<void>}
      */
     async function update(processedData) {
-        popup.loadTemporaryComponent(<Modal/>).title("处理中, 请稍等...").show({lockMask: true})
+        popup.loadTemporaryComponent(<Modal/>).title("操作处理中, 请稍等...").show({lockMask: true})
 
         await sleep(1000)
         let result = await http.updateArticle({id, ...processedData})
+        popup.close()
         if (result) {
-            popup.tip("文章已更新!")
+            tip.show("文章已更新!")
+            managementConsole.getArticleListData()
         } else {
-            popup.tip("文章更新失败!")
+            tip.show("文章更新失败!")
         }
     }
 
@@ -180,14 +187,14 @@ export default function Editor({isEditMode = false}) {
             description: "缺少内容",
         }
         if (!isFormatDateTime && formatDatetime(time) === "Invalid Date") {
-            popup.tip("时间格式不正确!")
+            tip.show("时间格式不正确!")
             return
         }
 
         for (let checkMapKey in checkMap) {
             if (!processedData[checkMapKey]) {
                 console.log(checkMapKey);
-                popup.tip(checkMap[checkMapKey])
+                tip.show(checkMap[checkMapKey])
                 return
             }
         }
@@ -195,14 +202,16 @@ export default function Editor({isEditMode = false}) {
         if (isEditMode)
             return update(processedData)
 
-        popup.loadTemporaryComponent(<Modal/>).title("发布中, 请稍等...").show({lockMask: true})
+        popup.loadTemporaryComponent(<Modal/>).title("文章发布中, 请稍等...").show({lockMask: true})
 
-        await sleep(1000)
+        // await sleep(1000)
         let result = await http.publishArticle(processedData)
+        popup.close()
+
         if (result) {
-            popup.tip("文章已发布!")
+            tip.show("文章已发布!")
         } else {
-            popup.tip("文章发布失败!")
+            tip.show("文章发布失败!")
         }
     }
 
@@ -226,7 +235,7 @@ export default function Editor({isEditMode = false}) {
         <div className="inputArea">
             <input value={title} onChange={e => setTitle(e.target.value)}
                    type="text" className="titleInput" placeholder="请输入标题"/>
-            <div className="previewButton" title="预览" onClick={preview}><Icon icon="ri:bill-line"/></div>
+            {isEditMode || <div className="previewButton" title="预览" onClick={preview}><Icon icon="ri:bill-line"/></div>}
             <MarkdownEditor value={markdown} handler={editorChangeHandler}/>
             <div className="options">
                 <div className="item">

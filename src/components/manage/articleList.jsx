@@ -1,9 +1,9 @@
 import "/src/stylesheets/manage/artileList.less"
 import {Icon} from "@iconify/react";
 import React, {useContext} from "react";
-import {ArticleListObjectContextForManage} from "../../pages/manage.jsx";
+import {ArticleListObjectContextForManage, ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
 import Loading from "../content/loading.jsx";
-import {PopupContext} from "../popup/popup.jsx";
+import {PopupContext, usePopup} from "../popup/popup.jsx";
 import Editor from "../write/editor.jsx";
 import Window from "../popup/window.jsx";
 import {getArticleContent} from "../../utils/http.js";
@@ -13,8 +13,9 @@ import ArticleDetails from "../recent/articleDetails.jsx";
 import {useNavigate} from "react-router-dom";
 
 export default function ArticleListForManage() {
+    const managementConsole = useContext(ManagementConsoleUpdateContext)
     const articleListObject = useContext(ArticleListObjectContextForManage)
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
     const navigate = useNavigate()
 
     async function editArticle(id) {
@@ -47,6 +48,7 @@ export default function ArticleListForManage() {
     function writeArticle() {
         popup.confirm("About to leave the current page and jump to the writing page, Are you sure?",
             () => {
+                popup.close()
                 navigate("/write")
             })
     }

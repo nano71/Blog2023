@@ -6,15 +6,17 @@ import "/src/stylesheets/guestbook/guestbook.less"
 import {useImmer} from "use-immer";
 import {Icon} from "@iconify/react";
 import {emojiLabels} from "../../utils/data.js";
-import {PopupContext} from "../popup/popup.jsx";
+import {usePopup} from "../popup/popup.jsx";
 import Modal from "../popup/modal.jsx";
 import * as http from "../../utils/http.js";
 import {isValidUrl} from "../../utils/http.js";
 import {formatDatetime, sleep} from "../../utils/tools.js";
 import Result from "../content/result.jsx";
+import {useTip} from "../popup/tip.jsx";
 
 export default function () {
     const messageListObject = useContext(MessageListObjectContext)
+
     function List() {
         if (messageListObject.total)
             return <MessageList messageList={messageListObject.list}/>
@@ -33,7 +35,8 @@ export default function () {
 
 function InputArea() {
     const messageListObject = useContext(MessageListObjectContext)
-    const popup = useContext(PopupContext)
+    const popup = usePopup()
+    const tip = useTip()
 
     const [message, setMessage] = useImmer("")
     const [nickname, setNickname] = useImmer("")
@@ -50,14 +53,14 @@ function InputArea() {
             createTime: formatDatetime()
         }
         if (!data.content) {
-            popup.tip("多少写点!")
+            tip.show("多少写点!")
             return
         }
         if (data.url) {
             if (!url.startsWith("http"))
                 data.url = "http://" + url
             if (!isValidUrl(data.url)) {
-                popup.tip("网址格式错误!")
+                tip.show("网址格式错误!")
                 return
             }
         }
@@ -67,12 +70,13 @@ function InputArea() {
 
         let result = await http.leaveMessage(data)
         console.log(result);
+        popup.close()
         if (result) {
             messageListObject.push(data)
             setMessage("")
-            popup.tip("留言成功!")
+            tip.show("留言成功!")
         } else {
-            popup.tip("留言失败!")
+            tip.show("留言失败!")
         }
     }
 

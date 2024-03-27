@@ -1,24 +1,46 @@
-import React, {useContext, useRef} from "react";
-import {PopupContext} from "./popup.jsx";
+import React, {useContext, useEffect, useRef} from "react";
+import {usePopup} from "./popup.jsx";
 import {Icon} from "@iconify/react";
-import {addCategory} from "../../utils/http.js";
+import {addCategory, updateCategory} from "../../utils/http.js";
+import {useTip} from "./tip.jsx";
+import {ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
 
-function AddCategory({target}) {
-    const popup = useContext(PopupContext)
+export default function EditCategory({isAddMode = false}) {
+    const popup = usePopup()
+    const tip = useTip()
     const content = useRef(null)
     const name = useRef(null)
-    const errorMessage = ""
+    const managementConsole = useContext(ManagementConsoleUpdateContext)
+
+    useEffect(() => {
+        if (!isAddMode) {
+            let category = JSON.parse(sessionStorage.getItem("category"))
+            console.log(category);
+            content.current.value = category.content
+            name.current.value = category.name
+            sessionStorage.removeItem("category")
+        }
+    }, [])
 
     async function submit() {
         let data = {
             content: content.current.value,
             name: name.current.value
         }
-        let result = await addCategory(data)
+        if (!data.name || !data.content) {
+            tip.show("内容不完整!")
+            return
+        }
+        let result
+        if (isAddMode)
+            result = await addCategory(data)
+        else
+            result = await updateCategory(data)
         if (result) {
             popup.close()
+            tip.show(isAddMode ? "标签已添加" : "标签已更新")
         } else {
-
+            tip.show(isAddMode ? "标签添加失败" : "标签更新失败")
         }
     }
 
@@ -53,4 +75,4 @@ function AddCategory({target}) {
         </div>)
 }
 
-export default AddCategory
+
