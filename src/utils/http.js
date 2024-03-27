@@ -42,8 +42,6 @@ export async function getRecentArticles(limit = 8, page = 1, isManager = false) 
     console.log("getRecentArticles");
     page = page.toInt()
 
-    await sleep(1000)
-
     /**
      *
      * @type {{data: ArticlesResponseData, code: number, message: string}}
@@ -62,9 +60,6 @@ export async function getRecentArticles(limit = 8, page = 1, isManager = false) 
  * @returns {Promise<TagListObject>} 技术栈标签列表 / 失败
  */
 export async function getTagList() {
-
-    await sleep(1000)
-
     /**
      *
      * @type {{data: Tag[]|false, code: number, message: string}}
@@ -89,9 +84,6 @@ export async function getTagList() {
 export async function getMessageList(limit = 10000, page = 1) {
     console.log("getMessageList");
     page = page.toInt()
-
-    await sleep(1000)
-
 
     const response = await r("/getMessageList", {
         limit,
@@ -128,9 +120,6 @@ export async function deleteMessage(messageId) {
     const response = await r("/manage/deleteMessage", {messageId})
     return response?.data
 }
-
-
-
 
 /**
  *  上传图片
