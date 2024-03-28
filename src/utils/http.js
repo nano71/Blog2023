@@ -1,5 +1,4 @@
 import axios from "axios";
-import {sleep} from "./tools.js";
 import {ArticleListObject, MessageListObject, TagListObject} from "./type.js";
 
 axios.defaults.baseURL = import.meta.env.DEV ? "http://localhost:9000/api" : "https://nano71.com:9000/api"
@@ -301,13 +300,15 @@ function processResponse(response, limit, page) {
         limit,
         page
     })
-    let {list, total} = response.data
-    if (response.data && total) {
-        for (let object of list) {
-            sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
+    if (response.data) {
+        let {list, total} = response.data
+        if (total) {
+            for (let object of list) {
+                sessionStorage.setItem("article-" + object.id, JSON.stringify(object))
+            }
+            returnValue.list = list
+            returnValue.total = total
         }
-        returnValue.list = list
-        returnValue.total = total
     }
     return returnValue
 }
