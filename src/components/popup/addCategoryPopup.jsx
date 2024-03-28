@@ -3,14 +3,14 @@ import {usePopup} from "./popup.jsx";
 import {Icon} from "@iconify/react";
 import {addCategory, updateCategory} from "../../utils/http.js";
 import {useTip} from "./tip.jsx";
-import {ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
+
+import EventBus from "../../utils/bus.js";
 
 export default function EditCategory({isAddMode = false}) {
     const popup = usePopup()
     const tip = useTip()
     const content = useRef(null)
     const name = useRef(null)
-    const managementConsole = useContext(ManagementConsoleUpdateContext)
 
     useEffect(() => {
         if (!isAddMode) {
@@ -39,6 +39,7 @@ export default function EditCategory({isAddMode = false}) {
         if (result) {
             popup.close()
             tip.show(isAddMode ? "标签已添加" : "标签已更新")
+            EventBus.emit("update", "tagList")
         } else {
             tip.show(isAddMode ? "标签添加失败" : "标签更新失败")
         }

@@ -16,7 +16,8 @@ import Loading from "../content/loading.jsx";
 import {formatDatetime, sleep} from "../../utils/tools.js";
 import Feedback from "../content/feedback.jsx";
 import {useTip} from "../popup/tip.jsx";
-import {ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
+
+import EventBus from "../../utils/bus.js";
 
 let realCoverImage = ""
 let id = 0
@@ -31,7 +32,6 @@ export default function Editor({isEditMode = false}) {
     const [time, setTime] = useState(formatDatetime())
     const [description, setDescription] = useState("")
     const [tags, setTags] = useState([])
-    const managementConsole = useContext(ManagementConsoleUpdateContext)
 
     const navigate = useNavigate()
     const popup = usePopup()
@@ -160,7 +160,7 @@ export default function Editor({isEditMode = false}) {
         popup.close()
         if (result) {
             tip.show("文章已更新!")
-            managementConsole.getArticleListData()
+            EventBus.emit("update", "articleList")
         } else {
             tip.show("文章更新失败!")
         }

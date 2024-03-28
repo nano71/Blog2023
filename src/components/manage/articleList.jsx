@@ -1,21 +1,24 @@
 import "/src/stylesheets/manage/artileList.less"
 import {Icon} from "@iconify/react";
 import React, {useContext} from "react";
-import {ArticleListObjectContextForManage, ManagementConsoleUpdateContext} from "../../pages/manage.jsx";
+import {ArticleListObjectContextForManage} from "../../pages/manage.jsx";
 import Loading from "../content/loading.jsx";
-import {PopupContext, usePopup} from "../popup/popup.jsx";
+import {usePopup} from "../popup/popup.jsx";
 import Editor from "../write/editor.jsx";
 import Window from "../popup/window.jsx";
+import * as http from "../../utils/http.js";
 import {getArticleContent} from "../../utils/http.js";
 import Modal from "../popup/modal.jsx";
 import {formatDatetime, SEOTools, sleep} from "../../utils/tools.js";
 import ArticleDetails from "../recent/articleDetails.jsx";
 import {useNavigate} from "react-router-dom";
+import EventBus from "../../utils/bus.js";
+import {useTip} from "../popup/tip.jsx";
 
 export default function ArticleListForManage() {
-    const managementConsole = useContext(ManagementConsoleUpdateContext)
     const articleListObject = useContext(ArticleListObjectContextForManage)
     const popup = usePopup()
+    const tip = useTip()
     const navigate = useNavigate()
 
     async function editArticle(id) {
@@ -46,10 +49,27 @@ export default function ArticleListForManage() {
     }
 
     function writeArticle() {
-        popup.confirm("About to leave the current page and jump to the writing page, Are you sure?",
+        popup.confirm(null, "About to leave the current page and jump to the writing page, Are you sure?",
             () => {
                 popup.close()
                 navigate("/write")
+            })
+    }
+
+    function deleteArticle(target) {
+        console.log(target);
+        target.datetime = formatDatetime(target.createTime)
+        delete target.createTime
+        popup.confirm(target, "Your action will delete this article, Are you sure?",
+            async () => {
+                popup.close()
+                let result = await http.deleteArticle(target.id)
+                if (result) {
+                    tip.show("删除成功")
+                    EventBus.emit("update", "articleList")
+                } else {
+                    tip.show("删除失败")
+                }
             })
     }
 
@@ -72,7 +92,7 @@ export default function ArticleListForManage() {
                         <div className="operation">
                             <Icon icon="ri:eye-off-line"/>
                             <Icon icon="ri:edit-line" onClick={_ => editArticle(value.id)} className={"edit"}/>
-                            <Icon icon="ri:delete-bin-3-line" className={"delete"}/>
+                            <Icon icon="ri:delete-bin-3-line" onClick={_ => deleteArticle(value)} className={"delete"}/>
                         </div>
                     </div>
                 )}

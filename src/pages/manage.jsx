@@ -5,14 +5,11 @@ import {Icon} from "@iconify/react";
 import {useImmer} from "use-immer";
 import {articleListObjectContextValue, messageListContextValue, tagListContextValue} from "./index.jsx";
 import {getMessageList, getRecentArticles, getTagList} from "../utils/http.js";
-
-class ManageUpdateContextValue {
-}
+import EventBus from "../utils/bus.js";
 
 export const ArticleListObjectContextForManage = createContext(articleListObjectContextValue)
 export const TagListObjectContextForManage = createContext(tagListContextValue)
 export const MessageListObjectContextForManage = createContext(messageListContextValue)
-export const ManagementConsoleUpdateContext = createContext(ManageUpdateContextValue)
 
 function Manage() {
     const sidebarItems = ["Articles", "Category", "Guestbook", "Charts"];
@@ -22,19 +19,34 @@ function Manage() {
     const [messageListObject, setMessageListObject] = useImmer(messageListContextValue)
     const navigate = useNavigate()
 
-    ManageUpdateContextValue = {
-        getMessageListData,
-        getArticleListData,
-        getTagListData
-    }
-
     useEffect(() => {
         window.scrollTo(0, 0);
         getArticleListData()
         getMessageListData()
         getTagListData()
         activeIndexInitial()
+
+        EventBus.on("update", handleUpdateListEvent);
+
+        return () => {
+            EventBus.off("update", handleUpdateListEvent);
+        };
     }, []);
+
+    function handleUpdateListEvent(targetList) {
+        switch (targetList) {
+            case "articleList":
+                getArticleListData()
+                break
+            case "tagList":
+                getTagListData()
+                break
+            case "messageList":
+                getMessageListData()
+                break
+        }
+    }
+
 
     function activeIndexInitial() {
         let i = 0
@@ -53,6 +65,9 @@ function Manage() {
      * @returns {void}
      */
     async function getArticleListData() {
+        setArticleListObject(draft => {
+            draft.isLoading = true
+        })
         console.log("getTagListData");
         let result = await getRecentArticles(50, 1, true)
         setArticleListObject(result)
@@ -63,6 +78,9 @@ function Manage() {
      * @returns {void}
      */
     async function getTagListData() {
+        setTagListObject(draft => {
+            draft.isLoading = true
+        })
         console.log("getTagListData");
         let result = await getTagList()
         setTagListObject(result)
@@ -73,6 +91,9 @@ function Manage() {
      * @returns {void}
      */
     async function getMessageListData() {
+        setMessageListObject(draft => {
+            draft.isLoading = true
+        })
         console.log("getTagListData");
         let result = await getMessageList()
         setMessageListObject(result)
@@ -105,9 +126,7 @@ function Manage() {
                 <ArticleListObjectContextForManage.Provider value={articleListObject}>
                     <TagListObjectContextForManage.Provider value={tagListObject}>
                         <MessageListObjectContextForManage.Provider value={messageListObject}>
-                            <ManagementConsoleUpdateContext.Provider value={ManageUpdateContextValue}>
-                                <Outlet/>
-                            </ManagementConsoleUpdateContext.Provider>
+                            <Outlet/>
                         </MessageListObjectContextForManage.Provider>
                     </TagListObjectContextForManage.Provider>
                 </ArticleListObjectContextForManage.Provider>

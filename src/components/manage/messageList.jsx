@@ -1,7 +1,7 @@
 import "/src/stylesheets/manage/messageList.less"
 
 import React, {useContext} from "react";
-import {ManagementConsoleUpdateContext, MessageListObjectContextForManage} from "../../pages/manage.jsx";
+import {MessageListObjectContextForManage} from "../../pages/manage.jsx";
 import {Icon} from "@iconify/react";
 import Loading from "../content/loading.jsx";
 import {usePopup} from "../popup/popup.jsx";
@@ -9,20 +9,23 @@ import {formatDatetime} from "../../utils/tools.js";
 import * as http from "../../utils/http.js";
 import Result from "../content/result.jsx";
 import {useTip} from "../popup/tip.jsx";
+import EventBus from "../../utils/bus.js";
 
 export default function MessageListForManage() {
     const popup = usePopup()
     const tip = useTip()
-    const managementConsole = useContext(ManagementConsoleUpdateContext)
     const messageListObject = useContext(MessageListObjectContextForManage)
 
-    async function deleteMessage(id) {
-        popup.confirm("Your action will delete this message, Are you sure?",
+    async function deleteMessage(target) {
+        target.datetime = formatDatetime(target.createTime)
+        delete target.createTime
+        popup.confirm(target,"Your action will delete this message, Are you sure?",
             async () => {
                 popup.close()
-                let result = await http.deleteMessage(id)
+                let result = await http.deleteMessage(target.id)
                 if (result) {
                     tip.show("删除成功")
+                    EventBus.emit("update", "messageList")
                 } else {
                     tip.show("删除失败")
                 }
@@ -55,7 +58,7 @@ export default function MessageListForManage() {
                         <div className="datetime">{formatDatetime(value.createTime)}</div>
                         <div className="operation">
                             <Icon icon="ri:eye-off-line"/>
-                            <Icon icon="ri:delete-bin-3-line" onClick={_ => deleteMessage(value.id)} className={"delete"}/>
+                            <Icon icon="ri:delete-bin-3-line" onClick={_ => deleteMessage(value)} className={"delete"}/>
                         </div>
                     </div>
                 )}

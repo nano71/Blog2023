@@ -122,6 +122,16 @@ export async function deleteMessage(messageId) {
 }
 
 /**
+ * 删除一篇文章
+ * @param {number} articleId 文章id
+ * @returns {Promise<boolean>} 删除成功 / 失败
+ */
+export async function deleteArticle(articleId) {
+    const response = await r("/manage/deleteArticle", {articleId})
+    return response?.data
+}
+
+/**
  * 删除一个标签
  * @param {string} tagName 标签名
  * @returns {Promise<boolean>} 删除成功 / 失败

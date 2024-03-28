@@ -42,8 +42,9 @@ export default function PopupProvider({children}) {
         }
     }, [isVisible, isLockScroll])
 
-    function confirm(message, confirmFn) {
-        loadTemporaryComponent(<Confirm confirmFn={confirmFn} tip={message}/>).show()
+    function confirm(target, message, confirmFn) {
+        console.log(target);
+        loadTemporaryComponent(<Confirm confirmFn={confirmFn} target={target} tip={message}/>).show()
     }
 
     function title(title) {
