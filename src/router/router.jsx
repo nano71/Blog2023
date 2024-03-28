@@ -12,8 +12,8 @@ import Manage from "../pages/manage.jsx";
 import ArticleListForManage from "../components/manage/articleList.jsx";
 import TagListForManage from "../components/manage/tagList.jsx";
 import MessageListForManage from "../components/manage/messageList.jsx";
-import Result from "../components/content/result.jsx";
 import Provider from "../pages/provider.jsx";
+import Charts from "../components/manage/charts.jsx";
 
 const pageRouteTree = [
     {
@@ -83,7 +83,7 @@ export default createBrowserRouter([
             },
             {
                 path: "charts",
-                element: <Result result={{code: 200, message: "It may be accessible later, but not now."}}/>,
+                element: <Charts/>,
                 // loader() {
                 //     throw hiddenError("It may be accessible later, but not now.")
                 // },
