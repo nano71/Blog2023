@@ -182,6 +182,24 @@ export async function publishArticle({title, content, description, markdown, cre
 }
 
 /**
+ *  获取访问量数据
+ * @returns {Promise<boolean|[]>} 成功 / 失败
+ */
+export async function getDailyVisitorVolume() {
+    const response = await r("/manage/getDailyVisitorVolume")
+    return response?.data
+}
+
+/**
+ *  获取封禁量数据
+ * @returns {Promise<boolean|[]>} 成功 / 失败
+ */
+export async function getDailyBannedCount() {
+    const response = await r("/manage/getDailyBannedCount")
+    return response?.data
+}
+
+/**
  * 添加一条标签
  * @param {string} name 名称
  * @param {string} content 内容
@@ -223,7 +241,7 @@ export async function updateArticle({id, title, content, description, markdown, 
     const response = await r("/manage/updateArticle", {
         id, title, content, description, createTime, coverImage, markdown, tags: tags.toString()
     })
-    return response.data
+    return response?.data
 }
 
 /**
@@ -239,7 +257,7 @@ export async function leaveMessage({nickname, url, face, content, createTime}) {
     const response = await r("/leaveMessage", {
         nickname, url, face, content, createTime
     })
-    return response.data
+    return response?.data
 }
 
 /**
