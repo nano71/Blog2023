@@ -96,7 +96,6 @@ export default function Editor({isEditMode = false}) {
     }
 
     function preview() {
-        localStorage.setItem("preview", JSON.stringify(template()))
         navigate("/write/preview")
         popup.show({
             onClose() {

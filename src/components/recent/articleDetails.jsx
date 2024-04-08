@@ -77,7 +77,9 @@ function ArticleDetails({isPreviewMode = true}) {
     async function loader() {
         console.log("article details loader");
         if (location.pathname === "/write/preview") {
-            setArticle(JSON.parse(localStorage.getItem("preview")))
+            let data = JSON.parse(localStorage.getItem("draft"))
+            data.content = data.html
+            setArticle(data)
         } else {
             let timer = setInterval(() => {
                 console.log("timer");
