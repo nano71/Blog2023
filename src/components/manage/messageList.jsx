@@ -21,7 +21,7 @@ export default function MessageListForManage() {
         delete target.createTime
         popup.confirm(target,"Your action will delete this message, Are you sure?",
             async () => {
-                popup.close()
+                popup.close().then()
                 let result = await http.deleteMessage(target.id)
                 if (result) {
                     tip.show("删除成功")

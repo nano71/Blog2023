@@ -29,7 +29,7 @@ export default function TagListForManage() {
                 content: target.content
             }, `Your action will delete this category, Are you sure?`,
             async () => {
-                popup.close()
+                popup.close().then()
                 let result = await http.deleteCategory(target.name)
                 if (result) {
                     tip.show("删除成功")

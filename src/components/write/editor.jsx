@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import "/src/stylesheets/write/editor.less";
@@ -85,8 +85,10 @@ export default function Editor({isEditMode = false}) {
         }
     }
 
-    function save() {
+    function save(now = false) {
         saveTimer && clearTimeout(saveTimer)
+        if (now)
+            return localStorage.setItem("draft", JSON.stringify(template()))
         saveTimer = setTimeout(() => {
             console.log("autosave");
             if (isEditMode)
@@ -96,6 +98,7 @@ export default function Editor({isEditMode = false}) {
     }
 
     function preview() {
+        save(true)
         navigate("/write/preview")
         popup.show({
             onClose() {
@@ -156,7 +159,7 @@ export default function Editor({isEditMode = false}) {
 
         await sleep(1000)
         let result = await http.updateArticle({id, ...processedData})
-        popup.close()
+        await popup.close()
         if (result) {
             tip.show("文章已更新!")
             EventBus.emit("update", "articleList")
@@ -205,7 +208,7 @@ export default function Editor({isEditMode = false}) {
 
         // await sleep(1000)
         let result = await http.publishArticle(processedData)
-        popup.close()
+        await popup.close()
 
         if (result) {
             tip.show("文章已发布!")

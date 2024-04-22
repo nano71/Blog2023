@@ -103,7 +103,7 @@ export async function getMessageList(limit = 10000, page = 1) {
 /**
  *  获取一个文章的内容
  * @param {number} articleId 文章id
- * @returns {Promise<Article>} 文章
+ * @returns {Promise<Article|null>} 文章
  */
 export async function getArticleContent(articleId) {
     const response = await r("/getArticleContent", {articleId})

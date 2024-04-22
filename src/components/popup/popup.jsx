@@ -64,24 +64,39 @@ export default function PopupProvider({children}) {
         if (message === "mask" && isLockMask)
             return
         console.log("close", message);
-        setHiding(true)
-        clearTimeout(autoCloseTimer)
-        setTimeout(() => {
-            setVisibility(false)
-            visibleState = false
-            isShowMask || setMaskVisibility(true)
-            isLockScroll || setLockScroll(true)
-            setPopupTitle("")
-            setTemporaryComponent(null)
-            if (haveTask) {
-                show(taskParams)
-            } else {
-                callback4Close()
-            }
-            console.log("closed", isVisible);
-        }, 400)
+        return new Promise(resolve => {
+            setHiding(true)
+            clearTimeout(autoCloseTimer)
+            setTimeout(() => {
+                setVisibility(false)
+                visibleState = false
+                isShowMask || setMaskVisibility(true)
+                isLockScroll || setLockScroll(true)
+                setPopupTitle("")
+                setTemporaryComponent(null)
+                if (haveTask) {
+                    show(taskParams)
+                } else {
+                    callback4Close()
+                }
+                console.log("closed", isVisible);
+                resolve()
+            }, 400)
+        })
+
     }
 
+    /**
+     *
+     * @param message
+     * @param showMask
+     * @param lockScroll
+     * @param autoClose
+     * @param task
+     * @param lockMask
+     * @param onClose
+     * @return {void}
+     */
     function show({
                       message = "",
                       showMask = true,
@@ -114,7 +129,7 @@ export default function PopupProvider({children}) {
         if (autoClose) {
             autoCloseTimer && clearTimeout(autoCloseTimer)
             autoCloseTimer = setTimeout(() => {
-                close("auto")
+                close("auto").then()
             }, 3000)
         }
 

@@ -37,7 +37,7 @@ export default function EditCategory({isAddMode = false}) {
         else
             result = await updateCategory(data)
         if (result) {
-            popup.close()
+            await popup.close()
             tip.show(isAddMode ? "标签已添加" : "标签已更新")
             EventBus.emit("update", "tagList")
         } else {

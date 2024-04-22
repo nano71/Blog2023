@@ -21,18 +21,22 @@ const pageRouteTree = [
         children: [
             {
                 path: ":articleId",
-                loader({params}) {
-                    SEOTools.articleDetailsLoader(params.articleId)
-                    return true
+                async loader({params}) {
+                    let ok = await SEOTools.articleDetailsLoader(params.articleId)
+                    if (ok)
+                        return true
+                    throw hiddenError("The article is non-existent.")
                 }
             }
         ]
     },
     {
         path: ":articleId",
-        loader({params}) {
-            SEOTools.articleDetailsLoader(params.articleId)
-            return true
+        async loader({params}) {
+            let ok = await SEOTools.articleDetailsLoader(params.articleId)
+            if (ok)
+                return true
+            throw hiddenError("The article is non-existent.")
         }
     }
 ]

@@ -44,14 +44,14 @@ export default function ArticleListForManage() {
     }
 
     function viewArticleContent(id) {
-        SEOTools.articleDetailsLoader(id, false)
+        SEOTools.articleDetailsLoader(id, false).then()
         popup.loadTemporaryComponent(<Window><ArticleDetails/></Window>).title("Preview article").show()
     }
 
     function writeArticle() {
         popup.confirm(null, "About to leave the current page and jump to the writing page, Are you sure?",
             () => {
-                popup.close()
+                popup.close().then()
                 navigate("/write")
             })
     }
@@ -62,7 +62,7 @@ export default function ArticleListForManage() {
         delete target.createTime
         popup.confirm(target, "Your action will delete this article, Are you sure?",
             async () => {
-                popup.close()
+                popup.close().then()
                 let result = await http.deleteArticle(target.id)
                 if (result) {
                     tip.show("删除成功")

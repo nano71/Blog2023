@@ -143,7 +143,7 @@ export const SEOTools = {
      *
      * @param articleId
      * @param isUseSEOTools 是否使用SEO工具
-     * @return {Article}
+     * @return {Promise<boolean>}
      */
     async articleDetailsLoader(articleId, isUseSEOTools = true) {
         console.log(articleId);
@@ -156,9 +156,9 @@ export const SEOTools = {
                 this.setDescription(article.description)
             }
         } else {
-            throw hiddenError("The article is non-existent.")
+            return false
         }
         sessionStorage.setItem("articleDetails", JSON.stringify(article))
-        return article
+        return true
     }
 }

@@ -70,7 +70,7 @@ function InputArea() {
 
         let result = await http.leaveMessage(data)
         console.log(result);
-        popup.close()
+        await popup.close()
         if (result) {
             messageListObject.push(data)
             setMessage("")

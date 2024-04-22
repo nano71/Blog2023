@@ -8,6 +8,8 @@ import Giscus from "@giscus/react";
 import {useImmer} from "use-immer";
 import {formatDatetime, SEOTools} from "../../utils/tools.js";
 import Result from "../content/result.jsx";
+import {usePopup} from "../popup/popup.jsx";
+import {useTip} from "../popup/tip.jsx";
 
 let previousDataStringify = ""
 let articleObject = {}
@@ -23,6 +25,9 @@ function ArticleDetails({isPreviewMode = true}) {
     const [isGiscusLoading, setGiscusLoading] = useState(true)
     const [article, setArticle] = articleState
     const [scrollHeight, setScrollHeight] = useState(0)
+    const [loadTime] = useState(new Date().getTime())
+    const popup = usePopup()
+    const tip = useTip()
 
     useEffect(() => {
         console.log("ArticleDetails Mounted");
@@ -81,7 +86,7 @@ function ArticleDetails({isPreviewMode = true}) {
             data.content = data.html
             setArticle(data)
         } else {
-            let timer = setInterval(() => {
+            let timer = setInterval(async () => {
                 console.log("timer");
                 let article = sessionStorage.getItem("articleDetails")
                 if (article) {
@@ -91,6 +96,10 @@ function ArticleDetails({isPreviewMode = true}) {
                     sessionStorage.removeItem("articleDetails")
                     isPreviewMode || bindDiscussion()
                     clearInterval(timer)
+                } else if (new Date().getTime() - loadTime > 1000) {
+                    clearInterval(timer)
+                    await popup.close()
+                    tip.show("文章加载失败, 请重试")
                 }
             }, 200)
         }
@@ -99,6 +108,7 @@ function ArticleDetails({isPreviewMode = true}) {
     function haveScrollbar(scrollHeight) {
         return scrollHeight > window.innerHeight * 0.95 - 62
     }
+
     const articleDetails =
         <div className={"markdown-body articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
             <h1 className="title">{article.title || "无标题"}</h1>

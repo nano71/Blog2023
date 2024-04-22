@@ -13,7 +13,7 @@ function Validate({target}) {
 
     function confirm() {
         sessionStorage.setItem("authenticationCode", authenticationCode.current.value)
-        popup.close()
+        popup.close().then()
         navigate("/" + target)
     }
 
