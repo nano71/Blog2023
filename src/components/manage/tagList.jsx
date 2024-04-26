@@ -30,7 +30,7 @@ export default function TagListForManage() {
             }, `Your action will delete this category, Are you sure?`,
             async () => {
                 popup.close().then()
-                let result = await http.deleteCategory(target.name)
+                let result = await http.deleteCategory(target.id)
                 if (result) {
                     tip.show("删除成功")
                     EventBus.emit("update", "tagList")

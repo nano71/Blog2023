@@ -9,6 +9,7 @@ import EventBus from "../../utils/bus.js";
 export default function EditCategory({isAddMode = false}) {
     const popup = usePopup()
     const tip = useTip()
+    const id = useRef(null)
     const content = useRef(null)
     const name = useRef(null)
 
@@ -16,6 +17,7 @@ export default function EditCategory({isAddMode = false}) {
         if (!isAddMode) {
             let category = JSON.parse(sessionStorage.getItem("category"))
             console.log(category);
+            id.current.value = category.id
             content.current.value = category.content
             name.current.value = category.name
             sessionStorage.removeItem("category")
@@ -24,6 +26,7 @@ export default function EditCategory({isAddMode = false}) {
 
     async function submit() {
         let data = {
+            tagId: id.current.value,
             content: content.current.value,
             name: name.current.value
         }
@@ -53,7 +56,7 @@ export default function EditCategory({isAddMode = false}) {
                 </div>
                 <a className="close" onClick={_ => popup.close()}><Icon icon="ri:close-fill"/></a>
             </div>
-            <div className="inputArea">
+            <div className="inputArea" ref={id}>
                 <h1>New category</h1>
                 <div className="inputItem">
                     <div className="label">Name</div>

@@ -132,11 +132,11 @@ export async function deleteArticle(articleId) {
 
 /**
  * 删除一个标签
- * @param {string} tagName 标签名
+ * @param {number} tagId 标签id
  * @returns {Promise<boolean>} 删除成功 / 失败
  */
-export async function deleteCategory(tagName) {
-    const response = await r("/manage/deleteCategory", {tagName})
+export async function deleteCategory(tagId) {
+    const response = await r("/manage/deleteCategory", {tagId})
     return response?.data
 }
 
@@ -214,13 +214,14 @@ export async function addCategory({name, content}) {
 
 /**
  * 更新一条标签
+ * @param {number} tagId id
  * @param {string} name 名称
  * @param {string} content 内容
  * @returns {Promise<boolean>} 发布成功 / 失败
  */
-export async function updateCategory({name, content}) {
+export async function updateCategory({tagId,name, content}) {
     const response = await r("/manage/updateCategory", {
-        name, content
+        tagId, name, content
     })
     return response?.data
 }
