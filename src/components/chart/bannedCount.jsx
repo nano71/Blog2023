@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {getDailyBannedCount} from "../../utils/http.js";
-import Chart from "./chart.jsx";
+import Chart, {chartStyle} from "./chart.jsx";
 
 export default function BannedCount() {
     const [dates, setDates] = useState([])
@@ -39,15 +39,16 @@ export default function BannedCount() {
             type: 'value',
             boundaryGap: [0, '100%'],
         },
-        grid: {
-            top: 100,
-            left: 50,
-            right: 10
-        },
+
         dataZoom: [
             {
                 start: 50,
-                end: 100
+                end: 100,
+                dataBackground: {
+                    areaStyle: {
+                        color: "#05b45d"
+                    }
+                }
             },
             {
                 start: 0,
@@ -60,7 +61,7 @@ export default function BannedCount() {
                 type: 'line',
                 showSymbol: false,
                 data: bannedCounts,
-                areaStyle: {},
+                ...chartStyle
             }
         ]
     }} id={"bannedCount"}/>

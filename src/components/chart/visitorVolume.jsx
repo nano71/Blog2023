@@ -1,4 +1,4 @@
-import Chart from "./chart.jsx";
+import Chart, {chartStyle} from "./chart.jsx";
 import {useEffect, useState} from "react";
 import {getDailyVisitorVolume} from "../../utils/http.js";
 
@@ -39,15 +39,15 @@ export default function VisitorVolume() {
             type: 'value',
             boundaryGap: [0, '100%'],
         },
-        grid: {
-            top: 100,
-            left: 50,
-            right: 10
-        },
         dataZoom: [
             {
                 start: 50,
-                end: 100
+                end: 100,
+                dataBackground: {
+                    areaStyle: {
+                        color: "#05b45d"
+                    }
+                }
             },
             {
                 start: 0,
@@ -56,11 +56,12 @@ export default function VisitorVolume() {
         ],
         series: [
             {
+
                 name: '当日访问量',
                 type: 'line',
                 showSymbol: false,
                 data: visitorVolumes,
-                areaStyle: {},
+                ...chartStyle
             }
         ]
     }} id={"visitorVolume"}/>

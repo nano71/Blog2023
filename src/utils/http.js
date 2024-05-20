@@ -200,6 +200,15 @@ export async function getDailyBannedCount() {
 }
 
 /**
+ * 获取热门文章的数据
+ * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
+ */
+export async function getPopularArticles(){
+    const response = await r("/manage/getPopularArticles")
+    return response?.data
+}
+
+/**
  * 添加一条标签
  * @param {string} name 名称
  * @param {string} content 内容
