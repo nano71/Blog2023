@@ -47,8 +47,15 @@ export default function Editor({isEditMode = false}) {
     }, [time, title, coverImage, html, tags])
 
     useEffect(() => {
-        let matches = html?.match(/<p>.*?<\/p>/gs)
-        matches && setDescription(matches[0])
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const dom = doc.body;
+        for (let child of dom.children) {
+            if (child.innerText.length > 20) {
+                setDescription(child.innerText)
+                break
+            }
+        }
     }, [html])
 
     function readLocalStorageData() {
