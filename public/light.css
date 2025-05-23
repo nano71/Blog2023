@@ -2,6 +2,7 @@
  * Copyright (c) 2018 GitHub Inc.
  * https://github.com/primer/primitives/blob/main/LICENSE
  */
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Mono:wght@700&display=swap');
 
 main {
     --color-prettylights-syntax-comment: #6e7781;
@@ -91,7 +92,8 @@ main {
 }
 
 html {
-    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+    font-weight: 500;
+    font-family: Montserrat, "微软雅黑", sans-serif;
 }
 
 ::selection {

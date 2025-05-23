@@ -1,7 +1,7 @@
 import axios from "axios";
 import {ArticleListObject, MessageListObject, TagListObject} from "./type.js";
 
-axios.defaults.baseURL = import.meta.env.DEV ? "http://localhost:9000/api" : "https://nano71.com:9000/api"
+axios.defaults.baseURL =  "https://nano71.com:9000/api"
 axios.defaults.withCredentials = false
 
 const baseStaticResourceURL = import.meta.env.DEV ? "http://localhost:9000" : "https://nano71.com:9000"

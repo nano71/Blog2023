@@ -113,9 +113,9 @@ function ArticleDetails({isPreviewMode = true}) {
         <div className={"markdown-body articleDetails" + (haveScrollbar(scrollHeight) ? " scrollbar" : "")} ref={articleDetailsRef}>
             <h1 className="title">{article.title || "无标题"}</h1>
             <BaseInfoArea article={article}/>
-            <div className="description" dangerouslySetInnerHTML={{__html: article.description}}></div>
-            {article.coverImage && <img className="image" src={article.coverImage} alt="articleCoverImage"/>}
-            <div className="content" dangerouslySetInnerHTML={{__html: article.content?.replace(article.description, "")}}></div>
+            {/*<div className="description" dangerouslySetInnerHTML={{__html: article.description}}></div>*/}
+            {/*{article.coverImage && <img className="image" src={article.coverImage} alt="articleCoverImage"/>}*/}
+            <div className="content" dangerouslySetInnerHTML={{__html: article.content}}></div>
             <BaseInfoArea article={article}/>
             {isPreviewMode
                 ? <Result

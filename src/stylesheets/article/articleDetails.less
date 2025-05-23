@@ -8,8 +8,12 @@
     gap: 15px;
     &:extend(.fadeInAnimation);
 
+    br {
+        user-select: none;
+    }
+
     strong {
-        font-size: 18px;
+        //font-size: 18px;
     }
 
     &.scrollbar {
@@ -30,7 +34,8 @@
         //&:extend(.enFontS);
         border-bottom: 1px solid #f5f5f5;
         padding-bottom: 15px;
-        font-family: "微软雅黑", monospace;
+        font-weight: 500;
+        font-family: Montserrat, sans-serif;
 
         .item {
             display: flex;
@@ -66,6 +71,12 @@
             background-color: #f8f8f8;
             padding: 4px 6px;
             margin: 0 2px;
+            letter-spacing: normal;
+
+
+            .hljs-comment {
+                letter-spacing: 1px;
+            }
         }
 
         a {
@@ -83,6 +94,10 @@
             * {
                 margin: 0;
             }
+        }
+
+        h2 {
+            border-bottom: 2px solid @themeColor;
         }
 
         hr {
@@ -111,6 +126,8 @@
                 margin: 0;
                 display: block;
                 overflow-x: auto;
+                white-space: break-spaces;
+                word-break: break-word;
             }
         }
 
@@ -148,6 +165,15 @@
             th, td {
                 padding: 8px 16px;
             }
+        }
+
+        p > strong:first-child {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        p > strong:last-child {
+            margin-bottom: 0;
         }
     }
 
