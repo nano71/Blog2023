@@ -1,7 +1,7 @@
 import axios from "axios";
 import {ArticleListObject, MessageListObject, TagListObject} from "./type.js";
 
-axios.defaults.baseURL =  "https://nano71.com:9000/api"
+axios.defaults.baseURL = "https://nano71.com:9000/api"
 axios.defaults.withCredentials = false
 
 const baseStaticResourceURL = import.meta.env.DEV ? "http://localhost:9000" : "https://nano71.com:9000"
@@ -203,7 +203,7 @@ export async function getDailyBannedCount() {
  * 获取热门文章的数据
  * @returns {Promise<ArticleListObject>} 文章列表,包含文章总数 / 失败
  */
-export async function getPopularArticles(){
+export async function getPopularArticles() {
     const response = await r("/manage/getPopularArticles")
     return response?.data
 }
@@ -228,7 +228,7 @@ export async function addCategory({name, content}) {
  * @param {string} content 内容
  * @returns {Promise<boolean>} 发布成功 / 失败
  */
-export async function updateCategory({tagId,name, content}) {
+export async function updateCategory({tagId, name, content}) {
     const response = await r("/manage/updateCategory", {
         tagId, name, content
     })
