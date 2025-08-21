@@ -16,6 +16,7 @@ import Loading from "../content/loading.jsx";
 import {formatDatetime, sleep} from "../../utils/tools.js";
 import Feedback from "../content/feedback.jsx";
 import {useTip} from "../popup/tip.jsx";
+import mathjax3 from 'markdown-it-mathjax3'
 
 import EventBus from "../../utils/bus.js";
 
@@ -319,7 +320,7 @@ function MarkdownEditor({value, handler}) {
             }
             return hljs.highlightAuto(str).value;
         }
-    });
+    }).use(mathjax3)
 
     const plugins = ["font-bold", "font-italic", "font-underline", "font-strikethrough", "list-unordered", "list-ordered", "block-quote", "block-code-inline", "block-code-block", "image", "link", "logger"]
 
