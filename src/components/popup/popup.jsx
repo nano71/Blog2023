@@ -13,6 +13,7 @@ let taskParams
 let titleQueue = []
 let temporaryComponentQueue = []
 let callback4Close
+let closing = false
 export default function PopupProvider({children}) {
     const [isHiding, setHiding] = useState(false)
     const [PopupChildren, loadComponent] = useState(<></>)
@@ -63,6 +64,9 @@ export default function PopupProvider({children}) {
     function close(message, haveTask) {
         if (message === "mask" && isLockMask)
             return
+        if (closing)
+            return
+        closing = true
         console.log("close", message);
         return new Promise(resolve => {
             setHiding(true)
@@ -79,6 +83,7 @@ export default function PopupProvider({children}) {
                 } else {
                     callback4Close()
                 }
+                closing = false
                 console.log("closed", isVisible);
                 resolve()
             }, 400)
