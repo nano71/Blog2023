@@ -123,7 +123,7 @@ function ArticleDetails({isPreviewMode = true}) {
                     result={{code: 0, message: "The comment section is not accessible in preview mode."}}/>
                 : <Giscus
                     id="comments"
-                    repo="nano71/Blog-2023"
+                    repo="nano71/Blog2023"
                     repoId="R_kgDOKh1WEg"
                     category="Announcements"
                     categoryId="DIC_kwDOKh1WEs4Cacuy"
